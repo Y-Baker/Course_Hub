@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """module init"""
 
 
@@ -30,7 +30,6 @@ def has_no_empty_params(rule):
     return len(defaults) >= len(arguments)
 
 
-
 @app.route("/site-map")
 def site_map_route():
     routes = []
@@ -45,7 +44,7 @@ def site_map_route():
 Swagger(app)
 
 if __name__ == '__main__':
-    host = getenv('HBNB_API_HOST', '0.0.0.0')
-    port = getenv('HBNB_API_PORT', '5000')
+    host = getenv('CH_API_HOST', '0.0.0.0')
+    port = getenv('CH_API_PORT', '5000')
     app.url_map.strict_slashes = False
     app.run(host=host, port=int(port), threaded=True)
