@@ -1,6 +1,8 @@
 # Course Hub Project
 ---
 
+## Frontend Part:
+---
 
 ## Authors :black_nib:
 
