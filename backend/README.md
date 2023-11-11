@@ -1,6 +1,10 @@
 # Course Hub Project
 ---
 
+to get the development needed dependancies run
+pip install -r requirements.txt inside your virtual environment
+
+
 ## BackEnd Part:
 ---
 
