@@ -5,13 +5,16 @@ Contains the class DBStorage
 
 import models
 from models.user import User
+from models.course import Course
+from models.section import Section
+from models.lesson import Lesson
 from os import getenv
 from models.base_model import Base
-import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-classes = {"User": User}
+classes = {"User": User, "Course": Course, "Section": Section,
+           "Lesson": Lesson}
 
 
 class DBStorage:
