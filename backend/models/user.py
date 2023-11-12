@@ -25,7 +25,7 @@ class User(BaseModel, Base):
         Sets an attribute of this class to a given value'''
         if key == 'password':
             if type(val) is str and not is_valid_hash(val):
-                hashed = md5(bytes(val, 'utf-8'))
+            hashed = md5(bytes(val, 'utf-8'))
                 super().__setattr__(key, hashed.hexdigest())
             else:
                 super().__setattr__(key, val)
