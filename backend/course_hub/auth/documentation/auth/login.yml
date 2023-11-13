@@ -1,0 +1,23 @@
+logs in a user---
+tags:
+  - Auth
+parameters:
+      - name: email_and_password_and_remember
+        in: body
+        required: true
+        requires:
+          - email:
+          - password:
+          - remember:
+        properties:
+          email:
+            type: string
+          password:
+            type: string
+          remember:
+            type: boolean
+responses:
+  400:
+    description: Missing email/password or not a JSON
+  200:
+    description: successfully loggedd in

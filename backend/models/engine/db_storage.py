@@ -85,6 +85,20 @@ class DBStorage:
                 return obj
         return None
 
+    def getUserByEmail(self, email):
+        """A method to retrieve one object by its id"""
+        if email is not None:
+            return self.__session.query(User).filter(User.email == str(email)).first()
+        else:
+            return None
+
+    def getUserById(self, id):
+        """A method to retrieve one object by its id"""
+        if id is not None:
+            return self.__session.query(User).filter(User.id == str(id)).first()
+        else:
+            return None
+
     def count(self, cls=None):
         """A method to count the number of objects in storage"""
         objects = self.all(cls)

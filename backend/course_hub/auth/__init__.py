@@ -3,5 +3,5 @@
 
 from flask import Blueprint
 
-user_views = Blueprint('user_views', __name__, url_prefix='/api/')
-from course_hub.user.views import *
+auth_views = Blueprint('auth_views', __name__, url_prefix='/api/')
+from course_hub.auth.views import *
