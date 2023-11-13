@@ -1,0 +1,24 @@
+    posts a new user
+    ---
+    tags:
+      - Auth
+    parameters:
+      - name: user_and_password
+        in: body
+        required: true
+        requires:
+          - email:
+          - password:
+        properties:
+          email:
+            type: string
+          password:
+            type: string
+          name:
+            type: string
+          age:
+            type: integer
+
+    responses:
+      201:
+        description: successfully created user
