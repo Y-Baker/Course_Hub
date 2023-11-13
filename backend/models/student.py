@@ -7,7 +7,7 @@ from models.user import User
 class Student(User):
     """Reapresntation for Student"""
     interested = Column(Integer, nullable=False)
-    categories = relationship('Categories', backref='Student')
+    categories = relationship('Category', backref='Student')
 
     def __init__(self, *args, **kwargs):
         """initializes user"""

@@ -8,9 +8,11 @@ from flask import jsonify, url_for
 from flask_cors import CORS
 from flasgger import Swagger
 from course_hub.user import user_views
+from course_hub.course import course_views
 
 
 app.register_blueprint(user_views)
+app.register_blueprint(course_views)
 
 
 @app.errorhandler(404)

@@ -8,13 +8,18 @@ from models.user import User
 from models.course import Course
 from models.section import Section
 from models.lesson import Lesson
+from models.category import Category
+from models.student import Student
+from models.instructor import Instructor
+from models.admin import Admin
 from os import getenv
 from models.base_model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 classes = {"User": User, "Course": Course, "Section": Section,
-           "Lesson": Lesson}
+           "Lesson": Lesson, "Category": Category, "Student": Student,
+           "Instructor": Instructor, "Admin": Admin}
 
 
 class DBStorage:
