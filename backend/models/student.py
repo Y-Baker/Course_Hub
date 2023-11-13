@@ -1,18 +1,19 @@
 #!/usr/bin/python3
 
-from sqlalchemy import Column, Integer
+from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from models.category import Category
 from models.base_model import BaseModel, Base
+from models.user import User
 
 
 class Student(BaseModel, Base):
     """Reapresntation for Student"""
     __tablename__ = 'students'
     interested = Column(Integer, nullable=False)
-    categories = relationship('Category', backref='Student')
+    categories = relationship('Category', backref='student')
     user = relationship("User", backref="student")
-    # user_id = Column(Integer, ForeignKey('users.id'), unique=True)
+    user_id = Column(Integer, ForeignKey('users.id'), unique=True)
     
     def __init__(self, *args, **kwargs):
         """initializes user"""
