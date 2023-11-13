@@ -8,9 +8,13 @@ from flask import jsonify
 from flask_cors import CORS
 from flasgger import Swagger
 from models import storage
+from course_hub.user import user_views
+from course_hub.course import course_views
+
 
 app.register_blueprint(user_views)
 app.register_blueprint(auth_views)
+app.register_blueprint(course_views)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -25,6 +29,7 @@ def load_user(id):
 @login_manager.unauthorized_handler
 def unauthorized():
     return jsonify({'message': 'Unauthorized'}), 401
+
 
 @app.errorhandler(404)
 def not_found(err):
