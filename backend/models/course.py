@@ -10,18 +10,18 @@ from sqlalchemy import CheckConstraint as Check
 from sqlalchemy.orm import relationship
 
 # association table between Courses and Students
-# enrollments = Table('enrollments', Base.metadata,
-#                     Column('student_id', String(60),
-#                            ForeignKey('students.id'),
-#                            primary_key=True, nullable=False),
-#                     Column('course_id', String(60),
-#                            ForeignKey('courses.id'),
-#                            primary_key=True, nullable=False),
-#                     Column('completed', Integer,
-#                            Check('completed >= 0 AND completed <= 100'),
-#                            nullable=False),
-#                     Column('enrolled_date', DateTime, default=datetime.utcnow)
-#                     )
+enrollments = Table('enrollments', Base.metadata,
+                    Column('student_id', String(60),
+                           ForeignKey('students.id'),
+                           primary_key=True, nullable=False),
+                    Column('course_id', String(60),
+                           ForeignKey('courses.id'),
+                           primary_key=True, nullable=False),
+                    Column('completed', Integer,
+                           Check('completed >= 0 AND completed <= 100'),
+                           nullable=False),
+                    Column('enrolled_date', DateTime, default=datetime.utcnow)
+                    )
 
 
 class Course(BaseModel, Base):
@@ -35,13 +35,13 @@ class Course(BaseModel, Base):
 
     sections = relationship("Section", backref="course")
 
-    # category_id = Column(String(60),
-    #                      ForeignKey('categories.id'),
-    #                      nullable=True)
-    # instructor_id = Column(String(60),
-    #                        ForeignKey('instructors.id'),
-    #                        nullable=False)
-    #
-    # students = relationship('Student',
-    #                         secondary='enrollments', viewonly=False,
-    #                         backref='courses')
+    category_id = Column(String(60),
+                         ForeignKey('categories.id'),
+                         nullable=True)
+    instructor_id = Column(String(60),
+                           ForeignKey('instructors.id'),
+                           nullable=False)
+    
+    students = relationship('Student',
+                            secondary='enrollments', viewonly=False,
+                            backref='courses')
