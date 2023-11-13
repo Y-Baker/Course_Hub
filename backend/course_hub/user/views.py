@@ -6,7 +6,8 @@ from flask import jsonify, abort, request
 from models import storage
 from models.user import User
 from flasgger.utils import swag_from
-
+from bcrypt import checkpw
+from flask_login import login_user, logout_user, login_required, current_user
 
 
 @user_views.route('/users', methods=['GET'])
@@ -15,7 +16,7 @@ def get_users():
     """reterive all users from storage
     """
     return jsonify(list(map(lambda user:
-                        user.to_dict(), storage.all(User).values())))
+                            user.to_dict(), storage.all(User).values())))
 
 
 @user_views.route('/users/<user_id>', methods=['GET'])

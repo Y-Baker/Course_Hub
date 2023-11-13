@@ -9,7 +9,7 @@ import models
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
-from hashlib import md5
+from bcrypt import hashpw, gensalt
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -27,8 +27,10 @@ class BaseModel:
         if kwargs:
             for key, value in kwargs.items():
                 if key != "__class__":
-                    if key == 'password' and not is_valid_hash(value):
-                        value = md5(value.encode()).hexdigest()
+                    if key == 'password' and not is_bcrypt_hash(value):
+                        password = value.encode('utf-8')
+                        salt = gensalt()
+                        setattr(self, key, hashpw(password, salt))
                     setattr(self, key, value)
             if kwargs.get("created_at", None) and type(self.created_at) is str:
                 self.created_at = datetime.strptime(kwargs["created_at"], time)
@@ -75,9 +77,6 @@ class BaseModel:
         models.storage.delete(self)
 
 
-def is_valid_hash(password):
-    """check valid md5 password"""
-    if re.match(r'(?i)(?<![a-z0-9])[a-f0-9]{32}(?![a-z0-9])', password):
-        return True
-    else:
-        return False
+def is_bcrypt_hash(hashed_password):
+    """Check if the hashed password starts with the bcrypt identifier"""
+    return hashed_password.startswith('$2b$')
