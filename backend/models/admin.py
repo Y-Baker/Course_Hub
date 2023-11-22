@@ -4,13 +4,14 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey
 
 class Admin(BaseModel, Base):
     """Reapresntation for Admin"""
     __tablename__ = 'admins'
-    id = Column(String(60), ForeignKey('users.id'), primary_key=True)
-
-    # user = relationship("User", backref="admin")
+    user = relationship("User", backref="admin")
+    user_id = Column(String(60), ForeignKey('users.id'), unique=True)
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
