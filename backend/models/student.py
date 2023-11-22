@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
-from sqlalchemy import Column, Integer
+from sqlalchemy import Column, String
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from models.category import Category
 from models.base_model import BaseModel, Base
@@ -9,10 +10,11 @@ from models.base_model import BaseModel, Base
 class Student(BaseModel, Base):
     """Reapresntation for Student"""
     __tablename__ = 'students'
-    interested = Column(Integer, nullable=False)
+    id = Column(String(60), ForeignKey('users.id'), primary_key=True)
+
+    interested = Column(String(60), ForeignKey('categories.id'), nullable=False)
     categories = relationship('Category', backref='Student')
-    user = relationship("User", backref="student")
-    # user_id = Column(Integer, ForeignKey('users.id'), unique=True)
+    # user = relationship("User", backref="student")
     
     def __init__(self, *args, **kwargs):
         """initializes user"""
