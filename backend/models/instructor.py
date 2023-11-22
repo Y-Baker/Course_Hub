@@ -10,7 +10,6 @@ from models.user import User
 class Instructor(BaseModel, Base):
     """Reapresntation for Instructor"""
     __tablename__ = 'instructors'
-    id = Column(String(60), ForeignKey('users.id'), primary_key=True)
 
     total_students =  Column(Integer, nullable=False)
     user = relationship("User", backref="instructor")
