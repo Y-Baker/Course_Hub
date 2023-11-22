@@ -40,7 +40,7 @@ def sign_up():
                            'name': name,
                            'age': age})
         new_user.save()
-        return jsonify({'message': 'user Created Successfully with id' + new_user.id})
+        return jsonify({'message': 'user Created Successfully with id: ' + new_user.id})
 
 
 @login_required
