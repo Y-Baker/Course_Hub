@@ -19,7 +19,7 @@ def stats():
         'students': storage.count('Student'),
         'instructors': storage.count('Instructor'),
         'admins': storage.count('Admin'),
-        'enrollments': storage.__session.query(enrollments).count()
+        # 'enrollments': storage.__session.query(enrollments).count()
     }
 
-    return jsonify({'stats': 00})
+    return jsonify(objects)
