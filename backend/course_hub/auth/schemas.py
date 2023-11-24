@@ -17,7 +17,7 @@ class UserSchema(Schema):
     @validates('email')
     def validate_email(self, value):
         if storage.getUserByEmail(value):
-            return "email already exists"
+            raise ValidationError("email already exists")
 
     @validates('name')
     def validate_name(self, value):
