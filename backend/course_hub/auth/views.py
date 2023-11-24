@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """new view for State objects that handles all default RESTFul API actions"""
+from marshmallow import ValidationError
 
 from course_hub.auth import auth_views
 from flask import abort, jsonify, request
@@ -8,39 +9,50 @@ from models.user import User
 from flasgger.utils import swag_from
 from bcrypt import checkpw
 from flask_login import login_user, logout_user, login_required, current_user
+from .schemas import UserSchema
 
 
 @auth_views.route('/sign-up', methods=['POST'])
 @swag_from('documentation/auth/sign_up.yml')
+# def sign_up():
+#     if request.method == 'POST':
+#         data = request.get_json()
+#         if not data:
+#             abort(400, "Not a JSON")
+#
+#         if not data.get('email'):
+#             abort(400, "Missing email")
+#
+#         if not data.get('password'):
+#             abort(400, "Missing password")
+#         email = data.get('email')
+#         name = data.get('name')
+#         password = data.get('password')
+#         age = data.get('age')
+#         if age:
+#             try:
+#                 age = int(age)
+#             except ValueError as ex:
+#                 pass
+#         checked_input = notValidInput(email, name, password, age)
+#         if checked_input:
+#             return jsonify({'error': checked_input})
+#         new_user = User(**{'email': email,
+#                            'password': password,
+#                            'name': name,
+#                            'age': age})
+#         new_user.save()
+#         return jsonify({'message': 'user Created Successfully with id' + new_user.id})
 def sign_up():
-    if request.method == 'POST':
-        data = request.get_json()
-        if not data:
-            abort(400, "Not a JSON")
+    data = request.get_json()
+    try:
+        new_user = UserSchema().load(data)
+    except ValidationError as e:
+        return jsonify({"error": e.messages}), 400
+    new_user.save()
+    # Save the new user or handle any additional logic here
 
-        if not data.get('email'):
-            abort(400, "Missing email")
-
-        if not data.get('password'):
-            abort(400, "Missing password")
-        email = data.get('email')
-        name = data.get('name')
-        password = data.get('password')
-        age = data.get('age')
-        if age:
-            try:
-                age = int(age)
-            except ValueError as ex:
-                pass
-        checked_input = notValidInput(email, name, password, age)
-        if checked_input:
-            return jsonify({'error': checked_input})
-        new_user = User(**{'email': email,
-                           'password': password,
-                           'name': name,
-                           'age': age})
-        new_user.save()
-        return jsonify({'message': 'user Created Successfully with id' + new_user.id})
+    return jsonify({'message': f'user Created Successfully with id {new_user.id}'})
 
 
 @login_required
