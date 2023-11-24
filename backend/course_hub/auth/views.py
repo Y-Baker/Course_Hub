@@ -12,7 +12,7 @@ from flasgger.utils import swag_from
 from bcrypt import checkpw
 from flask_login import login_user, logout_user, login_required, current_user
 from .schemas import UserSchema
-
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required
 
 @auth_views.route('/sign-up', methods=['POST'])
 @swag_from('documentation/auth/sign_up.yml')
@@ -44,6 +44,7 @@ def logout():
 
 
 @auth_views.route('/protected')
+@jwt_required()
 @login_required
 @swag_from('documentation/auth/protected.yml')
 def protected_route():
@@ -53,34 +54,70 @@ def protected_route():
 @auth_views.route('/login', methods=['POST'])
 @swag_from('documentation/auth/login.yml')
 def login():
-    if request.method == 'POST':
-        data = request.get_json()
-        if not data:
-            abort(400, "Not a JSON")
+    # if request.method == 'POST':
+    #     data = request.get_json()
+    #     if not data:
+    #         abort(400, "Not a JSON")
 
-        if not data.get('email'):
-            abort(400, "Missing email")
+    #     if not data.get('email'):
+    #         abort(400, "Missing email")
 
-        if not data.get('password'):
-            abort(400, "Missing password")
-        email = data.get('email')
-        password = data.get('password')
-        remember = data.get('remember')
-        if remember:
-            try:
-                remember = bool(remember)
-            except ValueError as ex:
-                remember = False
-        user = storage.getUserByEmail(email)
-        if user:
-            userBytes = password.encode('utf-8')
-            hashed_password_bytes = user.password.encode('utf-8')
-            if checkpw(userBytes, hashed_password_bytes):
-                login_user(user, remember=remember)
-                return jsonify({'message': 'user logged in successfully'})
-        else:
-            return jsonify({'message': 'incorrect email or password'})
+    #     if not data.get('password'):
+    #         abort(400, "Missing password")
+    #     email = data.get('email')
+    #     password = data.get('password')
+    #     remember = data.get('remember')
+    #     if remember:
+    #         try:
+    #             remember = bool(remember)
+    #         except ValueError as ex:
+    #             remember = False
+    #     user = storage.getUserByEmail(email)
+    #     if user:
+    #         userBytes = password.encode('utf-8')
+    #         hashed_password_bytes = user.password.encode('utf-8')
+    #         if checkpw(userBytes, hashed_password_bytes):
+    #             login_user(user, remember=remember)
+    #             return jsonify({'message': 'user logged in successfully'})
+    #     else:
+    #         return jsonify({'message': 'incorrect email or password'})
+    data = request.get_json()
+    if not data:
+        abort(400, "Not a JSON")
 
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email:
+        abort(400, "Missing email")
+
+    if not password:
+        abort(400, "Missing password")
+
+    remember = data.get('remember')
+    if remember:
+        try:
+            remember = bool(remember)
+        except ValueError as ex:
+            remember = False
+
+    user = storage.getUserByEmail(email)
+    if user:
+        userBytes = password.encode('utf-8')
+        hashed_password_bytes = user.password.encode('utf-8')
+        if checkpw(userBytes, hashed_password_bytes):
+            access_token = create_access_token(identity=user.email)
+            refresh_token = create_refresh_token(identity=user.email)
+            login_user(user, remember=remember)
+            return jsonify({
+                'message': 'user logged in successfully',
+                'tokens' : {
+                    "access_token" : access_token, 
+                    "refresh_token" : refresh_token
+                }
+            }), 200
+    else:
+        return jsonify({'message': 'incorrect email or password'})
 
 def notValidInput(email, name, password, age):
     if storage.getUserByEmail(email):

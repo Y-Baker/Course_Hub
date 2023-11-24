@@ -1,22 +1,28 @@
 #!/usr/bin/python3
 """new view for State objects that handles all default RESTFul API actions"""
 
+from flask_jwt_extended import jwt_required
 from course_hub.user import user_views
 from flask import jsonify, abort, request
+from course_hub.user.user_service import UserService
 from models import storage
 from models.user import User
 from flasgger.utils import swag_from
 from bcrypt import checkpw
 from flask_login import login_user, logout_user, login_required, current_user
 
-
+user_service = UserService()
 @user_views.route('/users', methods=['GET'])
+@jwt_required()    
 @swag_from('documentation/user/all_users.yml')
 def get_users():
     """reterive all users from storage
     """
     return jsonify(list(map(lambda user:
-                            user.to_dict(), storage.all(User).values())))
+                            user.to_dict(), user_service.get_users(
+                                request.args.get("page", 1, type=int),
+                                request.args.get("per_page", 3, type=int)
+                            ))))
 
 
 @user_views.route('/users/<user_id>', methods=['GET'])
