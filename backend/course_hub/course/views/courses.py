@@ -92,4 +92,3 @@ def update_user(course_id):
 
     cousre.save()
     return jsonify(cousre.to_dict())
-

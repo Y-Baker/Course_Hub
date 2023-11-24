@@ -76,8 +76,6 @@ def login():
         email = data.get('email')
         password = data.get('password')
         remember = data.get('remember')
-        print(email)
-        print(password)
         if remember:
             try:
                 remember = bool(remember)
