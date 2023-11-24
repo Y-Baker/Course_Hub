@@ -3,22 +3,34 @@
     tags:
       - Auth
     parameters:
-      - name: user_and_password
-        in: body
+      - in: body
+        name: UserSchema
+        description: User data
         required: true
-        requires:
-          - email:
-          - password:
-        properties:
-          email:
-            type: string
-          password:
-            type: string
-          name:
-            type: string
-          age:
-            type: integer
+        schema:
+          $ref: '#/definitions/UserSchema'
 
     responses:
       201:
         description: successfully created user
+
+    definitions:
+      UserSchema:
+        type: object
+        properties:
+          email:
+            type: string
+            format: email
+            example: user@example.com
+          name:
+            type: string
+            example: John Doe
+          password:
+            type: string
+            example: password123
+          role:
+            type: integer
+            example: 1
+          age:
+            type: integer
+            example: 25

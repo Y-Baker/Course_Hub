@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 """to init db"""
 
 from os import getenv
@@ -17,5 +16,4 @@ engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
                                         CH_MYSQL_HOST, 
                                         CH_MYSQL_DB))
 Base.metadata.drop_all(engine)
-sess_factory = sessionmaker(bind=engine)
-Session = scoped_session(sess_factory)
+Base.metadata.create_all(engine)

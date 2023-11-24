@@ -25,9 +25,9 @@ def load_user(id):
     print(id)
     return storage.getUserById(id)
 
-
+@app.errorhandler(401)
 @login_manager.unauthorized_handler
-def unauthorized():
+def unauthorized(err):
     return jsonify({'message': 'Unauthorized'}), 401
 
 

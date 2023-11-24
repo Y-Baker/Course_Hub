@@ -3,17 +3,18 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
-from models.base_model import BaseModel, Base
+from models.base_model import Base
+from models.base_model_role import BaseRole
 from models.user import User
 
 
-class Instructor(BaseModel, Base):
+class Instructor(BaseRole, Base):
     """Reapresntation for Instructor"""
     __tablename__ = 'instructors'
 
-    total_students =  Column(Integer, nullable=False)
+    # total_students =  Column(Integer, nullable=False, default=0)
     user = relationship("User", backref="instructor")
-    user_id = Column(String(60), ForeignKey('users.id'), unique=True)
+    id = Column(String(60), ForeignKey('users.id'), primary_key=True)
     courses = relationship('Course', backref='instructor')
     
     def __init__(self, *args, **kwargs):
