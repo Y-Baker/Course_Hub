@@ -13,6 +13,7 @@ class User(BaseModel, Base, UserMixin):
     password = Column(String(100), nullable=False)
     name = Column(String(150), nullable=True)
     age = Column(Integer(), nullable=True)
+    role = Column(Integer, nullable=False) # 0 for admin, 1 for instructor, 2 for student
 
     def __init__(self, *args, **kwargs):
         """initializes user"""

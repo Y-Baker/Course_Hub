@@ -18,6 +18,9 @@
             type: string
           age:
             type: integer
+          role:
+            type: integer
+            # description: 0 for admin, 1 for student, 2 for teacher
 
     responses:
       201:

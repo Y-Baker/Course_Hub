@@ -43,25 +43,6 @@ def delete_users(user_id):
     return jsonify({}), 200
 
 
-@user_views.route('/users', methods=['POST'])
-@swag_from('documentation/user/post_user.yml', methods=['POST'])
-def create_users():
-    """post user to storage
-    """
-    data = request.get_json()
-    if not data:
-        abort(400, "Not a JSON")
-
-    if not data.get('email'):
-        abort(400, "Missing email")
-
-    if not data.get('password'):
-        abort(400, "Missing password")
-
-    user = User(**data)
-    user.save()
-    return jsonify(user.to_dict()), 201
-
 
 @user_views.route('/users/<user_id>', methods=['PUT'])
 @swag_from('documentation/user/put_user.yml', methods=['PUT'])

@@ -12,7 +12,7 @@ class Category(BaseModel, Base):
     name = Column(String(128), nullable=False)
     courses = relationship('Course', backref='Category')
     students = relationship('models.student.Student', backref='Category')
-    student_id = Column(String(60), ForeignKey('students.id'))
+    # student_id = Column(String(60), ForeignKey('students.id'))
 
     def __init__(self, *args, **kwargs):
         """initializes Category"""

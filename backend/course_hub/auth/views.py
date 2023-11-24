@@ -5,6 +5,9 @@ from course_hub.auth import auth_views
 from flask import abort, jsonify, request
 from models import storage
 from models.user import User
+from models.student import Student
+from models.instructor import Instructor
+from models.admin import Admin
 from flasgger.utils import swag_from
 from bcrypt import checkpw
 from flask_login import login_user, logout_user, login_required, current_user
@@ -14,6 +17,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 @swag_from('documentation/auth/sign_up.yml')
 def sign_up():
     if request.method == 'POST':
+        roles = [Admin, Instructor, Student]
         data = request.get_json()
         if not data:
             abort(400, "Not a JSON")
@@ -23,10 +27,15 @@ def sign_up():
 
         if not data.get('password'):
             abort(400, "Missing password")
+
+        if not data.get('role'):
+            abort(400, "Missing role")
+
         email = data.get('email')
         name = data.get('name')
         password = data.get('password')
         age = data.get('age')
+        role = data.get('role')
         if age:
             try:
                 age = int(age)
@@ -38,8 +47,14 @@ def sign_up():
         new_user = User(**{'email': email,
                            'password': password,
                            'name': name,
-                           'age': age})
+                           'age': age,
+                           'role': role})
         new_user.save()
+        new_data = role_data(data)
+        new_data['id'] = new_user.id
+        role = roles[new_user.role](**new_data)
+        print(role)
+        role.save()
         return jsonify({'message': 'user Created Successfully with id: ' + new_user.id})
 
 
@@ -103,3 +118,13 @@ def notValidInput(email, name, password, age):
         return "password cannot be less than 6 characters"
     if age and age < 9:
         return "age cannot be less than 9"
+
+
+def role_data(data):
+    """update data to handle new role"""
+    new_data = {}
+    for k, v in data.items():
+        if k in ['interested']:
+            new_data[k] = v
+
+    return new_data
