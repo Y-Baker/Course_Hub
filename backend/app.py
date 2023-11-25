@@ -23,6 +23,57 @@ login_manager.init_app(app)
 #flask_JWT configurations
 jwt.init_app(app)
 
+# load user
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_headers, jwt_data):
+    identity = jwt_data.get("sub")
+
+    return storage.getUserById(identity)
+
+# additional claims
+
+# @jwt.additional_claims_loader
+# def make_additional_claims(identity):
+#     if identity == "janedoe123":
+#         return {"is_staff": True}
+#     return {"is_staff": False}
+
+# jwt error handlers
+
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_data):
+    return jsonify({"message": "Token has expired", "error": "token_expired"}), 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return (
+        jsonify(
+            {"message": "Signature verification failed", "error": "invalid_token"}
+        ),
+        401,
+    )
+
+@jwt.unauthorized_loader
+def missing_token_callback(error):
+    return (
+        jsonify(
+            {
+                "message": "Request doesnt contain valid token",
+                "error": "authorization_header",
+            }
+        ),
+        401,
+    )
+
+@jwt.token_in_blocklist_loader
+def token_in_blocklist_callback(jwt_header,jwt_data):
+    jti = jwt_data.get('jti')
+
+    token = storage.getTokenByJti(jti)
+
+    return token is not None
+
+
 @login_manager.user_loader
 def load_user(id):
     print(id)

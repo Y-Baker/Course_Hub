@@ -3,6 +3,14 @@
 from os import getenv
 from sqlalchemy import create_engine
 from models.base_model import Base
+from models.section import Section
+from models.lesson import Lesson
+from models.course import Course
+from models.user import User
+from models.student import Student
+from models.instructor import Instructor
+from models.admin import Admin
+from models.TokenBlocklist import TokenBlocklist
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 CH_MYSQL_USER = getenv('CH_MYSQL_USER')
@@ -15,5 +23,10 @@ engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
                                         CH_MYSQL_PWD,
                                         CH_MYSQL_HOST, 
                                         CH_MYSQL_DB))
+# for t in Base.metadata.sorted_tables:
+#         print(t.name)
 Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
+
+session_maker = sessionmaker(bind=engine)
+session = scoped_session(session_maker)
