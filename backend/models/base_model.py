@@ -5,14 +5,15 @@ Contains class BaseModel
 
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import DeclarativeBase
 from models.base import BaseMethods, is_bcrypt_hash
 import uuid
 from bcrypt import hashpw, gensalt
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 
 class BaseModel(BaseMethods):

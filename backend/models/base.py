@@ -5,11 +5,9 @@ Contains class BaseModel
 
 from datetime import datetime
 import models
-from sqlalchemy.ext.declarative import declarative_base
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
-Base = declarative_base()
 
 
 class BaseMethods:
