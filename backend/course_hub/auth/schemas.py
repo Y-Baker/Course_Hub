@@ -4,7 +4,7 @@ from models import storage
 from models.user import User
 
 
-class UserSchema(Schema):
+class SignUpSchema(Schema):
     class Meta:
         unknown = INCLUDE
     email = fields.Email(required=True)
@@ -41,3 +41,11 @@ class UserSchema(Schema):
     def validate_age(self, value):
         if value and value < 9:
             raise ValidationError("Age cannot be less than 9")
+
+
+class SignInSchema(Schema):
+    # class Meta:
+    #     unknown = INCLUDE
+    email = fields.Email(required=True)
+    password = fields.String(required=True)
+    remember = fields.Boolean(load_default=False)

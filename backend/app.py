@@ -34,6 +34,10 @@ def load_user(id):
 def unauthorized():
     return jsonify({'message': 'Unauthorized'}), 401
 
+@app.errorhandler(403)
+def unauthorized(err):
+    return jsonify({'message': 'not authorized'}), 403
+
 @app.errorhandler(401)
 def unauthenticated(err):
     return jsonify({'message': 'not authenticated'}), 401

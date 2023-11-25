@@ -11,7 +11,7 @@ from models.admin import Admin
 from flasgger.utils import swag_from
 from bcrypt import checkpw
 from flask_login import login_user, logout_user, login_required, current_user
-from .schemas import UserSchema
+from .schemas import SignUpSchema, SignInSchema
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required
 
 @auth_views.route('/sign-up', methods=['POST'])
@@ -20,7 +20,7 @@ def sign_up():
     roles = [Admin, Instructor, Student]
     data = request.get_json()
     try:
-        new_user = UserSchema().load(data)
+        new_user = SignUpSchema().load(data)
     except ValidationError as e:
         return jsonify({"error": e.messages}), 400
     new_user.save()
@@ -54,53 +54,10 @@ def protected_route():
 @auth_views.route('/login', methods=['POST'])
 @swag_from('documentation/auth/login.yml')
 def login():
-    # if request.method == 'POST':
-    #     data = request.get_json()
-    #     if not data:
-    #         abort(400, "Not a JSON")
-
-    #     if not data.get('email'):
-    #         abort(400, "Missing email")
-
-    #     if not data.get('password'):
-    #         abort(400, "Missing password")
-    #     email = data.get('email')
-    #     password = data.get('password')
-    #     remember = data.get('remember')
-    #     if remember:
-    #         try:
-    #             remember = bool(remember)
-    #         except ValueError as ex:
-    #             remember = False
-    #     user = storage.getUserByEmail(email)
-    #     if user:
-    #         userBytes = password.encode('utf-8')
-    #         hashed_password_bytes = user.password.encode('utf-8')
-    #         if checkpw(userBytes, hashed_password_bytes):
-    #             login_user(user, remember=remember)
-    #             return jsonify({'message': 'user logged in successfully'})
-    #     else:
-    #         return jsonify({'message': 'incorrect email or password'})
-    data = request.get_json()
-    if not data:
-        abort(400, "Not a JSON")
-
+    data = SignInSchema().load(data=request.get_json())
     email = data.get('email')
     password = data.get('password')
-
-    if not email:
-        abort(400, "Missing email")
-
-    if not password:
-        abort(400, "Missing password")
-
     remember = data.get('remember')
-    if remember:
-        try:
-            remember = bool(remember)
-        except ValueError as ex:
-            remember = False
-
     user = storage.getUserByEmail(email)
     if user:
         userBytes = password.encode('utf-8')
