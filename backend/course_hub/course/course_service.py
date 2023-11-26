@@ -68,3 +68,11 @@ class CourseService:
                 .limit(per_page).all()
         return results
 
+    def get_sections(self, page, per_page):
+        """method to paginate sections"""
+        offset = (page - 1) * per_page
+
+        results = self.__session.query(Section)\
+            .offset(offset)\
+                .limit(per_page).all()
+        return results
