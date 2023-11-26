@@ -7,6 +7,7 @@ from models import storage
 from models.course import Course
 from models.instructor import Instructor
 from flasgger.utils import swag_from
+from course_hub.course import course_service
 
 
 
@@ -15,8 +16,11 @@ from flasgger.utils import swag_from
 def get_courses():
     """reterive all courses from storage
     """
-    courses = storage.all(Course).values()
-    return jsonify([course.to_dict() for course in courses])
+    return jsonify(list(map(lambda course:
+                            course.to_dict(), course_service.get_courses(
+                                request.args.get("page", 1, type=int),
+                                request.args.get("per_page", 3, type=int)
+                            ))))
 
 
 @course_views.route('/instructors/<instructor_id>/courses', methods=['GET'])
@@ -26,7 +30,13 @@ def get_courses_instructor(instructor_id):
     if instructor is None:
         abort(404)
 
-    return jsonify([course.to_dict() for course in instructor.courses])
+    return jsonify(list(map(lambda course:
+                            course.to_dict(), course_service.get_courses_by_instructor(
+                                instructor_id,
+                                request.args.get("page", 1, type=int),
+                                request.args.get("per_page", 3, type=int)
+                                ))))
+    # return jsonify([course.to_dict() for course in instructor.courses])
 
 
 @course_views.route('/courses/<course_id>', methods=['GET'])
