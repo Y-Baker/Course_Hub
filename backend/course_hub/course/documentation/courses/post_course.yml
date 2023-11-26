@@ -1,0 +1,35 @@
+    post a new course by instractor
+    ---
+    tags:
+      - Courses
+    parameters:
+      - name: course
+        in: body
+        required: true
+        requires:
+          - name:
+          - hours:
+          - instractor_id:
+          - num_sections:
+          - num_enrolled:
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+          hours:
+            type: integer
+          num_sections:
+            type: integer
+          num_enrolled:
+            type: integer
+          category_id:
+            type: string
+          instractor_id:
+            type: string
+
+    responses:
+      400:
+        description: Missing name/hours/instractor_id/num_sections/num_enrolled or not a JSON
+      201:
+        description: successfully created course

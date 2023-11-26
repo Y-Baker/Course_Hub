@@ -5,6 +5,10 @@ from os import environ
 from flask import Flask
 from .auth import  auth_views
 from .user import user_views
+from flask_jwt_extended import JWTManager
+
+
+jwt = JWTManager()
 app = Flask(__name__, instance_relative_config=True)
 
 app.config.from_object('config.default')

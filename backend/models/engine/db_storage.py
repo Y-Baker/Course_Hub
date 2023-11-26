@@ -5,7 +5,7 @@ Contains the class DBStorage
 
 import models
 from models.user import User
-from models.course import Course
+from models.course import Course, enrollments
 from models.section import Section
 from models.lesson import Lesson
 from models.category import Category
@@ -103,3 +103,8 @@ class DBStorage:
         """A method to count the number of objects in storage"""
         objects = self.all(cls)
         return len(objects)
+
+    def get_enrollments(self):
+        """return list of enrollments"""
+        result = self.__session.query(enrollments).all()
+        return result

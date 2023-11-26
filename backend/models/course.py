@@ -41,7 +41,6 @@ class Course(BaseModel, Base):
     instructor_id = Column(String(60),
                            ForeignKey('instructors.id'),
                            nullable=False)
-    
     students = relationship('Student',
                             secondary='enrollments', viewonly=False,
                             backref='courses')

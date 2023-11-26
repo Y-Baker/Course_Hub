@@ -1,0 +1,19 @@
+    updates course information
+    ---
+    tags:
+      - Courses
+    parameters:
+      - name: course_id
+        in: path
+        type: string
+        required: true
+        description: The id of the course to update
+      - name: update_request
+        in: body
+        required: true
+
+    responses:
+      404:
+        description: course not found!
+      200:
+        description: request executed successfully
