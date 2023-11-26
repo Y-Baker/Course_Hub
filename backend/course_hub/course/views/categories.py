@@ -6,6 +6,7 @@ from flask import jsonify, abort, request
 from models import storage
 from models.category import Category
 from flasgger.utils import swag_from
+from course_hub.course import course_service
 
 
 @course_views.route('/categories', methods=['GET'])
@@ -13,8 +14,11 @@ from flasgger.utils import swag_from
 def get_categories():
     """reterive all categories from storage
     """
-    categories = storage.all(Category).values()
-    return jsonify([category.to_dict() for category in categories])
+    return jsonify(list(map(lambda category:
+                            category.to_dict(), course_service.get_categories(
+                                request.args.get('page', 1, type=int),
+                                request.args.get('per_page', 3, type=int)
+                            ))))
 
 
 @course_views.route('/categories/<category_id>', methods=['GET'])
@@ -35,7 +39,13 @@ def get_courses_category(category_id):
     if category is None:
         abort(404)
 
-    return jsonify([course.to_dict() for course in category.courses])
+    return jsonify(list(map(lambda category:
+                            category.to_dict(), course_service.get_courses_by_category(
+                                category_id,
+                                request.args.get('page', 1, type=int),
+                                request.args.get('per_page', 3, type=int)
+                            ))))
+    # return jsonify([course.to_dict() for course in category.courses])
 
 
 @course_views.route('/categories/<category_id>', methods=['DELETE'])

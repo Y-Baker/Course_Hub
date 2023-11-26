@@ -59,6 +59,12 @@ class CourseService:
                 .limit(per_page).all()
         return results
 
+    def get_categories(self, page, per_page):
+        """method to paginate categories"""
+        offset = (page - 1) * per_page
 
-
+        results = self.__session.query(Category)\
+            .offset(offset)\
+                .limit(per_page).all()
+        return results
 
