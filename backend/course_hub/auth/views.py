@@ -12,7 +12,8 @@ from flasgger.utils import swag_from
 from bcrypt import checkpw
 from flask_login import login_user, logout_user, login_required, current_user
 from .schemas import SignUpSchema, SignInSchema
-from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt, jwt_required,  verify_jwt_in_request
+from functools import wraps
 
 @auth_views.route('/sign-up', methods=['POST'])
 @swag_from('documentation/auth/sign_up.yml')
@@ -43,12 +44,26 @@ def logout():
     return jsonify({'message': current_user.name + ' has logged out successfully'})
 
 
+@login_required        
+def user_required(allowed_roles):
+    def docerator(func):
+        @wraps(func)
+        def decorated(*args, **kwargs):
+            if current_user.role in allowed_roles:
+                return func(*args, **kwargs)
+            else:
+                return jsonify(msg="you have not premmssion to do this operation"), 403
+        return decorated
+    return docerator
+
+
+
 @auth_views.route('/protected')
-@jwt_required()
-@login_required
+@user_required(allowed_roles={2})
 @swag_from('documentation/auth/protected.yml')
 def protected_route():
-    return jsonify({'message': 'Access granted for user {}'.format(current_user.email)})
+    data=request.get_json()
+    return jsonify({'messageda ': 'Access granted for user {}'.format(data['email'])})
 
 
 @auth_views.route('/login', methods=['POST'])
@@ -95,3 +110,5 @@ def role_data(data):
             new_data[k] = v
 
     return new_data
+
+

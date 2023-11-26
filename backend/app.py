@@ -11,6 +11,7 @@ from models import storage
 from course_hub.user import user_views
 from course_hub.course import course_views
 
+
 #registering bluebrints
 app.register_blueprint(user_views)
 app.register_blueprint(auth_views)
