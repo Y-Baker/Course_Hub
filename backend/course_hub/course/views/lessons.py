@@ -4,12 +4,10 @@
 from course_hub.course import course_views
 from flask import jsonify, abort, request
 from models import storage
-from models.course import Course
 from models.section import Section
 from models.lesson import Lesson
 from flasgger.utils import swag_from
-
-
+from course_hub.course import course_service
 
 
 @course_views.route('/sections/<section_id>/lessons', methods=['GET'])
@@ -19,7 +17,14 @@ def get_lesson_section(section_id):
     if section is None:
         abort(404)
 
-    return jsonify([lesson.to_dict() for lesson in section.lessons])
+    return jsonify(list(map(lambda lesson:
+                            lesson.to_dict(),
+                            course_service.get_lessons_by_section(
+                                section_id,
+                                request.args.get('page', 1, type=int),
+                                request.args.get('per_page', 3, type=int)
+                            ))))
+    # return jsonify([lesson.to_dict() for lesson in section.lessons])
 
 
 @course_views.route('/lessons/<lesson_id>', methods=['GET'])
