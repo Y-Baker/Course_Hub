@@ -8,8 +8,8 @@ from models.course import Course
 from models.instructor import Instructor
 from flasgger.utils import swag_from
 from course_hub.course.views import course_service
-from course_hub.course.schemas import CourseSchema
-from course_hub.course.schemas import CreateCourseSchema, UpdateCourseSchema
+from course_hub.course.schemas.course_schema import CourseSchema
+from course_hub.course.schemas.course_schema import CreateCourseSchema, UpdateCourseSchema
 from marshmallow import ValidationError
 
 
