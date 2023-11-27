@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """new view for State objects that handles all default RESTFul API actions"""
+from threading import currentThread
 from marshmallow import ValidationError
 
 from course_hub.auth import auth_views
@@ -44,11 +45,12 @@ def logout():
     return jsonify({'message': current_user.name + ' has logged out successfully'})
 
 
-@login_required        
 def user_required(allowed_roles):
     def docerator(func):
         @wraps(func)
         def decorated(*args, **kwargs):
+            if not current_user.is_authenticated:
+                abort(401)
             if current_user.role in allowed_roles:
                 return func(*args, **kwargs)
             else:
@@ -59,11 +61,10 @@ def user_required(allowed_roles):
 
 
 @auth_views.route('/protected')
-@user_required(allowed_roles={2})
+@user_required(allowed_roles={2, 1})
 @swag_from('documentation/auth/protected.yml')
 def protected_route():
-    data=request.get_json()
-    return jsonify({'messageda ': 'Access granted for user {}'.format(data['email'])})
+    return jsonify({'messageda ': 'Access granted for user {}'.format(current_user.email)})
 
 
 @auth_views.route('/login', methods=['POST'])
