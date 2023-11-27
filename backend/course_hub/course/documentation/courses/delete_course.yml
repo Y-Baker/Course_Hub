@@ -6,7 +6,7 @@
       - name: course_id
         in: path
         type: string
-        required: false
+        required: true
         description: The unique id of the course
     responses:
       404:
