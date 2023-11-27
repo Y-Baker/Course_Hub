@@ -89,16 +89,20 @@ def create_course(instructor_id):
 def update_user(course_id):
     """update Course to storage
     """
-    cousre = storage.get(Course, course_id)
-    if not cousre:
+    course = storage.get(Course, course_id)
+    if not course:
         abort(404)
     data = request.get_json()
     if not data:
         abort(400, 'Not a JSON')
 
-    for k, v in data.items():
-        if k not in ['id', 'created_at', 'updated_at', 'instractor_id']:
-            setattr(cousre, k, v)
+    new_data = CourseSchema().dump(course)
+    new_data.update(data)
+    try:
+        new_data['instance'] = course
+        UpdateCourseSchema().load(new_data)
+    except ValidationError as err:
+        return jsonify({'validation_error': err.messages}), 422
 
-    cousre.save()
-    return jsonify(cousre.to_dict())
+    course.save()
+    return jsonify(course.to_dict())

@@ -22,7 +22,7 @@ def sign_up():
     try:
         new_user = SignUpSchema().load(data)
     except ValidationError as e:
-        return jsonify({"error": e.messages}), 400
+        return jsonify({"validation_error": e.messages}), 422
     new_user.save()
     new_data = role_data(data)
     new_data['id'] = new_user.id
