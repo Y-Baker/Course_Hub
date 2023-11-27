@@ -9,7 +9,6 @@ from models.course import Course
 from models.instructor import Instructor
 from models.category import Category
 
-from course_hub.course.views import course_service
 
 
 class CourseSchema(Schema):
