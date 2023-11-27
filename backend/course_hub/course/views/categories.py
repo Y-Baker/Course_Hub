@@ -6,7 +6,7 @@ from flask import jsonify, abort, request
 from models import storage
 from models.category import Category
 from flasgger.utils import swag_from
-from course_hub.course import course_service
+from course_hub.course.views import course_service
 
 
 @course_views.route('/categories', methods=['GET'])

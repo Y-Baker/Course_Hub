@@ -7,7 +7,7 @@ from models import storage
 from models.course import Course
 from models.section import Section
 from flasgger.utils import swag_from
-from course_hub.course import course_service
+from course_hub.course.views import course_service
 
 
 @course_views.route('/courses/<course_id>/sections', methods=['GET'])
