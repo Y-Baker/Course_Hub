@@ -8,7 +8,9 @@ from models.course import Course
 from models.instructor import Instructor
 from flasgger.utils import swag_from
 from course_hub.course.views import course_service
-
+from course_hub.course.schemas import CourseSchema
+from course_hub.course.schemas import CreateCourseSchema, UpdateCourseSchema
+from marshmallow import ValidationError
 
 
 @course_views.route('/courses', methods=['GET'])
@@ -71,18 +73,15 @@ def create_course(instructor_id):
     data = request.get_json()
     if not data:
         abort(400, "Not a JSON")
+    if not data.get('instructor_id'):
+        data['instructor_id'] = instructor_id
+    try:
+        new_course = CreateCourseSchema().load(data)
+    except ValidationError as err:
+        return jsonify({'validation_error': err.messages}), 422
 
-    if not data.get('name'):
-        abort(400, "Missing name")
-
-    if not data.get('hours'):
-        abort(400, "Missing hours")
-
-
-    course = Course(**data)
-    course.instructor_id = instructor_id
-    course.save()
-    return jsonify(course.to_dict()), 201
+    new_course.save()
+    return jsonify(new_course.to_dict()), 201
 
 
 @course_views.route('/courses/<course_id>', methods=['PUT'])
