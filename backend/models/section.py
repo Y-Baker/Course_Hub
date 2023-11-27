@@ -11,8 +11,9 @@ class Section(BaseModel, Base):
     """Representation of a Section """
     __tablename__ = 'sections'
     name = Column(String(128), nullable=False)
-    section_num = Column(Integer, nullable=False, autoincrement=True)
-    completed = Column(Boolean, nullable=False, default=False)
+    section_num = Column(Integer, nullable=False,
+                         autoincrement=True, unique=True)
+    # completed = Column(Boolean, nullable=False, default=False)
 
     course_id = Column(String(60),
                        ForeignKey('courses.id'),
