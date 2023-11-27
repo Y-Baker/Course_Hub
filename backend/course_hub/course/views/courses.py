@@ -26,6 +26,7 @@ def get_courses():
 
 
 @course_views.route('/instructors/<instructor_id>/courses', methods=['GET'])
+@swag_from('../documentation/courses/all_courses_instructor.yml', methods=['GET'])
 def get_courses_instructor(instructor_id):
     """list all courses by instructor in storage"""
     instructor = storage.get(Instructor, instructor_id)
@@ -52,6 +53,7 @@ def get_course(course_id):
     return jsonify(course.to_dict())
 
 
+# admin permission or instructor of this course permission
 @course_views.route('/courses/<course_id>', methods=['DELETE'])
 @swag_from('../documentation/courses/delete_course.yml', methods=['DELETE'])
 def delete_course(course_id):
@@ -65,6 +67,7 @@ def delete_course(course_id):
     return jsonify({}), 200
 
 
+# admin permission or instructor permission
 @course_views.route('/instructors/<instructor_id>/courses', methods=['POST'])
 @swag_from('../documentation/courses/post_course.yml', methods=['POST'])
 def create_course(instructor_id):
@@ -84,6 +87,7 @@ def create_course(instructor_id):
     return jsonify(new_course.to_dict()), 201
 
 
+# admin permission or instructor of this course permission
 @course_views.route('/courses/<course_id>', methods=['PUT'])
 @swag_from('../documentation/courses/put_course.yml', methods=['PUT'])
 def update_user(course_id):
