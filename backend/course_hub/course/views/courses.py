@@ -79,7 +79,7 @@ def create_course(instructor_id):
     if not data.get('instructor_id'):
         data['instructor_id'] = instructor_id
     try:
-        new_course = CreateCourseSchema().load(data)
+        new_course = CreateCourseSchema(context={'data': data}).load(data)
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
 
@@ -103,8 +103,9 @@ def update_user(course_id):
     new_data = CourseSchema().dump(course)
     new_data.update(data)
     try:
-        new_data['instance'] = course
-        UpdateCourseSchema().load(new_data)
+        UpdateCourseSchema(context={
+            'data': new_data, 'instance': course
+        }).load(new_data)
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
 

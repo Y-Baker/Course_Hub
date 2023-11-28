@@ -71,7 +71,7 @@ def create_section(course_id):
         data['course_id'] = course_id
 
     try:
-        new_section = CreateSectionSchema().load(data)
+        new_section = CreateSectionSchema(context={'data': data}).load(data)
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
 
@@ -96,8 +96,9 @@ def update_section(section_id):
     new_data.update(data)
 
     try:
-        new_data['instance'] = section
-        UpdateSectionSchema().load(new_data)
+        UpdateSectionSchema(context={
+            'data': new_data, 'instance': section
+        }).load(new_data)
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
 

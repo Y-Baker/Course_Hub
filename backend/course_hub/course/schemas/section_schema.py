@@ -26,6 +26,23 @@ class SectionSchema(Schema):
         if not storage.get(Course, value):
             raise ValidationError("Course doesn't exist")
 
+    @validates('section_num')
+    def validate_section_num(self, value):
+        course_id = self.context.get('data', {}).get('course_id')
+        course = storage.get(Course, course_id)
+        section = self.context.get('instance', None)
+        if course:
+            list_sections = course.sections
+            if section:
+                list_sections = [one for one in list_sections
+                                if one.id != section.id]
+
+            section_nums = [section.section_num for section in course.sections]
+
+            if value in section_nums:
+                raise ValidationError("section_num already exists")
+
+
 class CreateSectionSchema(SectionSchema):
     @post_load
     def make_Section(self, data, **kwargs):
@@ -35,9 +52,9 @@ class CreateSectionSchema(SectionSchema):
 class UpdateSectionSchema(SectionSchema):
     @post_load
     def update_Section(self, data, **kwargs):
-        section = data.get('instance')
+        section = self.context.get('instance', None)
         if section:
             for key, value in data.items():
-                if key not in ['id', 'created_at', 'updated_at', 'instance', 'course_id']:
+                if key not in ['id', 'created_at', 'updated_at', 'course_id']:
                     setattr(section, key, value)
         return section
