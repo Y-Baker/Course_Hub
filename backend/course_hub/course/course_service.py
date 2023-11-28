@@ -88,3 +88,11 @@ class CourseService:
             .offset(offset)\
                 .limit(per_page).all()
         return results
+
+    def check_same_class(self, section_1, section_2):
+        """check if sections same class"""
+        from models import storage
+        section_1 = storage.get(Section, section_1)
+        section_2 = storage.get(Section, section_2)
+
+        return (section_1.course_id == section_2.course_id)
