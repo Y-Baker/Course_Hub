@@ -12,7 +12,6 @@ from models.instructor import Instructor
 from models.admin import Admin
 from flasgger.utils import swag_from
 from bcrypt import checkpw
-from flask_login import login_user, logout_user, login_required, current_user as loggedIn_user
 from .schemas import SignUpSchema, SignInSchema
 from flask_jwt_extended import (
     create_access_token,
@@ -40,19 +39,9 @@ def sign_up():
     role = roles[new_user.role](**new_data)
     role.save()
 
-    return jsonify({'message': f'user Created Successfully with id {new_user.id}'})
-
-
-# @login_required
-# @swag_from('documentation/auth/logout.yml')
-# @swag_from(os.path.join(current_directory, 'documentation/auth/logout.yml'))
-# @auth_views.route('/logout')
-# def logout():
-#     """ logout function"""
-#     if not current_user.is_authenticated:
-#         abort(401)
-#     logout_user()
-#     return jsonify({'message': current_user.name + ' has logged out successfully'})
+    return jsonify({
+        'message': 'success',
+        'data': f'{new_user.id}'}), 201
 
 
 @auth_views.get("/refresh")
@@ -65,26 +54,21 @@ def refresh_access():
 
 
 @auth_views.get('/logout')
-@login_required
-# @swag_from('documentation/auth/logout.yml')
 @swag_from(os.path.join(current_directory, 'documentation/auth/logout.yml'))
-
 @jwt_required(verify_type=False) 
 def logout_user():
     jwt = get_jwt()
-
     jti = jwt.get('jti')
     token_type = jwt.get('type')
 
     token_b = TokenBlocklist(jti=jti)
     token_b.save()
-    logout_user()
-    return jsonify({"message": f"{token_type} token revoked successfully"}) , 200
+    return jsonify({
+        'message': 'success',
+        "data": f"{token_type} token revoked successfully"}) , 200
 
 @auth_views.route('/protected')
 @jwt_required()
-@login_required
-# @swag_from('documentation/auth/protected.yml')
 @swag_from(os.path.join(current_directory, 'documentation/auth/protected.yml'))
 
 def protected_route():
@@ -92,7 +76,6 @@ def protected_route():
 
 
 @auth_views.route('/login', methods=['POST'])
-# @swag_from('documentation/auth/login.yml')
 @swag_from(os.path.join(current_directory, 'documentation/auth/login.yml'))
 
 def login():
@@ -105,19 +88,27 @@ def login():
         userBytes = password.encode('utf-8')
         hashed_password_bytes = user.password.encode('utf-8')
         if checkpw(userBytes, hashed_password_bytes):
-            additional_claims = {"role": user.role, "email": user.email}
+            additional_claims = {"role": user.role, "email": user.email, 'name': user.name}
             access_token = create_access_token(identity=user.id, additional_claims=additional_claims)
             refresh_token = create_refresh_token(identity=user.id, additional_claims=additional_claims)
-            login_user(user, remember=remember)
             return jsonify({
-                'message': 'user logged in successfully',
-                'tokens' : {
+                'message': 'success',
+                'data': {
+                    'name': user.name,
                     "access_token" : access_token, 
                     "refresh_token" : refresh_token
                 }
             }), 200
+        else:
+            return jsonify({
+            'message': 'fail',
+            'data': None,
+            'error': 'incorrect email or password'}),400
     else:
-        return jsonify({'message': 'incorrect email or password'})
+        return jsonify({
+            'message': 'fail',
+            'data': None,
+            'error': 'incorrect email or password'}),400
     
 @auth_views.get("/whoami")
 @jwt_required()

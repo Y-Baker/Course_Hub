@@ -28,6 +28,9 @@
           password:
             type: string
             example: password123
+          confirmPassword:
+            type: string
+            example: password123
           role:
             type: integer
             example: 1

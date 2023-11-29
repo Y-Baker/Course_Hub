@@ -2,22 +2,28 @@ logs in a user---
 tags:
   - Auth
 parameters:
-      - name: email_and_password_and_remember
+      - name: SignInSchema
         in: body
         required: true
-        requires:
-          - email:
-          - password:
-          - remember:
-        properties:
-          email:
-            type: string
-          password:
-            type: string
-          remember:
-            type: boolean
+        schema:
+          $ref: '#/definitions/SignInSchema'
 responses:
   400:
     description: Missing email/password or not a JSON
   200:
     description: successfully loggedd in
+
+definitions:
+  SignInSchema:
+    type: object
+    properties:
+      email:
+        type: string
+        format: email
+        example: user@example.com
+      password:
+        type: string
+        example: password123
+      remember:
+        type: boolean
+        example: false

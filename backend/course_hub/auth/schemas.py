@@ -1,4 +1,4 @@
-from marshmallow import INCLUDE, Schema, fields, validates, ValidationError, post_load
+from marshmallow import INCLUDE, Schema, fields, validates, ValidationError, post_load, validates_schema
 
 from models import storage
 from models.user import User
@@ -10,6 +10,7 @@ class SignUpSchema(Schema):
     email = fields.Email(required=True)
     name = fields.String(required=True)
     password = fields.String(required=True)
+    confirmPassword = fields.String(required=True)
     role = fields.Integer(required=True)
     age = fields.Integer()
 
@@ -41,7 +42,11 @@ class SignUpSchema(Schema):
     def validate_age(self, value):
         if value and value < 9:
             raise ValidationError("Age cannot be less than 9")
-
+        
+    @validates_schema
+    def validate_confirm_password(self, data, **kwargs):
+        if data.get('confirmPassword') != data.get('password'):
+            raise ValidationError('Passwords do not match.')
 
 class SignInSchema(Schema):
     # class Meta:
