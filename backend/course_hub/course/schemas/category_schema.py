@@ -30,9 +30,9 @@ class CreateCategorySchema(CategorySchema):
 class UpdateCategorySchema(CategorySchema):
     @post_load
     def update_category(self, data, **kwargs):
-        category = data.get('instance')
+        category = self.context.get('instance', None)
         if category:
             for key, value in data.items():
-                if key not in ['id', 'created_at', 'updated_at', 'instance']:
+                if key not in ['id', 'created_at', 'updated_at']:
                     setattr(category, key, value)
         return category

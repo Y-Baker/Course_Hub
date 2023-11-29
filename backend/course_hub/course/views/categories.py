@@ -105,8 +105,9 @@ def update_category(category_id):
     new_data.update(data)
 
     try:
-        new_data['instance'] = category
-        UpdateCategorySchema().load(new_data)
+        UpdateCategorySchema(context={
+            'data': new_data, 'instance': category
+        }).load(new_data)
     except ValidationError as err:
         return jsonify({'validation error': err.messages}), 422
 
