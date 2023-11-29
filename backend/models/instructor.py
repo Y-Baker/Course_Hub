@@ -20,3 +20,15 @@ class Instructor(BaseRole, Base):
     def __init__(self, *args, **kwargs):
         """initializes user"""
         super().__init__(*args, **kwargs)
+
+    def to_dict(self):
+        """return dict representation of instructor"""
+        from models import storage
+        new_dict = super().to_dict()
+        user_dict = self.user.to_dict()
+        new_dict.update(user_dict)
+        new_dict['courses'] = [course.to_dict() for course in self.courses]
+        # new_dict['user_name'] = self.user.name
+        # new_dict['email'] = self.user.email
+
+        return new_dict
