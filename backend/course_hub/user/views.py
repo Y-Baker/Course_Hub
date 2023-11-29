@@ -8,8 +8,6 @@ from course_hub.user.user_service import UserService
 from models import storage
 from models.user import User
 from flasgger.utils import swag_from
-from bcrypt import checkpw
-from flask_login import login_user, logout_user, login_required, current_user
 
 user_service = UserService()
 @user_views.route('/users', methods=['GET'])

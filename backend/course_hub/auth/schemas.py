@@ -49,8 +49,7 @@ class SignUpSchema(Schema):
             raise ValidationError('Passwords do not match.')
 
 class SignInSchema(Schema):
-    # class Meta:
-    #     unknown = INCLUDE
+    class Meta:
+        unknown = INCLUDE
     email = fields.Email(required=True)
     password = fields.String(required=True)
-    remember = fields.Boolean(load_default=False)

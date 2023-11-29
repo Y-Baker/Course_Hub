@@ -44,13 +44,13 @@ def user_lookup_callback(_jwt_headers, jwt_data):
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_data):
-    return jsonify({"message": "Token has expired", "error": "token_expired"}), 401
+    return jsonify({"message": "Token has expired", "error": "expired"}), 464
 
 @jwt.invalid_token_loader
 def invalid_token_callback(error):
     return (
         jsonify(
-            {"message": "Signature verification failed", "error": "invalid_token"}
+            {"message": "Signature verification failed", "error": "invalid"}
         ),
         401,
     )
@@ -75,6 +75,10 @@ def token_in_blocklist_callback(jwt_header,jwt_data):
 
     return token is not None
 
+@app.after_request 
+def after_request_callback( response ):
+    storage.close()
+    return response
 
 # @login_manager.user_loader
 # def load_user(id):

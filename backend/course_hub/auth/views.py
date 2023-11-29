@@ -21,24 +21,12 @@ from flask_jwt_extended import (
     jwt_required,
     current_user,
 )
-
-from functools import wraps
+from utils.auth_utils import user_required
 
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 
-def user_required(allowed_roles):
-    def docerator(func):
-        @wraps(func)
-        def decorated(*args, **kwargs):
-            if not current_user:
-                abort(401)
-            if current_user.role in allowed_roles:
-                return func(*args, **kwargs)
-            else:
-                return jsonify(message="you have not premmssion to do this operation"), 403
-        return decorated
-    return docerator
+
 
 
 @auth_views.route('/sign-up', methods=['POST'])
