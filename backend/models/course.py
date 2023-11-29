@@ -54,8 +54,8 @@ class Course(BaseModel, Base):
         new_dict = super().to_dict()
         instructor = storage.get(Instructor, self.instructor_id)
         if instructor:
-            new_dict['instructor_name'] = instructor.name
-            # new_dict['total_students'] = instructor.total_students
+            new_dict['instructor_name'] = instructor.user.name
+        # new_dict['total_students'] = instructor.total_students
         new_dict['sections'] = [section.to_dict() for section in self.sections]
         # new_dict['students'] = [student.to_dict() for student in self.students]
         return new_dict
