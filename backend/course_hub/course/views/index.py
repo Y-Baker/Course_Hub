@@ -4,7 +4,6 @@
 from course_hub.course import course_views
 from flask import jsonify
 from models import storage
-from models.course import enrollments
 
 
 @course_views.route('/stats')
@@ -19,7 +18,6 @@ def stats():
         'students': storage.count('Student'),
         'instructors': storage.count('Instructor'),
         'admins': storage.count('Admin'),
-        # 'enrollments': storage.__session.query(enrollments).count()
+        'enrollments': len(storage.get_enrollments())
     }
-
     return jsonify(objects)

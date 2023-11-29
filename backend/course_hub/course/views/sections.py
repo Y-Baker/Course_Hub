@@ -7,8 +7,7 @@ from models import storage
 from models.course import Course
 from models.section import Section
 from flasgger.utils import swag_from
-
-
+from course_hub.course.views import course_service
 
 
 @course_views.route('/courses/<course_id>/sections', methods=['GET'])
@@ -18,7 +17,14 @@ def get_section_course(course_id):
     if course is None:
         abort(404)
 
-    return jsonify([section.to_dict() for section in course.sections])
+    return jsonify(list(map(lambda section:
+                            section.to_dict(),
+                            course_service.get_sections_by_course(
+                                course_id,
+                                request.args.get('page', 1, type=int),
+                                request.args.get('per_page', 3, type=int)
+                            ))))
+    # return jsonify([section.to_dict() for section in course.sections])
 
 
 @course_views.route('/sections/<section_id>', methods=['GET'])
@@ -81,4 +87,3 @@ def update_section(section_id):
 
     section.save()
     return jsonify(section.to_dict())
-

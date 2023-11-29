@@ -7,7 +7,10 @@ from models import storage
 from models.course import Course
 from models.instructor import Instructor
 from flasgger.utils import swag_from
-
+from course_hub.course.views import course_service
+from course_hub.course.schemas.course_schema import CourseSchema
+from course_hub.course.schemas.course_schema import CreateCourseSchema, UpdateCourseSchema
+from marshmallow import ValidationError
 
 
 @course_views.route('/courses', methods=['GET'])
@@ -15,18 +18,28 @@ from flasgger.utils import swag_from
 def get_courses():
     """reterive all courses from storage
     """
-    courses = storage.all(Course).values()
-    return jsonify([course.to_dict() for course in courses])
+    return jsonify(list(map(lambda course:
+                            course.to_dict(), course_service.get_courses(
+                                request.args.get("page", 1, type=int),
+                                request.args.get("per_page", 3, type=int)
+                            ))))
 
 
 @course_views.route('/instructors/<instructor_id>/courses', methods=['GET'])
+@swag_from('../documentation/courses/all_courses_instructor.yml', methods=['GET'])
 def get_courses_instructor(instructor_id):
     """list all courses by instructor in storage"""
     instructor = storage.get(Instructor, instructor_id)
     if instructor is None:
         abort(404)
 
-    return jsonify([course.to_dict() for course in instructor.courses])
+    return jsonify(list(map(lambda course:
+                            course.to_dict(), course_service.get_courses_by_instructor(
+                                instructor_id,
+                                request.args.get("page", 1, type=int),
+                                request.args.get("per_page", 3, type=int)
+                                ))))
+    # return jsonify([course.to_dict() for course in instructor.courses])
 
 
 @course_views.route('/courses/<course_id>', methods=['GET'])
@@ -40,6 +53,7 @@ def get_course(course_id):
     return jsonify(course.to_dict())
 
 
+# admin permission or instructor of this course permission
 @course_views.route('/courses/<course_id>', methods=['DELETE'])
 @swag_from('../documentation/courses/delete_course.yml', methods=['DELETE'])
 def delete_course(course_id):
@@ -53,6 +67,7 @@ def delete_course(course_id):
     return jsonify({}), 200
 
 
+# admin permission or instructor permission
 @course_views.route('/instructors/<instructor_id>/courses', methods=['POST'])
 @swag_from('../documentation/courses/post_course.yml', methods=['POST'])
 def create_course(instructor_id):
@@ -61,35 +76,37 @@ def create_course(instructor_id):
     data = request.get_json()
     if not data:
         abort(400, "Not a JSON")
+    if not data.get('instructor_id'):
+        data['instructor_id'] = instructor_id
+    try:
+        new_course = CreateCourseSchema().load(data)
+    except ValidationError as err:
+        return jsonify({'validation_error': err.messages}), 422
 
-    if not data.get('name'):
-        abort(400, "Missing name")
-
-    if not data.get('hours'):
-        abort(400, "Missing hours")
-
-
-    course = Course(**data)
-    course.instructor_id = instructor_id
-    course.save()
-    return jsonify(course.to_dict()), 201
+    new_course.save()
+    return jsonify(new_course.to_dict()), 201
 
 
+# admin permission or instructor of this course permission
 @course_views.route('/courses/<course_id>', methods=['PUT'])
 @swag_from('../documentation/courses/put_course.yml', methods=['PUT'])
 def update_user(course_id):
     """update Course to storage
     """
-    cousre = storage.get(Course, course_id)
-    if not cousre:
+    course = storage.get(Course, course_id)
+    if not course:
         abort(404)
     data = request.get_json()
     if not data:
         abort(400, 'Not a JSON')
 
-    for k, v in data.items():
-        if k not in ['id', 'created_at', 'updated_at', 'instractor_id']:
-            setattr(cousre, k, v)
+    new_data = CourseSchema().dump(course)
+    new_data.update(data)
+    try:
+        new_data['instance'] = course
+        UpdateCourseSchema().load(new_data)
+    except ValidationError as err:
+        return jsonify({'validation_error': err.messages}), 422
 
-    cousre.save()
-    return jsonify(cousre.to_dict())
+    course.save()
+    return jsonify(course.to_dict())
