@@ -40,8 +40,7 @@ export default function Login(props) {
   let formik = useFormik({
     initialValues : {
       email: '',
-      password: '',
-      remember: false
+      password: ''
     },
     validationSchema:validShceme,
     onSubmit: handleLogin
@@ -82,7 +81,7 @@ export default function Login(props) {
         />
         {formik.errors.password && formik.touched.password ? <div className="alert alert-danger">{formik.errors.password}</div> : null}
 
-        <div className='rem-checkbox'>
+        {/* <div className='rem-checkbox'>
             <label id='remember-label' htmlFor='remember'>
             Remember Me
             </label>
@@ -94,7 +93,7 @@ export default function Login(props) {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
-          </div>
+          </div> */}
 
         {isLoading ?  
         <button type='button' className='register-button'><i className='fas fa-spinner fa-spin'></i></button> :
