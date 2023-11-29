@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """new view for State objects that handles all default RESTFul API actions"""
+from threading import currentThread
 from marshmallow import ValidationError
 
 import os
@@ -16,13 +17,29 @@ from .schemas import SignUpSchema, SignInSchema
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
-    jwt_required,
     get_jwt,
+    jwt_required,
     current_user,
-    get_jwt_identity,
 )
 
+from functools import wraps
+
+
 current_directory = os.path.dirname(os.path.realpath(__file__))
+
+def user_required(allowed_roles):
+    def docerator(func):
+        @wraps(func)
+        def decorated(*args, **kwargs):
+            if not current_user:
+                abort(401)
+            if current_user.role in allowed_roles:
+                return func(*args, **kwargs)
+            else:
+                return jsonify(message="you have not premmssion to do this operation"), 403
+        return decorated
+    return docerator
+
 
 @auth_views.route('/sign-up', methods=['POST'])
 @swag_from(os.path.join(current_directory, 'documentation/auth/sign_up.yml'))
@@ -38,7 +55,6 @@ def sign_up():
     new_data['id'] = new_user.id
     role = roles[new_user.role](**new_data)
     role.save()
-
     return jsonify({
         'message': 'success',
         'data': f'{new_user.id}'}), 201
@@ -47,10 +63,15 @@ def sign_up():
 @auth_views.get("/refresh")
 @jwt_required(refresh=True)
 def refresh_access():
-    additional_claims = {"role": current_user.role, "email": current_user.email}
+    additional_claims = {"role": current_user.role, "email": current_user.email, "name": current_user.name}
     new_access_token = create_access_token(identity=current_user.id, additional_claims=additional_claims)
 
-    return jsonify({"access_token": new_access_token})
+    return jsonify({
+        "messsage": "success",
+        "data":{
+            "access_token": new_access_token
+            }
+        }), 200
 
 
 @auth_views.get('/logout')
@@ -70,19 +91,18 @@ def logout_user():
 @auth_views.route('/protected')
 @jwt_required()
 @swag_from(os.path.join(current_directory, 'documentation/auth/protected.yml'))
-
+@user_required(allowed_roles={2, 1})
+@swag_from('documentation/auth/protected.yml')
 def protected_route():
-    return jsonify({'message': 'Access granted for user {}'.format(current_user.email)})
+    return jsonify({'message ': 'Access granted for user {}'.format(current_user.email)})
 
 
 @auth_views.route('/login', methods=['POST'])
 @swag_from(os.path.join(current_directory, 'documentation/auth/login.yml'))
-
 def login():
     data = SignInSchema().load(data=request.get_json())
     email = data.get('email')
     password = data.get('password')
-    remember = data.get('remember')
     user = storage.getUserByEmail(email)
     if user:
         userBytes = password.encode('utf-8')
@@ -115,24 +135,13 @@ def login():
 def whoami():
     return jsonify(
         {
-            "message": "message",
+            "message": "success",
             "user_details": {
                 "name": current_user.name,
                 "email": current_user.email,
             },
         }
     )
-
-
-def notValidInput(email, name, password, age):
-    if storage.getUserByEmail(email):
-        return "email already exists"
-    if name and len(name) < 2:
-        return "name cannot be less than 2 characters"
-    if len(password) < 6:
-        return "password cannot be less than 6 characters"
-    if age and age < 9:
-        return "age cannot be less than 9"
 
 
 def role_data(data):
