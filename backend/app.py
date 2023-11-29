@@ -44,13 +44,13 @@ def user_lookup_callback(_jwt_headers, jwt_data):
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_data):
-    return jsonify({"message": "Token has expired", "error": "token_expired"}), 401
+    return jsonify({"message": "Token has expired", "error": "expired"}), 464
 
 @jwt.invalid_token_loader
 def invalid_token_callback(error):
     return (
         jsonify(
-            {"message": "Signature verification failed", "error": "invalid_token"}
+            {"message": "Signature verification failed", "error": "invalid"}
         ),
         401,
     )
