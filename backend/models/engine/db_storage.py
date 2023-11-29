@@ -4,6 +4,7 @@ Contains the class DBStorage
 """
 
 import models
+from models.TokenBlocklist import TokenBlocklist
 from models.user import User
 from models.course import Course
 from models.section import Section
@@ -95,7 +96,7 @@ class DBStorage:
     def getUserById(self, id):
         """A method to retrieve one object by its id"""
         if id is not None:
-            return self.__session.query(User).filter(User.id == str(id)).first()
+            return self.__session.query(User).filter(User.id == str(id)).scalar()
         else:
             return None
 
@@ -103,3 +104,10 @@ class DBStorage:
         """A method to count the number of objects in storage"""
         objects = self.all(cls)
         return len(objects)
+    
+    def getTokenByJti(self, jti):
+        """method to get token by jti"""
+        if jti is not None:
+            return self.__session.query(TokenBlocklist).filter(TokenBlocklist.jti == str(jti)).scalar()
+        else:
+            return None
