@@ -35,5 +35,5 @@ SQLAlchemy==2.0.23
 typing-extensions==4.8.0
 werkzeug==3.0.1
 zipp==3.17.0
-
+Flask-Login==0.6.3
 marshmallow~=3.20.1
