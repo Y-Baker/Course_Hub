@@ -75,6 +75,10 @@ def token_in_blocklist_callback(jwt_header,jwt_data):
 
     return token is not None
 
+@app.after_request 
+def after_request_callback( response ):
+    storage.close()
+    return response
 
 # @login_manager.user_loader
 # def load_user(id):
