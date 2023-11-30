@@ -21,7 +21,16 @@ export default function Login(props) {
         localStorage.setItem("refresh_token", response.data.data.refresh_token);
         props.saveUserData();
         setisLoading(false);
-        nav('/')
+        console.log(response.data )
+        if (response.data.data.role === 1) {
+          nav('/Instructor')
+        } else if (response.data.data.role === 0) {
+          nav('/admin')
+        }
+        else {
+          nav('/')
+        }
+        
       } else {
         setisLoading(false);
       }
