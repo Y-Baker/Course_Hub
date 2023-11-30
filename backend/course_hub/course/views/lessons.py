@@ -8,9 +8,14 @@ from models.section import Section
 from models.lesson import Lesson
 from flasgger.utils import swag_from
 from course_hub.course.views import course_service
+from marshmallow import ValidationError
+from course_hub.course.schemas.lesson_schema import LessonSchema
+from course_hub.course.schemas.lesson_schema import CreateLessonSchema
+from course_hub.course.schemas.lesson_schema import UpdateLessonSchema
 
 
 @course_views.route('/sections/<section_id>/lessons', methods=['GET'])
+@swag_from('../documentation/lessons/all_lessons_section.yml', methods=['GET'])
 def get_lesson_section(section_id):
     """list all lessons by section in storage"""
     section = storage.get(Section, section_id)
@@ -28,7 +33,7 @@ def get_lesson_section(section_id):
 
 
 @course_views.route('/lessons/<lesson_id>', methods=['GET'])
-# @swag_from('documentation/user/get_user.yml', methods=['GET'])
+@swag_from('../documentation/lessons/get_lesson.yml', methods=['GET'])
 def get_lesson(lesson_id):
     """reterive lesson by id
     """
@@ -38,8 +43,9 @@ def get_lesson(lesson_id):
     return jsonify(lesson.to_dict())
 
 
+# admin permission or instructor of this course permission
 @course_views.route('/lessons/<lesson_id>', methods=['DELETE'])
-# @swag_from('documentation/user/delete_user.yml', methods=['DELETE'])
+@swag_from('../documentation/lessons/delete_lesson.yml', methods=['DELETE'])
 def delete_lesson(lesson_id):
     """delete lesson by id
     """
@@ -51,8 +57,9 @@ def delete_lesson(lesson_id):
     return jsonify({}), 200
 
 
+# admin permission or instructor of this course permission
 @course_views.route('/sections/<section_id>/lessons', methods=['POST'])
-# @swag_from('documentation/user/post_user.yml', methods=['POST'])
+@swag_from('../documentation/lessons/post_lesson.yml', methods=['POST'])
 def create_lesson(section_id):
     """post lesson to storage
     """
@@ -60,17 +67,21 @@ def create_lesson(section_id):
     if not data:
         abort(400, "Not a JSON")
 
-    if not data.get('name'):
-        abort(400, "Missing name")
+    if not data.get('section_id'):
+        data['section_id'] = section_id
 
-    lesson = Lesson(**data)
-    lesson.section_id = section_id
-    lesson.save()
-    return jsonify(lesson.to_dict()), 201
+    try:
+        new_lesson = CreateLessonSchema(context={'data': data}).load(data)
+    except ValidationError as err:
+        return jsonify({'validation error': err.messages}), 422
+
+    new_lesson.save()
+    return jsonify(new_lesson.to_dict()), 201
 
 
+# admin permission or instructor of this course permission
 @course_views.route('/lesson/<lesson_id>', methods=['PUT'])
-# @swag_from('documentation/user/put_user.yml', methods=['PUT'])
+@swag_from('../documentation/lessons/put_lesson.yml', methods=['PUT'])
 def update_lesson(lesson_id):
     """update lesson to storage
     """
@@ -81,9 +92,15 @@ def update_lesson(lesson_id):
     if not data:
         abort(400, 'Not a JSON')
 
-    for k, v in data.items():
-        if k not in ['id', 'created_at', 'updated_at']:
-            setattr(lesson, k, v)
+    new_data = LessonSchema().dump(lesson)
+    new_data.update(data)
+
+    try:
+        lesson = UpdateLessonSchema(context={
+            'data': new_data, 'instance': lesson
+            }).load(new_data)
+    except ValidationError as err:
+        return jsonify({'validation error': err.messages}), 422
 
     lesson.save()
     return jsonify(lesson.to_dict())

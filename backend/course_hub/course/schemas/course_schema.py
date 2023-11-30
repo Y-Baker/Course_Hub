@@ -39,6 +39,13 @@ class CourseSchema(Schema):
         if not storage.get(Instructor, value):
             raise ValidationError("Instructor doesn't exist")
 
+    @validates('num_sections')
+    def validate_num_sections(self, value):
+        course = self.context.get('instance', None)
+        if course:
+            if value < len(course.sections):
+                raise ValidationError("num_sections cannot be less\
+                                      than the number of sections exists")
 
 class LessonSchema(Schema):
     name = fields.Str(required=True)
@@ -86,9 +93,9 @@ class CreateCourseSchema(Schema):
 class UpdateCourseSchema(CourseSchema):
     @post_load
     def update_course(self, data, **kwargs):
-        course = data.get('instance')
+        course = self.context.get('instance', None)
         if course:
             for key, value in data.items():
-                if key not in ['id', 'created_at', 'updated_at', 'instractor_id', 'instance']:
+                if key not in ['id', 'created_at', 'updated_at', 'instractor_id']:
                     setattr(course, key, value)
         return course

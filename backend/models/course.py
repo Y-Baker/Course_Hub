@@ -9,6 +9,9 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import CheckConstraint as Check
 from sqlalchemy.orm import relationship
 
+from models.instructor import Instructor
+
+
 # association table between Courses and Students
 enrollments = Table('enrollments', Base.metadata,
                     Column('student_id', String(60),
@@ -44,3 +47,15 @@ class Course(BaseModel, Base):
     students = relationship('Student',
                             secondary='enrollments', viewonly=False,
                             backref='courses')
+
+    def to_dict(self):
+        """returns dict representation of course"""
+        from models import storage
+        new_dict = super().to_dict()
+        instructor = storage.get(Instructor, self.instructor_id)
+        if instructor:
+            new_dict['instructor_name'] = instructor.user.name
+        # new_dict['total_students'] = instructor.total_students
+        new_dict['sections'] = [section.to_dict() for section in self.sections]
+        # new_dict['students'] = [student.to_dict() for student in self.students]
+        return new_dict

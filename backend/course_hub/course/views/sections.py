@@ -8,9 +8,14 @@ from models.course import Course
 from models.section import Section
 from flasgger.utils import swag_from
 from course_hub.course.views import course_service
+from marshmallow import ValidationError
+from course_hub.course.schemas.section_schema import SectionSchema
+from course_hub.course.schemas.section_schema import CreateSectionSchema
+from course_hub.course.schemas.section_schema import UpdateSectionSchema
 
 
 @course_views.route('/courses/<course_id>/sections', methods=['GET'])
+@swag_from('../documentation/sections/all_sections_course.yml', methods=['GET'])
 def get_section_course(course_id):
     """list all section by course in storage"""
     course = storage.get(Course, course_id)
@@ -28,7 +33,7 @@ def get_section_course(course_id):
 
 
 @course_views.route('/sections/<section_id>', methods=['GET'])
-# @swag_from('documentation/user/get_user.yml', methods=['GET'])
+@swag_from('../documentation/sections/get_section.yml', methods=['GET'])
 def get_section(section_id):
     """reterive section by id
     """
@@ -38,8 +43,9 @@ def get_section(section_id):
     return jsonify(section.to_dict())
 
 
+# admin permission or instructor of this course permission
 @course_views.route('/sections/<section_id>', methods=['DELETE'])
-# @swag_from('documentation/user/delete_user.yml', methods=['DELETE'])
+@swag_from('../documentation/sections/delete_section.yml', methods=['DELETE'])
 def delete_section(section_id):
     """delete Course by id
     """
@@ -51,8 +57,9 @@ def delete_section(section_id):
     return jsonify({}), 200
 
 
+# admin permission or instructor of this course permission
 @course_views.route('/courses/<course_id>/sections', methods=['POST'])
-# @swag_from('documentation/user/post_user.yml', methods=['POST'])
+@swag_from('../documentation/sections/post_section.yml', methods=['POST'])
 def create_section(course_id):
     """post section to storage
     """
@@ -60,17 +67,21 @@ def create_section(course_id):
     if not data:
         abort(400, "Not a JSON")
 
-    if not data.get('name'):
-        abort(400, "Missing name")
+    if not data.get('course_id'):
+        data['course_id'] = course_id
 
-    section = Section(**data)
-    section.course_id = course_id
-    section.save()
-    return jsonify(section.to_dict()), 201
+    try:
+        new_section = CreateSectionSchema(context={'data': data}).load(data)
+    except ValidationError as err:
+        return jsonify({'validation_error': err.messages}), 422
+
+    new_section.save()
+    return jsonify(new_section.to_dict()), 201
 
 
+# admin permission or instructor of this course permission
 @course_views.route('/sections/<section_id>', methods=['PUT'])
-# @swag_from('documentation/user/put_user.yml', methods=['PUT'])
+@swag_from('../documentation/sections/put_section.yml', methods=['PUT'])
 def update_section(section_id):
     """update section to storage
     """
@@ -81,9 +92,15 @@ def update_section(section_id):
     if not data:
         abort(400, 'Not a JSON')
 
-    for k, v in data.items():
-        if k not in ['id', 'created_at', 'updated_at', 'course_id']:
-            setattr(section, k, v)
+    new_data = SectionSchema().dump(section)
+    new_data.update(data)
+
+    try:
+        UpdateSectionSchema(context={
+            'data': new_data, 'instance': section
+        }).load(new_data)
+    except ValidationError as err:
+        return jsonify({'validation_error': err.messages}), 422
 
     section.save()
     return jsonify(section.to_dict())
