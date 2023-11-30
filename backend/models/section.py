@@ -18,7 +18,7 @@ class Section(BaseModel, Base):
                        ForeignKey('courses.id'),
                        nullable=False)
 
-    lessons = relationship("Lesson", backref="section")
+    lessons = relationship("Lesson", backref="section", cascade='all, delete-orphan')
 
     def check_complete(self):
         """Update complete state"""

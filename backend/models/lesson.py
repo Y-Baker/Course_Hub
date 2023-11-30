@@ -2,7 +2,7 @@
 """ holds class Lesson"""
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Integer, Boolean
+from sqlalchemy import Column, String, Integer, Boolean, Text
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
@@ -13,7 +13,7 @@ class Lesson(BaseModel, Base):
     name = Column(String(128), nullable=False)
     lesson_num = Column(Integer, nullable=False, autoincrement=True)
     completed = Column(Boolean, nullable=False, default=False)
-
+    content = Column(Text, nullable=False)
     section_id = Column(String(60),
                         ForeignKey('sections.id'),
                         nullable=False)
