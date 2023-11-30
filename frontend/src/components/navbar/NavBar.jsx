@@ -86,14 +86,14 @@ export default function NavBar(props) {
                 Courses
               </Link>
             </li>
-            {userData.role === 1 ? 
+            {userData && userData.role === 1 ? 
             <>            
             <li className="nav-item">
             <Link className="nav-link" to="/Instructor">
               Instructor
             </Link>
           </li></>: null}
-          {userData.role === 0 ? 
+          {userData && userData.role === 0 ? 
             <>            
             <li className="nav-item">
             <Link className="nav-link" to="/Admin">
