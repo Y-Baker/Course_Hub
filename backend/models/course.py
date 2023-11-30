@@ -36,7 +36,7 @@ class Course(BaseModel, Base):
     num_sections = Column(Integer, nullable=False, default=0)
     num_enrolled = Column(Integer, nullable=False, default=0)
 
-    sections = relationship("Section", backref="course")
+    sections = relationship("Section", backref="course", cascade='all, delete-orphan')
 
     category_id = Column(String(60),
                          ForeignKey('categories.id'),

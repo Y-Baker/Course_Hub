@@ -8,6 +8,8 @@ from models import storage
 from models.course import Course
 from models.instructor import Instructor
 from models.category import Category
+from models.lesson import Lesson
+from models.section import Section
 
 
 
@@ -18,7 +20,6 @@ class CourseSchema(Schema):
     description = fields.String()
     hours = fields.Integer(required=True, validate=validate.Range(min=1))
     num_sections = fields.Integer(required=True, validate=validate.Range(min=1))
-    num_enrolled = fields.Integer(validate=validate.Range(min=0))
     category_id = fields.String()
     instructor_id = fields.String(required=True)
 
@@ -46,10 +47,47 @@ class CourseSchema(Schema):
                 raise ValidationError("num_sections cannot be less\
                                       than the number of sections exists")
 
-class CreateCourseSchema(CourseSchema):
+class LessonSchema(Schema):
+    name = fields.Str(required=True)
+    content = fields.Str(required=True)
+    lesson_num = fields.Int()
+    completed = fields.Bool()
+
+class SectionSchema(Schema):
+    name = fields.Str(required=True)
+    section_num = fields.Int()
+    completed = fields.Bool()
+    lessons = fields.Nested(LessonSchema, many=True)
+    
+class CreateCourseSchema(Schema):
+    class Meta:
+        unknown = INCLUDE
+    name = fields.Str(required=True)
+    description = fields.Str()
+    hours = fields.Int(required=True)
+    num_sections = fields.Int()
+    num_enrolled = fields.Int()
+    category_id = fields.String()
+    instructor_id = fields.String(required=True)
+
+    sections = fields.Nested(SectionSchema, many=True)
     @post_load
     def make_course(self, data, **kwargs):
-        return Course(**data)
+        # Extract sections data and convert them into Section objects
+        sections_data = data.pop('sections', [])
+        sections = []
+
+        for section_data in sections_data:
+            # Extract lessons data and convert them into Lesson objects
+            lessons_data = section_data.pop('lessons', [])
+            lessons = [Lesson(**lesson_data) for lesson_data in lessons_data]
+
+            # Create the Section object with the converted lessons and remaining data
+            section = Section(lessons=lessons, **section_data)
+            sections.append(section)
+
+        # Create the Course object with the converted sections and the remaining data
+        return Course(sections=sections, **data)
 
 
 class UpdateCourseSchema(CourseSchema):

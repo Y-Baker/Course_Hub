@@ -2,7 +2,7 @@
 """ holds class Lesson"""
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Integer, Boolean
+from sqlalchemy import Column, String, Integer, Boolean, Text
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from models.section import Section

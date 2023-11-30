@@ -11,7 +11,8 @@ from course_hub.course.views import course_service
 from course_hub.course.schemas.course_schema import CourseSchema
 from course_hub.course.schemas.course_schema import CreateCourseSchema, UpdateCourseSchema
 from marshmallow import ValidationError
-
+from flask_jwt_extended import current_user, jwt_required
+from utils.auth_utils import user_required
 
 @course_views.route('/courses', methods=['GET'])
 @swag_from('../documentation/courses/all_courses.yml', methods=['GET'])
@@ -69,22 +70,31 @@ def delete_course(course_id):
 
 # admin permission or instructor permission
 @course_views.route('/instructors/<instructor_id>/courses', methods=['POST'])
+@jwt_required()
+@user_required([1])
 @swag_from('../documentation/courses/post_course.yml', methods=['POST'])
 def create_course(instructor_id):
     """post course to storage
     """
     data = request.get_json()
+    if current_user.id != instructor_id:
+        abort(403)
     if not data:
         abort(400, "Not a JSON")
     if not data.get('instructor_id'):
         data['instructor_id'] = instructor_id
+    createCourseSchema = CreateCourseSchema()
     try:
         new_course = CreateCourseSchema(context={'data': data}).load(data)
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
-
+    print("before")
+    print(new_course)
     new_course.save()
-    return jsonify(new_course.to_dict()), 201
+    return jsonify({
+        "message" : "success",
+        "data": createCourseSchema.dump(new_course)    
+    }), 201
 
 
 # admin permission or instructor of this course permission

@@ -41,12 +41,12 @@ export default function NavBar(props) {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="about">
+              <Link className="nav-link" to="/about">
                 About
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="contact-us">
+              <Link className="nav-link" to="/contact-us">
                 Contact Us
               </Link>
             </li>
@@ -82,10 +82,24 @@ export default function NavBar(props) {
               </ul>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="courses">
+              <Link className="nav-link" to="/courses">
                 Courses
               </Link>
             </li>
+            {userData.role === 1 ? 
+            <>            
+            <li className="nav-item">
+            <Link className="nav-link" to="/Instructor">
+              Instructor
+            </Link>
+          </li></>: null}
+          {userData.role === 0 ? 
+            <>            
+            <li className="nav-item">
+            <Link className="nav-link" to="/Admin">
+              Admin
+            </Link>
+          </li></>: null}
           </ul>
           {/* Right side navigation */}
           
@@ -93,18 +107,18 @@ export default function NavBar(props) {
           {userData === null ? <>
           
             <li className="nav-item">
-              <Link className="nav-link" to="register">
+              <Link className="nav-link" to="/register">
                 Register
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="login">
+              <Link className="nav-link" to="/login">
                 Login
               </Link>
             </li>
           </> : 
           <li className="nav-item">
-          <Link className="nav-link" to="logout">
+          <Link className="nav-link" to="/logout">
             Logout
           </Link>
         </li>

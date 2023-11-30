@@ -48,7 +48,7 @@ def sign_up():
         'data': f'{new_user.id}'}), 201
 
 
-@auth_views.get("/refresh")
+@auth_views.post("/refresh")
 @jwt_required(refresh=True)
 def refresh_access():
     additional_claims = {"role": current_user.role, "email": current_user.email, "name": current_user.name}
@@ -103,6 +103,7 @@ def login():
                 'message': 'success',
                 'data': {
                     'name': user.name,
+                    'role': user.role,
                     "access_token" : access_token, 
                     "refresh_token" : refresh_token
                 }
@@ -127,6 +128,7 @@ def whoami():
             "user_details": {
                 "name": current_user.name,
                 "email": current_user.email,
+                "id": current_user.id
             },
         }
     )
