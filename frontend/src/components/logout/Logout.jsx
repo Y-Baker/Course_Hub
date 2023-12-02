@@ -69,7 +69,8 @@ export default function Logout(props) {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     // props.saveUserData();
-    userContext.saveUserData();
-    navigate('/');
+    // userContext.saveUserData();
+    userContext.setUserData(null);
+    navigate('/login');
   }
 }

@@ -63,7 +63,7 @@ export default function UserContextProvider(props) {
           }, [localStorage.getItem('access_token')]);
   return <>
   
-    <UserDataContext.Provider value={{userData, saveUserData}}>
+    <UserDataContext.Provider value={{userData, saveUserData, setUserData}}>
         {props.children}
     </UserDataContext.Provider>
   </>
