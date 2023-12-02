@@ -1,10 +1,12 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import config from '../config'
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
+import { UserDataContext } from '../UserContextProvider/UserContextProvider';
 
 export default function Logout(props) {
+  const userContext = useContext(UserDataContext);
   const navigate = useNavigate();
   const axiosConfig = {
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('access_token') }
@@ -66,7 +68,8 @@ export default function Logout(props) {
   function doLogOut() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
-    props.saveUserData();
+    // props.saveUserData();
+    userContext.saveUserData();
     navigate('/');
   }
 }

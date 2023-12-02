@@ -7,7 +7,10 @@ import './layout.css'
 export default function Layout(props) {
   return <>
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Header  userData={props.userData} saveUserData={props.saveUserData}/>
+      { /* using userContext instead of props */}
+      {/* <Header  userData={props.userData} saveUserData={props.saveUserData}/> */}
+      <Header/>
+
       <div style={{ flex: 1 }}>
         <Outlet />
       </div>

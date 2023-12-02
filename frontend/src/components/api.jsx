@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const api = axios.create({
     baseURL: 'http://localhost:5000',
@@ -45,7 +44,11 @@ const api = axios.create({
           return response;
         } catch (retryError) {
           console.error('Error during retry:', retryError);
-          // Handle the retry failure
+          if (retryError?.response?.status === 401){
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');    
+            window.location.href = '/login';
+          }
           return Promise.reject(retryError);
         }
       }
@@ -67,6 +70,8 @@ const api = axios.create({
       }
     } catch (error) {
       console.error('Error refreshing access token:', error.message);
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');    
     }
   }
   export default api;
