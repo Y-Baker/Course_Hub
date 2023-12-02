@@ -4,7 +4,7 @@
 from datetime import datetime
 from models.base_model import BaseModel, Base
 from sqlalchemy import Table
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, DateTime, Boolean
 from sqlalchemy import ForeignKey
 from sqlalchemy import CheckConstraint as Check
 from sqlalchemy.orm import relationship
@@ -32,6 +32,7 @@ class Course(BaseModel, Base):
     __tablename__ = 'courses'
     name = Column(String(128), nullable=False)
     description = Column(String(1024), nullable=True)
+    approved = Column(Boolean(), nullable=False, default=False)
     hours = Column(Integer, nullable=False)
     num_sections = Column(Integer, nullable=False, default=0)
     num_enrolled = Column(Integer, nullable=False, default=0)
