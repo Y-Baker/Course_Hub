@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './navbar.css'
 import logo from '../../assets/images/online-course.ico';
+import { UserDataContext } from '../UserContextProvider/UserContextProvider';
 
 
 export default function NavBar(props) {
-  let userData = props.userData;
+  let userContext = useContext(UserDataContext);
+  let userData = userContext.userData;
   useEffect(() =>{
     console.log('userData changed');
   }

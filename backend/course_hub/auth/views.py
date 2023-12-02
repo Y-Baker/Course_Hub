@@ -104,6 +104,8 @@ def login():
                 'data': {
                     'name': user.name,
                     'role': user.role,
+                    'id': user.id,
+                    'email': user.email,
                     "access_token" : access_token, 
                     "refresh_token" : refresh_token
                 }

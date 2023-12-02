@@ -1,13 +1,15 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
+import { UserDataContext } from '../../UserContextProvider/UserContextProvider';
 import * as Yup from 'yup'
 import config from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { useFormik} from 'formik';
-import { toast } from 'react-toastify';
+import toast, { Toaster } from 'react-hot-toast';
 import './addCourse.css'
 import api from '../../api';
 export default function AddCourse(props) {
-    const userData = props.userData; 
+  const userContext = useContext(UserDataContext);
+    const userData = userContext.userData; 
     const [loading, setLoading] = useState(true);
 
     const [isLoading, setisLoading] = useState(false)
@@ -15,14 +17,15 @@ export default function AddCourse(props) {
     const nav = useNavigate();
 
     useEffect(() => {
-        if (props.userData) {
+        if (userContext.userData) {
           setLoading(false);
         }
-      }, [props.userData]);
+      }, [userContext.userData]);
     const CourseSchema = Yup.object().shape({
         name: Yup.string()
           .required('Required'),
         description: Yup.string(),
+        approved : Yup.boolean(),
         hours: Yup.number()
           .required('Required')
           .positive('Must be positive')
@@ -67,7 +70,7 @@ export default function AddCourse(props) {
         {
           setisLoading(false);
             toast.success('Course saved successfully!', {
-                position: 'top-right',
+                position: 'top-center',
                 autoClose: 3000, 
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -78,9 +81,16 @@ export default function AddCourse(props) {
           setisLoading(false);
         }
      } catch (error) {
+      
+      if (error.response.status === 401){
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');    
+        nav('/login');
+        window.location.reload();
+      }
       setisLoading(false);
       console.error(error);
-      seterrorMessage(`${JSON.stringify(error.response.data.validation_error)}`);
+      seterrorMessage(`${JSON.stringify(error.response.data)}`);
     }
     setisLoading(false);
     }
@@ -90,6 +100,7 @@ export default function AddCourse(props) {
       initialValues : {
         name: '',
         description: '',
+        approved: false,
         hours: '',
         num_sections: '',
         category_id: undefined,
@@ -358,6 +369,7 @@ export default function AddCourse(props) {
         {isLoading ?  
         <button type='button' className='register-button'><i className='fas fa-spinner fa-spin'></i></button> :
         <button  className='btn btn-primary btn-lg btn-block' disabled={!formik.dirty && formik.isValid} type="submit" onSubmit={handleCourseSubmit} >create Course</button>}
+        <Toaster/>
         </form>
     </div>
      </>

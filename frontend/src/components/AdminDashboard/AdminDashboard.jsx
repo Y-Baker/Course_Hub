@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Outlet , Link} from 'react-router-dom';
 import './AdminDashboard.css';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
+import { UserDataContext } from '../UserContextProvider/UserContextProvider';
 
 export default function AdminDashboard(props) {
+  const userContext = useContext(UserDataContext);
   const [loading, setLoading] = useState(true);
   const [optionsVisibility, setOptionsVisibility] = useState({
     courses: false,
@@ -20,10 +22,10 @@ export default function AdminDashboard(props) {
   };
 
   useEffect(() => {
-    if (props.userData && props.userData.role !== null && props.userData.role !== undefined) {
+    if (userContext.userData && userContext.userData.role !== null && userContext.userData.role !== undefined) {
       setLoading(false);
     }
-  }, [props.userData]);
+  }, [userContext.userData]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -31,7 +33,7 @@ export default function AdminDashboard(props) {
     return (
       <>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <Header  userData={props.userData} saveUserData={props.saveUserData}/>
+        <Header  userData={userContext.userData} saveUserData={userContext.saveUserData}/>
         <div style={{ flex: 1 }}>
         <div className="dashboard">
           <div className="sidebar">
@@ -42,18 +44,26 @@ export default function AdminDashboard(props) {
               {optionsVisibility.courses ? (
                 <>
                   <div className="options">
+                  <Link className="nav-link" to='searchCourse'>
                     <div className="option">
-                      <Link className="nav-link" to='addCourse'>
-                        <span className="icon">+</span> Add
-                      </Link>
+                        <span className="icon">+</span> search
                     </div>
+                    </Link>
+                  <Link className="nav-link" to='addCourse'>
+                    <div className="option">
+                        <span className="icon">+</span> Add
+                    </div>
+                    </Link>
+                  <Link className="nav-link" to='updateCourse'>
                     <div className="option">
                       <span className="icon">✎</span> Update
                     </div>
+                    </Link>
+
                     <div className="option">
                       <span className="icon">✖</span> Delete
                     </div>
-                    {props.userData.role === 0 ? (
+                    {userContext.userData.role === 0 ? (
                       <>
                         <div className="option">
                           <span className="icon">✎</span> Approve Courses
@@ -102,6 +112,12 @@ export default function AdminDashboard(props) {
             </div>
           </div>
           <div className="main-content">
+          {/* <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Welcome Back</h5>
+              <p className="card-text">{userContext.userData.name}</p>
+            </div>
+          </div> */}
             <Outlet></Outlet>
           </div>
         </div>
