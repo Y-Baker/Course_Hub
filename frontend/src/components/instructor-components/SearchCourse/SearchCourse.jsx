@@ -1,7 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react'
 import { UserDataContext } from '../../UserContextProvider/UserContextProvider';
-import { useFormik } from 'formik';
-import * as Yup from 'yup'
 import api from '../../api';
 import toast, { Toaster } from 'react-hot-toast';
 import config from '../../config';
