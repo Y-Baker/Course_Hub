@@ -5,10 +5,11 @@ import toast, { Toaster } from 'react-hot-toast';
 import config from '../../config';
 import { useNavigate } from 'react-router-dom';
 
-export default function SearchCourse() {
+
+export default function SearchCategory() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('id');
-  const [courses, setCourses] = useState([]);
+  const [categories, setcategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isLoading, setisLoading] = useState(false)
 
@@ -25,9 +26,9 @@ export default function SearchCourse() {
   const handleSearch = () => {
     setisLoading(true);
     if (searchTerm !== '') {
-      api.get(`${config.api}/courses/${filterType}/${searchTerm}`)
+      api.get(`${config.api}/categories/${filterType}/${searchTerm}`)
         .then(response => {
-          setCourses(response.data.data);
+          setcategories(response.data.data);
           setisLoading(false)
         })
         .catch(error => {
@@ -39,21 +40,21 @@ export default function SearchCourse() {
   };
 
 
-  function handleUpdateClick(course) {
-    if (userData && userData.id === course.instructor_id) {
-        setCourses([]);
-        setSearchTerm('');
-        navigate(`/instructor/updateCourse/${course.id}`, { state: { courseData: course } });
-    } else {
-        toast.error("You are not allowed to edit this course !!", {
-            duration: 4000
-        })
+  function handleUpdate(category) {
+    navigate(`/admin/updateCategory/${category.id}`, { state: { categoryData: category } });  
+    }
+    function handleDelete(id) {
+      api.delete(`${config.api}/categories/${id}?page=1&per_page=0`)
+      .then((resp) => {
+          toast.success("deleted successfully");
+          setcategories(resp.data)
+      })
+      .catch((err) => {
+          console.error(err);
+          toast.error("cant delete this category")
+      })
     }
 
-  }
-  function handleDeleteClick(course) {
-
-  }
   
     if (loading){
       return <div className="card">Loading...</div>
@@ -73,32 +74,29 @@ export default function SearchCourse() {
             {isLoading? <button type='button' className='fas fa-spinner fa-spin'></button>: 
             <button className="btn btn-primary btn-block" onClick={handleSearch}>Search</button>}
             <div className="row">
-                {courses.map((course, index) => (
-                  <div key={course.id || index} className="col-md-10 mb-4">
+                {categories.map((category, index) => (
+                  <div key={category.id || index} className="col-md-10 mb-4">
                     <div className="card">
                       <div className="card-body">
-                        <h5 className="card-title">{course.name}</h5>
-                        <p className="card-text">Description: {course.description}</p>
-                        <p className="card-text">Hours: {course.hours}</p>
-                        <p className="card-text">Sections: {course.num_sections}</p>
-                        <p className="card-text">ID: {course.id}</p>
-                        <p className="card-text">Instructor ID: {course.instructor_id}</p>
+                        <h5 className="card-title">{category.name}</h5>
+
 
                         <div className="d-flex justify-content-between">
                           <button
                             className="btn btn-primary"
                             onClick={(e) => {
-                              e.stopPropagation(); // Prevent card click when the button is clicked
-                              handleUpdateClick(course);
+                              e.stopPropagation();
+                              handleUpdate(category);
                             }}
                           >
                             Update
                           </button>
+                          <Toaster/>
                           <button
                             className="btn btn-danger"
                             onClick={(e) => {
-                              e.stopPropagation(); // Prevent card click when the button is clicked
-                              handleDeleteClick(course);
+                              e.stopPropagation();
+                              handleDelete(category.id);
                             }}
                           >
                             Delete

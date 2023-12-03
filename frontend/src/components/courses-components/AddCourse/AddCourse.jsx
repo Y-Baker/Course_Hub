@@ -131,12 +131,12 @@ export default function AddCourse(props) {
     return <>
         <div>
 
-            {errorMessage.length > 0 ?   
+            {/* {errorMessage.length > 0 ?   
                 <div className="alert alert-danger">
                 {errorMessage}
             </div> :
             null
-            }
+            } */}
             <h1>Add a New Course</h1>
             {errorMessage.length > 0 ?   
             <div className="alert alert-danger">

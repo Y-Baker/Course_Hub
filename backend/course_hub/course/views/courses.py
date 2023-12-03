@@ -28,6 +28,18 @@ def get_courses():
                             ))))
 
 
+@course_views.route('/courses/noCategory', methods=['GET'])
+@swag_from('../documentation/courses/all_courses.yml', methods=['GET'])
+def get_courses_without_category():
+    """reterive all courses from storage
+    """
+    return jsonify(list(map(lambda course:
+                            course.to_dict(), course_service.get_courses_without_category(
+                                request.args.get("page", 1, type=int),
+                                request.args.get("per_page", 3, type=int)
+                            ))))
+
+
 @course_views.route('/instructors/<instructor_id>/courses', methods=['GET'])
 @swag_from('../documentation/courses/all_courses_instructor.yml', methods=['GET'])
 def get_courses_instructor(instructor_id):
@@ -77,6 +89,8 @@ def search_course(filter_by, search_term):
 
 # admin permission or instructor of this course permission
 @course_views.route('/courses/<course_id>', methods=['DELETE'])
+@jwt_required()
+@user_required([1])
 @swag_from('../documentation/courses/delete_course.yml', methods=['DELETE'])
 def delete_course(course_id):
     """delete Course by id
@@ -84,9 +98,19 @@ def delete_course(course_id):
     course = storage.get(Course, course_id)
     if course is None:
         abort(404)
+    if current_user.id != course.instructor_id:
+        abort(403)
     course.delete()
     storage.save()
-    return jsonify({}), 200
+    return jsonify({
+            "message": "deleted successfully",
+            "data":  list(map(lambda course:
+                        course.to_dict(), course_service.get_courses_by_instructor(
+                            current_user.id,
+                            request.args.get("page", 1, type=int),
+                            request.args.get("per_page", 3, type=int)
+                            )))
+        }), 200
 
 
 @course_views.route('/instructors/<instructor_id>/courses', methods=['POST'])
