@@ -7,11 +7,13 @@ import { UserDataContext } from '../UserContextProvider/UserContextProvider';
 
 export default function AdminDashboard(props) {
   const userContext = useContext(UserDataContext);
+  const userData = userContext.userData;
   const [loading, setLoading] = useState(true);
   const [optionsVisibility, setOptionsVisibility] = useState({
     courses: false,
     sections: false,
     lessons: false,
+    categories: false,
   });
 
   const toggleOptions = (sectionId) => {
@@ -44,17 +46,8 @@ export default function AdminDashboard(props) {
               {optionsVisibility.courses ? (
                 <>
                   <div className="options">
-                  <Link className="nav-link" to='searchCourse'>
-                    <div className="option">
-                        <span className="icon">+</span> search
-                    </div>
-                    </Link>
-                  <Link className="nav-link" to='addCourse'>
-                    <div className="option">
-                        <span className="icon">+</span> Add
-                    </div>
-                    </Link>
-                  <Link className="nav-link" to='updateCourse'>
+
+                  {/* <Link className="nav-link" to='updateCourse'>
                     <div className="option">
                       <span className="icon">✎</span> Update
                     </div>
@@ -62,33 +55,54 @@ export default function AdminDashboard(props) {
 
                     <div className="option">
                       <span className="icon">✖</span> Delete
-                    </div>
+                    </div> */}
                     {userContext.userData.role === 0 ? (
                       <>
                         <div className="option">
                           <span className="icon">✎</span> Approve Courses
                         </div>
                       </>
-                    ) : null}
+                    ) : <>
+                    <Link className="nav-link" to='searchCourse'>
+                      <div className="option">
+                          <span className="icon">+</span> search
+                      </div>
+                    </Link>
+                    <Link className="nav-link" to='addCourse'>
+                      <div className="option">
+                          <span className="icon">+</span> Add
+                      </div>
+                    </Link>
+                    </>}
                   </div>
                 </>
               ) : null}
             </div>
+            {userData.role === 1 ? 
+            <>
             <div className="dash-section" id="sections">
               <div className="dash-section-title" onClick={() => toggleOptions('sections')}>
                 Sections
               </div>
               {optionsVisibility.sections && (
+                
                 <div className="options">
-                  <div className="option">
-                    <span className="icon">+</span> Add
-                  </div>
-                  <div className="option">
+                  <Link className="nav-link" to='SearchSection'>
+                    <div className="option">
+                        <span className="icon">+</span> search
+                    </div>
+                  </Link>
+                  <Link className="nav-link" to='addSection'>
+                    <div className="option">
+                      <span className="icon">+</span> Add
+                    </div>
+                  </Link>
+                  {/* <div className="option">
                     <span className="icon">✎</span> Update
                   </div>
                   <div className="option">
                     <span className="icon">✖</span> Delete
-                  </div>
+                  </div> */}
                 </div>
               )}
             </div>
@@ -98,15 +112,60 @@ export default function AdminDashboard(props) {
               </div>
               {optionsVisibility.lessons && (
                 <div className="options">
-                  <div className="option">
-                    <span className="icon">+</span> Add
-                  </div>
-                  <div className="option">
+                  <Link className="nav-link" to='SearchLesson'>
+                    <div className="option">
+                        <span className="icon">+</span> search
+                    </div>
+                  </Link>
+                  <Link className="nav-link" to='addLesson'>
+                    <div className="option">
+                      <span className="icon">+</span> Add
+                    </div>
+                  </Link>
+                  {/* <div className="option">
                     <span className="icon">✎</span> Update
                   </div>
                   <div className="option">
                     <span className="icon">✖</span> Delete
+                  </div> */}
+                </div>
+              )}
+            </div>
+            </>: null}
+            
+            <div className="dash-section" id="categories">
+              <div className="dash-section-title" onClick={() => toggleOptions('categories')}>
+                categories
+              </div>
+              {optionsVisibility.categories && (
+                
+                <div className="options">
+                  <Link className="nav-link" to='SearchCategory'>
+                    <div className="option">
+                        <span className="icon">+</span> search
+                    </div>
+                  </Link>
+                  {userData.role === 0 ? 
+                  <>
+                    <Link className="nav-link" to='showCategories'>
+                      <div className="option">
+                        <span className="icon"></span> Show
+                      </div>
+                    </Link>
+                  
+                    <Link className="nav-link" to='addCategory'>
+                      <div className="option">
+                        <span className="icon">+</span> Add
+                      </div>
+                    </Link>
+                  </> : null}
+
+                  {/* <div className="option">
+                    <span className="icon">✎</span> Update
                   </div>
+                  <div className="option">
+                    <span className="icon">✖</span> Delete
+                  </div> */}
                 </div>
               )}
             </div>

@@ -16,10 +16,22 @@ import { jwtDecode } from 'jwt-decode';
 import Forbidden from './components/forbidden/Forbidden';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 
-import AddCourse from './components/instructor-components/AddCourse/AddCourse'
-import UpdateCourse from './components/instructor-components/UpdateCourse/UpdateCourse'
+import AddCourse from './components/courses-components/AddCourse/AddCourse'
+import UpdateCourse from './components/courses-components/UpdateCourse/UpdateCourse'
 import UserContextProvider from './components/UserContextProvider/UserContextProvider';
-import SearchCourse from './components/instructor-components/SearchCourse/SearchCourse';
+import SearchCourse from './components/courses-components/SearchCourse/SearchCourse';
+import ShowCourses from './components/courses-components/show-courses/ShowCourses';
+import AddCategory from './components/categories-components/add-category/AddCategory';
+import ShowCategories from './components/categories-components/show_categories/ShowCategories';
+import SearchCategory from './components/categories-components/search-category/SearchCategory';
+import UpdateCategory from './components/categories-components/update-category/UpdateCategory';
+import AddSection from './components/section-components/add-section/AddSection';
+import SearchSection from './components/section-components/search-sections/SearchSection';
+import UpdateSection from './components/section-components/update-section/UpdateSection';
+import AddLesson from './components/lesson-components/add-lesson/AddLesson';
+import SearchLesson from './components/lesson-components/search-lesson/SearchLesson';
+import UpdateLesson from './components/lesson-components/update-lesson/UpdateLesson';
+import ApproveCourses from './components/courses-components/approve-courses/ApproveCourses';
 
 function App() {
   // const [userData, setuserData] = useState({});
@@ -98,15 +110,35 @@ function App() {
   {
     path: '/Admin',
     element: <ProtectedRoute roles={['Admin']}><AdminDashboard/></ProtectedRoute>,
-    children: [],
+    children: [
+      {index:true, element:<ApproveCourses/>},
+
+      { path: 'showCategories', element: <ShowCategories /> },
+      { path: 'SearchCategory', element: <SearchCategory /> },
+      { path: 'addCategory', element:<AddCategory />},
+      { path: 'updateCategory/:id', element:<UpdateCategory />},
+
+    ],
   },
   {
     path: 'Instructor',
     element: <ProtectedRoute roles={['Instructor']}><AdminDashboard /></ProtectedRoute>,
     children: [
+      { index:true, element: <ShowCourses /> },
       {path: 'addCourse', element:<AddCourse/>},
       { path: 'SearchCourse', element: <SearchCourse /> },
-      { path: 'updateCourse/:id', element: <UpdateCourse /> }
+      { path: 'updateCourse/:id', element:<UpdateCourse />},
+      
+
+      { path: 'SearchCategory', element: <SearchCategory /> },
+
+      { path: 'addSection', element:<AddSection />},
+      { path: 'SearchSection', element: <SearchSection /> },
+      { path: 'updateSection/:id', element:<UpdateSection />},
+
+      { path: 'addLesson', element:<AddLesson />},
+      { path: 'SearchLesson', element: <SearchLesson /> },
+      { path: 'updateLesson/:id', element:<UpdateLesson />},
     ],
   },
   ])

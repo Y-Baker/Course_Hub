@@ -11,7 +11,7 @@ export default function UpdateCourse(props) {
   const [loading, setLoading] = useState(true);
   const [isLoading, setisLoading] = useState(false)
   const [errorMessage, seterrorMessage] = useState('')
-
+  const nav = useNavigate();
   const userContext = useContext(UserDataContext);
   const { id } = useParams();
   const location = useLocation();
@@ -23,10 +23,16 @@ export default function UpdateCourse(props) {
   function fetchCourse() {
     api.get(`${config.api}/courses/${id}`)
     .then((resp) => {
-      setfetchedCourse(resp.data.data);
+      if (resp.status == 200) {
+        setfetchedCourse(resp.data.data);
+      }
+      else {
+        setfetchedCourse(null);
+      }
     })
     .catch(error =>{
       console.error(error);
+      nav('/')
     })
   }
   useEffect(() =>{
@@ -40,7 +46,7 @@ export default function UpdateCourse(props) {
 
   useEffect(() => {
     if (!userData || !fetchedCourse || userData.id !== fetchedCourse.instructor_id) {
-      nav('/instructor/searchProduct')
+      nav('/instructor')
     }
 
   },[userData, fetchedCourse])
@@ -49,7 +55,6 @@ export default function UpdateCourse(props) {
       setLoading(false);
     }
   }, [userData]);
-  const nav = useNavigate();
   async function handleCourseSubmit(values) {
     try {
       setisLoading(true);
@@ -188,28 +193,31 @@ export default function UpdateCourse(props) {
   });
 
   useEffect(() =>{
-    formik.values.name = fetchedCourse.name || '';
-    formik.values.description = fetchedCourse.description || '';
-    formik.values.approved = fetchedCourse.approved || false;
-    formik.values.hours = fetchedCourse.hours || '';
-    formik.values.num_sections = fetchedCourse.num_sections || '';
-    formik.values.category_id = fetchedCourse.category_id || undefined;
-    formik.values.instructor_id = fetchedCourse.instructor_id || userData.id;
-    formik.values.sections = fetchedCourse.sections || [
-      {
-        name: '',
-        section_num: 1,
-        completed: false,
-        lessons: [
-          {
-            name: '',
-            lesson_num: 1,
-            completed: false,
-            content: '',
-          },
-        ],
-      },
-    ]
+    if (fetchCourse) {
+      formik.values.name = fetchedCourse.name || '';
+      formik.values.description = fetchedCourse.description || '';
+      formik.values.approved = fetchedCourse.approved || false;
+      formik.values.hours = fetchedCourse.hours || '';
+      formik.values.num_sections = fetchedCourse.num_sections || '';
+      formik.values.category_id = fetchedCourse.category_id || undefined;
+      formik.values.instructor_id = fetchedCourse.instructor_id || userData.id;
+      formik.values.sections = fetchedCourse.sections || [
+        {
+          name: '',
+          section_num: 1,
+          completed: false,
+          lessons: [
+            {
+              name: '',
+              lesson_num: 1,
+              completed: false,
+              content: '',
+            },
+          ],
+        },
+      ]
+    }
+
   }, [fetchedCourse])
 
     if (loading){
