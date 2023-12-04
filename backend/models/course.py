@@ -47,7 +47,7 @@ class Course(BaseModel, Base):
                            nullable=False)
     students = relationship('Student',
                             secondary='enrollments', viewonly=False,
-                            backref='courses')
+                            back_populates='my_courses')
 
     def to_dict(self):
         """returns dict representation of course"""
