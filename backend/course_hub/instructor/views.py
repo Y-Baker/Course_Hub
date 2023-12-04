@@ -33,4 +33,16 @@ def get_instrucor(instructor_id):
     instructor = storage.get(Instructor, instructor_id)
     if instructor is None:
         abort(404)
+    instructor_service.get_total_students(instructor)
     return jsonify(instructor.to_dict())
+
+
+@instructor_views.route('/instructors/<instructor_id>/total_students', methods=['GET'])
+@jwt_required()
+def get_total_students(instructor_id):
+    """reterive total students by instructor id
+    """
+    instructor = storage.get(Instructor, instructor_id)
+    if instructor is None:
+        abort(404)
+    return jsonify(instructor_service.get_total_students(instructor))
