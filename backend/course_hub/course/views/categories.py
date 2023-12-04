@@ -95,7 +95,7 @@ def search_category(filter_by, search_term):
 # admin permission
 @course_views.route('/categories', methods=['POST'])
 @jwt_required()
-@user_required([0])
+# @user_required([0])
 @swag_from('../documentation/categories/post_category.yml', methods=['POST'])
 def create_category():
     """post category to storage
