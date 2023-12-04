@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { UserDataContext } from '../../UserContextProvider/UserContextProvider';
 import api from '../../api';
 import config from '../../config';
+import Loading from '../../Loading/loading';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -50,12 +51,12 @@ export default function ShowCourses() {
 
       if (loading) {
         return <>
-            Loading .....
+            <Loading/>
         </>
       }
       else {
         return <>
-        <table className="table">
+                <table className="table">
         <thead className='table-dark'>
             <tr>
             {/* <th scope="col">id</th> */}
@@ -65,7 +66,7 @@ export default function ShowCourses() {
             <th scope="col">hours</th>
             <th scope="col">category id</th>
             <th scope="col">update</th>
-            <th scope="col">deelete</th>
+            <th scope="col">delete</th>
             </tr>
         </thead>
         <tbody>
