@@ -10,6 +10,9 @@ from flasgger import Swagger
 from models import storage
 from course_hub.user import user_views
 from course_hub.course import course_views
+from course_hub.instructor import instructor_views
+from course_hub.student import student_views
+
 
 cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
@@ -17,6 +20,8 @@ cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 app.register_blueprint(user_views)
 app.register_blueprint(auth_views)
 app.register_blueprint(course_views)
+app.register_blueprint(instructor_views)
+app.register_blueprint(student_views)
 
 #flask_login configurations
 # login_manager = LoginManager()

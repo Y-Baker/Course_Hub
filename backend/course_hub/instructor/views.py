@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """new view for Instructor objects that handles all default RestFul API actions"""
 
+from flask_jwt_extended import jwt_required
 from course_hub.instructor import instructor_views
 from course_hub.instructor.instructor_service import InstructorService
 from flask import jsonify, abort, request
@@ -12,6 +13,8 @@ instructor_service = InstructorService()
 
 
 @instructor_views.route('/instructors', methods=['GET'])
+@jwt_required()
+@swag_from('documentation/all_instructors.yml', methods=['GET'])
 def get_instructors():
     """reterive all instructors from storage
     """
@@ -23,6 +26,7 @@ def get_instructors():
 
 
 @instructor_views.route('/instructors/<instructor_id>', methods=['GET'])
+@swag_from('documentation/get_instructor.yml', methods=['GET'])
 def get_instrucor(instructor_id):
     """reterive instructor by id
     """
