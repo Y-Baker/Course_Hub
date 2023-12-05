@@ -14,7 +14,7 @@ class Lesson(BaseModel, Base):
     name = Column(String(128), nullable=False)
     lesson_num = Column(Integer, nullable=False)
     # completed = Column(Boolean, nullable=False, default=False)
-    content = Column(String(16384), nullable=False)
+    content = Column(Text, nullable=False)
     section_id = Column(String(60),
                         ForeignKey('sections.id'),
                         nullable=False)

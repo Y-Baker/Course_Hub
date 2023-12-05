@@ -1,8 +1,8 @@
 import React from 'react'
-
-export default function Courses() {
+import CourseList from './CourseList'
+import { Container } from 'react-bootstrap'
+function Courses() {
   return <>
-  <div>courses</div>
             {/* Search bar in the middle */}
   <form className="d-flex mx-auto">
     <input
@@ -15,7 +15,15 @@ export default function Courses() {
       Search
     </button>
   </form>
+  <div className="row">
+    {/* <Container> */}
+      <CourseList />
+    {/* </Container> */}
+    
+  </div>
   </>
     
   
 }
+
+export default Courses

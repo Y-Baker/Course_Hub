@@ -12,7 +12,7 @@ class Instructor(BaseRole, Base):
     """Reapresntation for Instructor"""
     __tablename__ = 'instructors'
 
-    # total_students =  Column(Integer, nullable=False, default=0)
+    total_students =  Column(Integer, nullable=False, default=0)
     user = relationship("User", backref="instructor")
     id = Column(String(60), ForeignKey('users.id'), primary_key=True)
     courses = relationship('Course', backref='instructor')
@@ -28,7 +28,6 @@ class Instructor(BaseRole, Base):
         user_dict = self.user.to_dict()
         new_dict.update(user_dict)
         new_dict['courses'] = [course.to_dict() for course in self.courses]
-        # new_dict['user_name'] = self.user.name
-        # new_dict['email'] = self.user.email
+        new_dict['total_students'] = self.total_students
 
         return new_dict

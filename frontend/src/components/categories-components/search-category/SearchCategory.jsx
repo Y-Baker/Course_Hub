@@ -11,7 +11,7 @@ export default function SearchCategory() {
   const [filterType, setFilterType] = useState('id');
   const [categories, setcategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isLoading, setisLoading] = useState(false)
+  const [isLoading, setisLoading] = useState(false);
 
   const userContext = useContext(UserDataContext);
   let userData = userContext.userData;

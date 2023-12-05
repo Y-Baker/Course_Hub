@@ -1,4 +1,6 @@
 import React from 'react'
+import CourseList from '../courses/CourseList'
+import Slider from '../slider/Slider'
 
 export default function Home(props) {
   return <>
@@ -14,6 +16,12 @@ export default function Home(props) {
       Search
     </button>
   </form>
+  <div className="row">
+    {/* <Container> */}
+      <Slider />
+      <CourseList />
+    {/* </Container> */}
+  </div>
   </>
     
   
