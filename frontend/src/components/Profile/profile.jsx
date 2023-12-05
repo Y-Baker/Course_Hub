@@ -6,9 +6,11 @@ import "./profile.css";
 import { UserDataContext } from "../UserContextProvider/UserContextProvider";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading/loading";
+import CourseCard from "../cards/CourseCard";
 
 import {
   MDBCol,
+  MDBCardTitle,
   MDBContainer,
   MDBRow,
   MDBCard,
@@ -142,7 +144,7 @@ function Profile() {
                       </>
                     ) : (
                       <>
-                      <MDBRow>
+                        <MDBRow>
                           <MDBCol sm="3">
                             <MDBCardText>Interested In</MDBCardText>
                           </MDBCol>
@@ -159,7 +161,7 @@ function Profile() {
                           </MDBCol>
                           <MDBCol sm="9">
                             <MDBCardText className="text-muted">
-                              {data.my_courses.length}
+                              {data.courses.length}
                             </MDBCardText>
                           </MDBCol>
                         </MDBRow>
@@ -167,15 +169,14 @@ function Profile() {
                     )}
                   </MDBCardBody>
                 </MDBCard>
-
-                <MDBRow>
-                  <MDBCol md="6">
+                {/* <MDBRow>
+                  <MDBCol>
                     <MDBCard className="mb-4 mb-md-0">
                       <MDBCardBody>
                         <MDBCardText className="mb-4">
                           <span className="text-primary font-italic me-1">
                             assigment
-                          </span>{" "}
+                          </span>
                           Project Status
                         </MDBCardText>
                         <MDBCardText
@@ -332,9 +333,34 @@ function Profile() {
                       </MDBCardBody>
                     </MDBCard>
                   </MDBCol>
+                </MDBRow> */}
+              </MDBCol>
+            </MDBRow>
+
+
+
+
+            <MDBRow>
+              <MDBCol lg="4" sm="9">
+                <MDBCardTitle>
+                  {data.role == 1 ? "My Courses" : "My Learning"}
+                </MDBCardTitle>
+                <MDBRow className="py-5">
+                
+                  {console.log(data.courses)}
+                {data.courses.length == 0 ? (<strong>No Data!</strong>): (data.courses.map((course) => (
+                        <MDBCard className="mb-6">
+                        {course.approved && <CourseCard course={course} />}
+                        </MDBCard>
+                        )))}
+                
+                
                 </MDBRow>
               </MDBCol>
             </MDBRow>
+
+
+
           </MDBContainer>
         </section>
       </>

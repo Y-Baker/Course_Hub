@@ -15,9 +15,11 @@ export default function NavBar(props) {
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <div className="logo-container">
+          <Link to="/">
             <div className="logo">
               <img src={logo} alt="Logo" />
             </div>
+          </Link>
           </div>
           <Link className="navbar-brand" to="/">
             Course Hub
