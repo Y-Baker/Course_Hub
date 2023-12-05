@@ -13,9 +13,8 @@ class Student(BaseRole, Base):
     __tablename__ = 'students'
     interested = Column(String(60), ForeignKey('categories.id'),
                         nullable=True)
-    # categories = relationship('Category', backref='student')
     user = relationship("User", backref="student")
-    category = relationship("Category", backref="student") # insterested category
+    category = relationship("Category", back_populates="students") # insterested category
     my_courses = relationship('Course', secondary='enrollments', viewonly=False, back_populates='students')
     id = Column(String(60), ForeignKey('users.id'), primary_key=True)
 
@@ -33,5 +32,5 @@ class Student(BaseRole, Base):
             new_dict['interested'] = self.category.to_dict()
         else:
             new_dict['interested'] = {'name': "Not Defined", 'id': '0'}
-        new_dict['my_courses'] = [course.to_dict() for course in self.my_courses]
+        new_dict['courses'] = [course.to_dict() for course in self.my_courses]
         return new_dict
