@@ -16,13 +16,12 @@ function CourseList({ filter = null }) {
   const [loading, setLoading] = useState(true);
   let url_api = config.api + "/";
   if (filter === null) {
-    url_api += "courses";
+    url_api += "courses?page=1&per_page=20";
   } else {
     // categories/<category_id>/courses
-    url_api += "categories/" + filter.id + "/courses";
+    url_api += "categories/" + filter.id + "/courses?page=1&per_page=20";
   }
-  React.useEffect(() => {
-    console.log("Fetching courses from " + url_api);
+  useEffect(() => {
     api
       .get(url_api)
       .then((response) => {
@@ -41,7 +40,7 @@ function CourseList({ filter = null }) {
   } else {
     return (
       <MDBContainer className="py-4">
-        <MDBRow>
+        <MDBRow  style={{ paddingLeft: "40px", paddingRight: "40px" }}>
         {courses.map((course) => (
           <MDBCol lg="4">
             {course.approved && <CourseCard course={course} />}
