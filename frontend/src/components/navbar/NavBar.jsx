@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './navbar.css'
-// import logo from '../../assets/images/online-course.ico';
+import logo from '../../assets/images/online-course.ico';
+
 import { UserDataContext } from '../UserContextProvider/UserContextProvider';
 
 
@@ -17,7 +18,7 @@ export default function NavBar(props) {
       <div className="container-fluid">
         <div className="logo-container">
           <div className="logo">
-            {/* <img src={logo} alt="Logo" /> */}
+            <img src={logo} alt="Logo" />
           </div>
         </div>
         <Link className="navbar-brand" to="/">

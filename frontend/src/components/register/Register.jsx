@@ -5,6 +5,7 @@ import './register.css'
 import axios from 'axios';
 import * as yup from 'yup';
 import config from '../config';
+import api from '../api';
 
 export default function Register() {
 
@@ -14,7 +15,7 @@ export default function Register() {
   async function handleRegister(values) {
     try {
       setisLoading(true);
-      let response = await axios.post(`${config.baseUrl}/${config.auth}/sign-up`, values);
+      let response = await api.post(`${config.auth}/sign-up`, values);
       console.log(response.status)
       if (response.status === 201)
       {

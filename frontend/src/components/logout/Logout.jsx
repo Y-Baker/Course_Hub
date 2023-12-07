@@ -4,6 +4,7 @@ import config from '../config'
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import { UserDataContext } from '../UserContextProvider/UserContextProvider';
+import api from '../api';
 
 export default function Logout(props) {
   const userContext = useContext(UserDataContext);
@@ -14,7 +15,7 @@ export default function Logout(props) {
 
   async function logOutUser() {
     try {
-      let response  = await axios.get(`${config.baseUrl}${config.auth}/logout`, axiosConfig);
+      let response  = await api.get(`${config.auth}/logout`, axiosConfig);
       if (response.status === 200) {
         doLogOut();
       }

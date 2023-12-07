@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button'
 
 function CourseList() {
 
-    const api_url= 'http://127.0.0.1:5000/api/courses'
+    const api_url= 'http://192.168.1.13:5000/api/courses'
   
     const [courses, setCourses] = useState([]);
   

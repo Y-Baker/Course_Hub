@@ -6,6 +6,7 @@ import axios from 'axios';
 import * as yup from 'yup';
 import config from '../config';
 import { UserDataContext } from '../UserContextProvider/UserContextProvider';
+import api from '../api';
 
 export default function Login() {
   const userContext = useContext(UserDataContext);
@@ -63,7 +64,7 @@ export default function Login() {
   async function handleLogin(values) {
     try {
       setisLoading(true);
-      let response = await axios.post(`${config.baseUrl}${config.auth}/login`, values);
+      let response = await api.post(`${config.auth}/login`, values);
       if (response.status === 200) {
         localStorage.setItem("access_token", response.data.data.access_token);
         localStorage.setItem("refresh_token", response.data.data.refresh_token);
