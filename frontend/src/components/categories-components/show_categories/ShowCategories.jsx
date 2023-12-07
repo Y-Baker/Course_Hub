@@ -32,11 +32,12 @@ export default function ShowCategories() {
   function handleUpdate(category) {
     navigate(`/admin/updateCategory/${category.id}`, { state: { categoryData: category } });  
     }
+
     function handleDelete(id) {
       api.delete(`${config.api}/categories/${id}?page=1&per_page=100`)
       .then((resp) => {
           toast.success("deleted successfully");
-          setcategories(resp.data);
+          setcategories(prevCategories => prevCategories.filter(c => c.id !== id));
       })
       .catch((err) => {
           console.error(err);

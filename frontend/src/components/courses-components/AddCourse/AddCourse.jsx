@@ -11,16 +11,22 @@ export default function AddCourse(props) {
   const userContext = useContext(UserDataContext);
     const userData = userContext.userData; 
     const [loading, setLoading] = useState(true);
-
+    const [categories, setcategories] = useState([])
     const [isLoading, setisLoading] = useState(false)
     const [errorMessage, seterrorMessage] = useState('')
     const nav = useNavigate();
 
+
     useEffect(() => {
-        if (userContext.userData) {
-          setLoading(false);
-        }
-      }, [userContext.userData]);
+      api.get(`${config.api}/categories?page=1&per_page=100`)
+      .then((resp) => {
+        setcategories(resp.data)
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    }, [])
     const CourseSchema = Yup.object().shape({
         name: Yup.string()
           .required('Required'),
@@ -31,7 +37,7 @@ export default function AddCourse(props) {
           .positive('Must be positive')
           .integer('Must be an integer'),
         num_sections: Yup.number(),
-        category_id: Yup.string(),
+        category_id: Yup.string().required("you must choose category id from givin list"),
 
         sections: Yup.array()
           .of(
@@ -59,11 +65,19 @@ export default function AddCourse(props) {
             })
           )
       });
+
+      const handleCategoryChange = (event) => {
+        const categoryId = event.target.value;
+        formik.setFieldValue('category_id', categoryId);
+        formik.setFieldTouched('category_id', true);
+      };
+
+
     async function handleCourseSubmit(values) {
       values.num_sections = values.sections.length
       try {
         setisLoading(true);
-        let response = await api.post(`${config.baseUrl}${config.api}/instructors/${userData.id}/courses`, values);
+        let response = await api.post(`${config.api}/instructors/${userData.id}/courses`, values);
         if (response.status === 201)
         {
           setisLoading(false);
@@ -204,7 +218,7 @@ export default function AddCourse(props) {
                 required
                 /> */}
 
-                <label htmlFor="category_id">Category ID:</label>
+                {/* <label htmlFor="category_id">Category ID:</label>
                 <input
                 type="text"
                 name="category_id"
@@ -214,8 +228,28 @@ export default function AddCourse(props) {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 />
-                {formik.errors.category_id && formik.touched.category_id ? <div className="alert alert-danger">{formik.errors.category_id}</div> : null}
+                {formik.errors.category_id && formik.touched.category_id ? <div className="alert alert-danger">{formik.errors.category_id}</div> : null} */}
 
+                  <div>
+                    <label htmlFor="category_id">Category:</label>
+                    <select
+                      id="category_id"
+                      name="category_id"
+                      value={formik.values.category_id}
+                      onChange={handleCategoryChange}
+                      onBlur={formik.handleBlur}
+                    >
+                      <option value="" label="Select a category" />
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                    {formik.errors.category_id && formik.touched.category_id ? (
+                      <div className="alert alert-danger">{formik.errors.category_id}</div>
+                    ) : null}
+                  </div>
                 {/* <label htmlFor="instructor_id">Instructor ID:</label>
                 <Field id="instructor_id" name="instructor_id" placeholder="Instructor ID" />
                 {formik.errors.instructor_id && formik.touched.instructor_id ? <div className="alert alert-danger">{formik.errors.instructor_id}</div> : null}

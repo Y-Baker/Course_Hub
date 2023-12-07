@@ -96,35 +96,48 @@ export default function UpdateCategory() {
     });
   };
 
-  const handleAddToCategory = () => {
+  const handleAddToCategory = async () => {
     setisLoading(true);
+  
     const data = {
       'courses': addedCourses
-    }
-    api.put(`${config.api}/categories/${category.id}/add-courses`, data)
-    .then((response) => {
-      toast.success(response.data.message);
-    })
-    .catch((error) => {
+    };
+  
+    try {
+      await api.put(`${config.api}/categories/${category.id}/add-courses`, data);
+      toast.success("Courses added to category successfully");
+      
+      // Fetch and update the category and uncategorized courses after adding
+      getCategoryCourses(category.id, 1, 100);
+      getnoCategoryCourses(1, 100);
+    } catch (error) {
       console.error(error);
-      toast.error("error occured")
-    })
+      toast.error("Error occurred while adding courses to category");
+    }
+  
     setisLoading(false);
     setaddedCourses([]);
   };
-  const handleRemoveToCategory = () => {
+  
+  const handleRemoveToCategory = async () => {
     const data = {
       'courses': removedCourses
-    }
+    };
+  
     setisLoading(true);
-    api.put(`${config.api}/categories/${category.id}/remove-courses`, data)
-    .then((response) => {
-      toast.success(response.data.message);
-    })
-    .catch((error) => {
+  
+    try {
+      await api.put(`${config.api}/categories/${category.id}/remove-courses`, data);
+      toast.success("Courses removed from category successfully");
+      
+      // Fetch and update the category and uncategorized courses after removing
+      getCategoryCourses(category.id, 1, 100);
+      getnoCategoryCourses(1, 100);
+    } catch (error) {
       console.error(error);
-      toast.error("error occured")
-    })
+      toast.error("Error occurred while removing courses from category");
+    }
+  
     setisLoading(false);
     setremovedCourses([]);
   };
@@ -159,7 +172,7 @@ export default function UpdateCategory() {
         
         {isLoading ?  
         <button type='button' className='register-button'><i className='fas fa-spinner fa-spin'></i></button> :
-        <button  className='btn btn-primary btn-lg btn-block' disabled={!formik.dirty && formik.isValid} type="submit" onSubmit={handleCategorySubmit} >update Course</button>}
+        <button  className='btn btn-primary btn-lg btn-block' disabled={!formik.dirty && formik.isValid} type="submit" onSubmit={handleCategorySubmit} >update category</button>}
         <Toaster/>
       </form>
       <br/>
