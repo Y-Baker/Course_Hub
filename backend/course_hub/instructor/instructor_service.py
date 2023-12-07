@@ -5,9 +5,11 @@ from os import getenv
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-
+from datetime import datetime
 from models.instructor import Instructor
 from utils import sess_manager
+from models import storage
+
 
 class InstructorService:
     # __engine = None
@@ -36,3 +38,13 @@ class InstructorService:
             .offset(offset)\
                 .limit(per_page).all()
         return results
+
+    def get_total_students(self, instructor):
+        """method to get total students by instructor id"""
+        total_students = 0
+        for course in instructor.courses:
+            total_students += course.num_enrolled
+        instructor.total_students = total_students
+        instructor.updated_at = datetime.utcnow()
+        storage.save()
+        return total_students

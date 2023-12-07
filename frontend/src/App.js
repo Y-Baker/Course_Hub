@@ -33,6 +33,9 @@ import SearchLesson from './components/lesson-components/search-lesson/SearchLes
 import UpdateLesson from './components/lesson-components/update-lesson/UpdateLesson';
 import ApproveCourses from './components/courses-components/approve-courses/ApproveCourses';
 
+import Profile from './components/Profile/profile';
+
+
 function App() {
   // const [userData, setuserData] = useState({});
   // function TokenToUserData(decodedToken){
@@ -76,7 +79,7 @@ function App() {
       // {path:'logout', element: <ProtectedRoute userData={userData}><Logout saveUserData={saveUserData}/></ProtectedRoute>},
       /* using userContext instead of props */
       {path:'logout', element: <ProtectedRoute><Logout/></ProtectedRoute>},
-
+      {path: 'Profile', element: <ProtectedRoute><Profile/></ProtectedRoute>},
       {path:'register', element: <Register/>},
       // ,
       // {
