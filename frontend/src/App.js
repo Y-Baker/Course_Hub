@@ -34,6 +34,8 @@ import UpdateLesson from './components/lesson-components/update-lesson/UpdateLes
 import ApproveCourses from './components/courses-components/approve-courses/ApproveCourses';
 
 import Profile from './components/Profile/profile';
+import ShowLessons from './components/lesson-components/show_lesson/ShowLessons';
+import ShowSections from './components/section-components/show_section/ShowSections';
 
 
 function App() {
@@ -138,10 +140,12 @@ function App() {
       { path: 'addSection', element:<AddSection />},
       { path: 'SearchSection', element: <SearchSection /> },
       { path: 'updateSection/:id', element:<UpdateSection />},
+      { path: 'showSections', element: <ShowSections /> },
 
       { path: 'addLesson', element:<AddLesson />},
       { path: 'SearchLesson', element: <SearchLesson /> },
       { path: 'updateLesson/:id', element:<UpdateLesson />},
+      { path: 'showLessons', element: <ShowLessons /> },
     ],
   },
   ])

@@ -27,6 +27,16 @@ export default function ShowCourses() {
             console.error(err);
         })
     }, [])
+    function handleAdd(course) {
+        if (userData && userData.id === course.instructor_id) {
+            navigate(`/instructor/addSection`, { state: { courseData: course } });
+        } else {
+            toast.error("You are not allowed to edit this course !!", {
+                duration: 4000
+            })
+        }
+    
+      }
     function handleUpdate(course) {
         if (userData && userData.id === course.instructor_id) {
             navigate(`/instructor/updateCourse/${course.id}`, { state: { courseData: course } });
@@ -65,6 +75,7 @@ export default function ShowCourses() {
             <th scope="col">approved</th>
             <th scope="col">hours</th>
             <th scope="col">category id</th>
+            <th scope="col">add section</th>
             <th scope="col">update</th>
             <th scope="col">delete</th>
             </tr>
@@ -80,6 +91,10 @@ export default function ShowCourses() {
                 </td>
                 <td>{course.hours}</td>
                 <td>{course.category_id}</td>
+                <td>
+                    <button className='btn btn-secondary' onClick={() => handleAdd(course)}>add section</button>
+                    <Toaster/>
+                </td>
                 <td>
                     <button className='btn btn-secondary' onClick={() => handleUpdate(course)}>Update</button>
                     <Toaster/>
