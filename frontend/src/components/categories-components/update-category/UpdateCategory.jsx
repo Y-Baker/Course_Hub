@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import api from '../../api';
 import config from '../../config';
 import toast, { Toaster } from 'react-hot-toast';
-
+import './updateCategory.css'
 
 export default function UpdateCategory() {
   const location = useLocation()
@@ -16,7 +16,7 @@ export default function UpdateCategory() {
   const [addedCourses, setaddedCourses] = useState([]);
   const [removedCourses, setremovedCourses] = useState([]);
   const [categoryCourses, setcategoryCourses] = useState([])
-  const [allCourses, setallCourses] = useState([])
+  const [noCategoryCourses, setnoCategoryCourses] = useState([])
 
   useEffect(() => {
     formik.values.name = category.name;
@@ -48,11 +48,11 @@ export default function UpdateCategory() {
       toast.error("something went wrong");
     })
   }
-  function getAllCourses(page, per_page) {
+  function getnoCategoryCourses(page, per_page) {
     api.get(`${config.api}/courses/noCategory?page=${page}&per_page=${per_page}`)
     .then((resp) => {
       toast.success("all courses retrived");
-      setallCourses(resp.data);
+      setnoCategoryCourses(resp.data);
     }).catch((err)=> {
       console.error(err);
       toast.error("something went wrong");
@@ -61,8 +61,8 @@ export default function UpdateCategory() {
   useEffect(() => {
     if (categoryData !== null) {
       setloading(false);
-      getAllCourses(1, 100);
-      getCategoryCourses(1, 100);
+      getnoCategoryCourses(1, 100);
+      getCategoryCourses(category.id, 1, 100);
     }
   }, [])
   const formik = useFormik({
@@ -76,8 +76,18 @@ export default function UpdateCategory() {
 
 
   // Function to handle selecting/deselecting a course
-  const handleCourseSelection = (courseId) => {
+  const handleAddCourseSelection = (courseId) => {
     setaddedCourses((prevSelectedCourses) => {
+      if (prevSelectedCourses.includes(courseId)) {
+        return prevSelectedCourses.filter((id) => id !== courseId);
+      } else {
+        return [...prevSelectedCourses, courseId];
+      }
+    });
+  };
+
+  const handleRemoveCourseSelection = (courseId) => {
+    setremovedCourses((prevSelectedCourses) => {
       if (prevSelectedCourses.includes(courseId)) {
         return prevSelectedCourses.filter((id) => id !== courseId);
       } else {
@@ -88,30 +98,34 @@ export default function UpdateCategory() {
 
   const handleAddToCategory = () => {
     setisLoading(true);
-    api.put(`${config.api}/categories/${category.id}/add-courses`, addedCourses)
+    const data = {
+      'courses': addedCourses
+    }
+    api.put(`${config.api}/categories/${category.id}/add-courses`, data)
     .then((response) => {
-      toast.success(response.message);
+      toast.success(response.data.message);
     })
     .catch((error) => {
       console.error(error);
       toast.error("error occured")
     })
     setisLoading(false);
-    console.log('Adding courses to category:', addedCourses);
     setaddedCourses([]);
   };
   const handleRemoveToCategory = () => {
+    const data = {
+      'courses': removedCourses
+    }
     setisLoading(true);
-    api.put(`${config.api}/categories/${category.id}/remove-courses`, removedCourses)
+    api.put(`${config.api}/categories/${category.id}/remove-courses`, data)
     .then((response) => {
-      toast.success(response.message);
+      toast.success(response.data.message);
     })
     .catch((error) => {
       console.error(error);
       toast.error("error occured")
     })
     setisLoading(false);
-    console.log('removing courses from category:', removedCourses);
     setremovedCourses([]);
   };
   if (loading) {
@@ -150,6 +164,48 @@ export default function UpdateCategory() {
       </form>
       <br/>
 
+      <div>
+      <div className="category-box">
+        <h2>Add Category To Courses</h2>
+        <ul>
+          {noCategoryCourses.map((course, index) => (
+              <li key={course.id}>
+              <label htmlFor={`course${index}`}>{course.name}</label>
+                <input
+                  name={`course${index}`}
+                  type="checkbox"
+                  checked={addedCourses.includes(course.id)}
+                  onChange={() => handleAddCourseSelection(course.id)}
+                />
+              </li>
+            ))}
+        </ul>
+        <button className='btn btn-secondary' disabled={addedCourses.length === 0} onClick={handleAddToCategory}>Add to Category</button>
+      </div>
+
+      <br/>
+
+      <div className="category-box">
+        <h2>Remove Courses from Category</h2>
+        <ul>
+          {categoryCourses.map((course, index) => (
+              <li key={course.id}>
+                <label htmlFor={`courseToRemove${index}`}>
+                {course.name}
+                </label>
+                  <input
+                    name={`courseToRemove${index}`}
+                    type="checkbox"
+                    checked={removedCourses.includes(course.id)}
+                    onChange={() => handleRemoveCourseSelection(course.id)}
+                  />
+
+              </li>
+            ))}
+        </ul>
+        <button className='btn btn-danger' disabled={removedCourses.length === 0} onClick={handleRemoveToCategory}>Remove from Category</button>
+      </div>
+    </div>
 
 
     </>

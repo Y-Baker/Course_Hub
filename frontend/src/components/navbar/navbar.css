@@ -17,8 +17,8 @@ nav {
 }
 
 .logo {
-  width: 50px; /* Adjust the size of your logo */
-  height: 50px; /* Adjust the size of your logo */
+  width: 10px; /* Adjust the size of your logo */
+  height: 10px; /* Adjust the size of your logo */
   border-radius: 50%;
   overflow: hidden;
   margin-right: 10px; /* Adjust the spacing between logo and other elements in the navbar */

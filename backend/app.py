@@ -10,6 +10,7 @@ from flasgger import Swagger
 from models import storage
 from course_hub.user import user_views
 from course_hub.course import course_views
+from utils import sess_manager
 from course_hub.instructor import instructor_views
 from course_hub.student import student_views
 
@@ -80,9 +81,14 @@ def token_in_blocklist_callback(jwt_header,jwt_data):
 
     return token is not None
 
+# @app.before_request 
+# def before_request_callback():
+#     sess_manager.reload()
+
 @app.after_request 
 def after_request_callback( response ):
     storage.close()
+    sess_manager.close()
     return response
 
 # @login_manager.user_loader

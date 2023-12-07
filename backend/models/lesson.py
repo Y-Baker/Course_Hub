@@ -17,7 +17,7 @@ class Lesson(BaseModel, Base):
     content = Column(Text, nullable=False)
     section_id = Column(String(60),
                         ForeignKey('sections.id'),
-                        nullable=False)
+                        nullable=True)
 
     def to_dict(self):
         """returns dict representation of lesson"""

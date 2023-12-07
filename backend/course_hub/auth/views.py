@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """new view for State objects that handles all default RESTFul API actions"""
-from threading import currentThread
 from marshmallow import ValidationError
 
 import os

@@ -30,10 +30,7 @@ export default function AddCourse(props) {
           .required('Required')
           .positive('Must be positive')
           .integer('Must be an integer'),
-        num_sections: Yup.number()
-          .required('Required')
-          .positive('Must be positive')
-          .integer('Must be an integer'),
+        num_sections: Yup.number(),
         category_id: Yup.string(),
 
         sections: Yup.array()
@@ -63,6 +60,7 @@ export default function AddCourse(props) {
           )
       });
     async function handleCourseSubmit(values) {
+      values.num_sections = values.sections.length
       try {
         setisLoading(true);
         let response = await api.post(`${config.baseUrl}${config.api}/instructors/${userData.id}/courses`, values);
@@ -102,7 +100,7 @@ export default function AddCourse(props) {
         description: '',
         approved: false,
         hours: '',
-        num_sections: '',
+        num_sections: 1,
         category_id: undefined,
         instructor_id: userData.id,
         sections: [
@@ -186,13 +184,12 @@ export default function AddCourse(props) {
                 <input
                 type="number"
                 name="num_sections"
-                id = "num_sections"
+                id="num_sections"
                 placeholder="Number of Sections"
-                value={formik.values.num_sections}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                value={formik.values.sections.length}
                 required
-                />
+                disabled
+              />
                 {formik.errors.num_sections && formik.touched.num_sections ? <div className="alert alert-danger">{formik.errors.num_sections}</div> : null}
                 {/* <label htmlFor="num_enrolled">Number Enrolled:</label>
                 <Field id="num_enrolled" name="num_enrolled" placeholder="Number Enrolled" type="number" />
@@ -209,7 +206,7 @@ export default function AddCourse(props) {
 
                 <label htmlFor="category_id">Category ID:</label>
                 <input
-                type="number"
+                type="text"
                 name="category_id"
                 id = "category_id"
                 placeholder="Category ID"
