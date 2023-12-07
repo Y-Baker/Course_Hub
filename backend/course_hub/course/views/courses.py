@@ -165,3 +165,17 @@ def update_course(course_id):
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
     return course_service.update_course(course, data)
+
+
+@course_views.route('/courses/not-approved', methods=['GET'])
+@jwt_required()
+@user_required([0, 1])
+def get_not_approved_courses():
+    """reterive all not approved courses from storage
+    """
+    return jsonify(list(map(lambda course:
+                            course.to_dict(), course_service.get_courses(
+                                request.args.get("page", 1, type=int),
+                                request.args.get("per_page", 3, type=int),
+                                current_user
+                            ))))

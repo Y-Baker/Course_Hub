@@ -5,7 +5,7 @@ from os import getenv
 from flask import jsonify
 from marshmallow import ValidationError
 
-from sqlalchemy import create_engine, func
+from sqlalchemy import create_engine, func, and_
 from sqlalchemy.orm import scoped_session, sessionmaker
 from course_hub.course.schemas.course_schema import CourseSchema, UpdateCourseSchema
 
@@ -14,25 +14,26 @@ from models.section import Section
 from models.lesson import Lesson
 from models.category import Category
 from models.instructor import Instructor
-
+from utils import sess_manager
 
 class CourseService:
-    __engine = None
-    __session = None
+    # __engine = None
+    # __session = None
 
     def __init__(self):
-        CH_MYSQL_USER = getenv('CH_MYSQL_USER')
-        CH_MYSQL_PWD = getenv('CH_MYSQL_PWD')
-        CH_MYSQL_HOST = getenv('CH_MYSQL_HOST')
-        CH_MYSQL_DB = getenv('CH_MYSQL_DB')
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                format(CH_MYSQL_USER,
-                                        CH_MYSQL_PWD,
-                                        CH_MYSQL_HOST,
-                                        CH_MYSQL_DB))
-        sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(sess_factory)
-        self.__session = Session
+        # CH_MYSQL_USER = getenv('CH_MYSQL_USER')
+        # CH_MYSQL_PWD = getenv('CH_MYSQL_PWD')
+        # CH_MYSQL_HOST = getenv('CH_MYSQL_HOST')
+        # CH_MYSQL_DB = getenv('CH_MYSQL_DB')
+        # self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
+        #                         format(CH_MYSQL_USER,
+        #                                 CH_MYSQL_PWD,
+        #                                 CH_MYSQL_HOST,
+        #                                 CH_MYSQL_DB))
+        # sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        # Session = scoped_session(sess_factory)
+        sess_manager.reload()
+        self.__session = sess_manager.session
         
     def get_courses(self, page, per_page):
         """method to paginate courses"""
@@ -42,7 +43,23 @@ class CourseService:
             .offset(offset)\
                 .limit(per_page).all()
         return results
-
+    
+    def get_not_approved_courses(self, page, per_page, currentUser):
+        """method to paginate courses"""
+        offset = (page - 1) * per_page
+        results = []
+        if currentUser.role == 1:
+            results = self.__session.query(Course)\
+            .filter_by(and_(Course.approved == False,
+                            Course.instructor_id == currentUser.id))\
+            .offset(offset)\
+                .limit(per_page).all()
+        elif currentUser.role == 0:
+            results = self.__session.query(Course)\
+                .filter_by(Course.approved == False)\
+            .offset(offset)\
+                .limit(per_page).all()
+        return results
 
     def get_courses_without_category(self, page, per_page):
         """method to paginate courses"""

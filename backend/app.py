@@ -10,7 +10,7 @@ from flasgger import Swagger
 from models import storage
 from course_hub.user import user_views
 from course_hub.course import course_views
-
+from utils import sess_manager
 cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 #registering bluebrints
@@ -75,9 +75,14 @@ def token_in_blocklist_callback(jwt_header,jwt_data):
 
     return token is not None
 
+# @app.before_request 
+# def before_request_callback():
+#     sess_manager.reload()
+
 @app.after_request 
 def after_request_callback( response ):
     storage.close()
+    sess_manager.close()
     return response
 
 # @login_manager.user_loader
