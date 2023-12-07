@@ -30,12 +30,10 @@ class SessionManagement:
 
     def reload(self):
         """reloads data from the database"""
-        print("calling reload")
         Base.metadata.create_all(self.__engine)
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.session = scoped_session(sess_factory)
 
     def close(self):
         """call remove() method on the private session attribute"""
-        print("calling close")
         self.session.remove()

@@ -6,7 +6,7 @@ from flask import jsonify
 from marshmallow import ValidationError
 
 from sqlalchemy import create_engine, func, and_
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker, aliased
 from course_hub.course.schemas.course_schema import CourseSchema, UpdateCourseSchema
 
 from models.course import Course
@@ -48,17 +48,19 @@ class CourseService:
         """method to paginate courses"""
         offset = (page - 1) * per_page
         results = []
+
         if currentUser.role == 1:
             results = self.__session.query(Course)\
-            .filter_by(and_(Course.approved == False,
+                .filter(and_(Course.approved == False,
                             Course.instructor_id == currentUser.id))\
-            .offset(offset)\
+                .offset(offset)\
                 .limit(per_page).all()
         elif currentUser.role == 0:
             results = self.__session.query(Course)\
-                .filter_by(Course.approved == False)\
-            .offset(offset)\
+                .filter(Course.approved == False)\
+                .offset(offset)\
                 .limit(per_page).all()
+
         return results
 
     def get_courses_without_category(self, page, per_page):
@@ -143,6 +145,35 @@ class CourseService:
             return None
 
 
+    def get_lesson_by_search_term(self, filter_by, search_term):
+        """get course by filkter by and search term
+
+        Args:
+            filter_by (id, name): _description_
+            search_term (the given id or name): _description_
+        """
+        if filter_by.lower() == 'id':
+            return self.__session.query(Lesson).filter(Lesson.id == search_term).all()
+        elif filter_by.lower() == 'name':
+            return self.__session.query(Lesson).filter(func.lower(Lesson.name).like(f"%{search_term.lower()}%")).all()
+        else:
+            return None
+
+
+    def get_section_by_search_term(self, filter_by, search_term):
+        """get course by filkter by and search term
+
+        Args:
+            filter_by (id, name): _description_
+            search_term (the given id or name): _description_
+        """
+        if filter_by.lower() == 'id':
+            return self.__session.query(Section).filter(Section.id == search_term).all()
+        elif filter_by.lower() == 'name':
+            return self.__session.query(Section).filter(func.lower(Section.name).like(f"%{search_term.lower()}%")).all()
+        else:
+            return None
+
     def update_course(self, existing_course, data):
         # update logic !
         sections_data = data.pop('sections', [])
@@ -207,3 +238,28 @@ class CourseService:
             return self.__session.query(Category).filter(func.lower(Category.name).like(f"%{search_term.lower()}%")).all()
         else:
             return None
+
+    def get_all_instructor_lessons(self, instructor_id):
+        """return list of all instructor's lessons"""
+        CourseAlias = aliased(Course)
+        SectionAlias = aliased(Section)
+        lessons = (
+            self.__session.query(Lesson)
+                            .join(SectionAlias, Lesson.section_id == SectionAlias.id)
+                            .join(CourseAlias, SectionAlias.course_id == CourseAlias.id)
+                            .filter(and_(CourseAlias.instructor_id == instructor_id,
+                                    CourseAlias.approved == True))
+                            .all())
+        return lessons
+
+    def get_all_instructor_sections(self, instructor_id):
+        """return list of all instructor's sections"""
+        CourseAlias = aliased(Course)
+        sections = (
+            self.__session.query(Section)
+                            .join(CourseAlias, Section.course_id == CourseAlias.id)
+                            .filter(and_(CourseAlias.instructor_id == instructor_id,
+                                    CourseAlias.approved == True))
+                            .all())
+        
+        return sections
