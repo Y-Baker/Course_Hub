@@ -46,12 +46,17 @@ def get_courses_category(category_id):
     if category is None:
         abort(404)
 
+    approved = eval(request.args.get("approved", "false", type=str).capitalize())
+    courses = course_service.get_courses_by_category(
+        category_id,
+        request.args.get("page", 1, type=int),
+        request.args.get("per_page", 3, type=int)
+    )
+    if approved:
+        courses = list(filter(lambda course: course.approved, courses))
+
     return jsonify(list(map(lambda category:
-                            category.to_dict(), course_service.get_courses_by_category(
-                                category_id,
-                                request.args.get('page', 1, type=int),
-                                request.args.get('per_page', 3, type=int)
-                            ))))
+                            category.to_dict(), courses)))
     # return jsonify([course.to_dict() for course in category.courses])
 
 
@@ -95,7 +100,7 @@ def search_category(filter_by, search_term):
 # admin permission
 @course_views.route('/categories', methods=['POST'])
 @jwt_required()
-# @user_required([0])
+@user_required([0])
 @swag_from('../documentation/categories/post_category.yml', methods=['POST'])
 def create_category():
     """post category to storage

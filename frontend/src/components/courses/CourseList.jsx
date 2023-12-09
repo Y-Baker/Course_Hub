@@ -16,10 +16,10 @@ function CourseList({ filter = null }) {
   const [loading, setLoading] = useState(true);
   let url_api = config.api + "/";
   if (filter === null) {
-    url_api += "courses?page=1&per_page=20";
+    url_api += "courses?approved=true&page=1&per_page=20";
   } else {
     // categories/<category_id>/courses
-    url_api += "categories/" + filter.id + "/courses?page=1&per_page=20";
+    url_api += "categories/" + filter.id + "/courses?approved=1&page=1&per_page=20";
   }
   useEffect(() => {
     api
@@ -43,7 +43,7 @@ function CourseList({ filter = null }) {
         <MDBRow  style={{ paddingLeft: "40px", paddingRight: "40px" }}>
         {courses.map((course) => (
           <MDBCol lg="4">
-            {course.approved && <CourseCard course={course} />}
+            <CourseCard course={course} />
           </MDBCol>
         ))}
         </MDBRow>
