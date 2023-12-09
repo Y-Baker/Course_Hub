@@ -16,7 +16,7 @@ function CourseCard({ course }) {
             <strong style={{ fontSize: "30px" }}>{course.name}</strong>
           </Link>
           <Link
-            to={`/instroctor/${course.instructor_id}`}
+            to={`/users/${course.instructor_id}`}
             className="link-style"
           >
             <p

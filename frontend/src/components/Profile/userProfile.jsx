@@ -14,7 +14,11 @@ import {
   MDBCardImage,
 } from "mdb-react-ui-kit";
 
-function UserProfile({ data }) {
+function UserProfile({ data, owner}) {
+    let courses = data.courses;
+    if (owner == false) {
+      courses = courses.filter(course => course.approved == true);
+    }
     return (
         <section style={{ backgroundColor: "#eee" }}>
           <MDBContainer className="py-5">
@@ -130,12 +134,12 @@ function UserProfile({ data }) {
                 {data.role == 1 ? "My Courses" : "My Learning"}
               </MDBCardTitle>
               <MDBRow className="py-4">
-                {data.courses.length == 0 ? (
+                {courses.length == 0 ? (
                   <strong>No Data!</strong>
                 ) : (
-                  data.courses.map((course, index) => (
+                  courses.map((course, index) => (
                     <MDBCol lg="5" key={course.id || index}>
-                      <CourseCardProfile course={course} />
+                      <CourseCardProfile course={course} owner={owner}/>
                     </MDBCol>
                   ))
                 )}

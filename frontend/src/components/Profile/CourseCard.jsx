@@ -4,7 +4,7 @@ import { Card, Button, Row, Col } from "react-bootstrap";
 import Image from "../../assets/images/OIF.jpg";
 import "./CourseCard.css";
 
-function CourseCardProfile({ course }) {
+function CourseCardProfile({ course, owner }) {
   return (
     <Card className="my-3 p-3 rounded">
       <Card.Img src={Image} variant="top" />
@@ -15,7 +15,12 @@ function CourseCardProfile({ course }) {
             <strong style={{ fontSize: "30px" }}>{course.name}</strong>
           </Link>
           <div
-            style={{ paddingTop: "15px", color: "#373a3c", fontSize: "16px", fontWeight: "bold"}}
+            style={{
+              paddingTop: "15px",
+              color: "#373a3c",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
           >
             {course.approved ? (
               <p style={{ color: "#27ae60" }}>Approved</p>
@@ -31,26 +36,32 @@ function CourseCardProfile({ course }) {
           <p style={{ color: "#0C356A", paddingTop: "8px" }}>
             Total Hours: {course.hours}
           </p>
-        {course.approved ? (
-            <Link to={`/courses/${course.id}`}>
-                <button
-                className="btn btn-outline-success"
-                type="submit"
-                >
-                More Details
+          {course.approved ? (
+            <div>
+              {owner && (
+                <Link to={`/instructor/`}>
+                  <button
+                    className="btn btn-outline-success"
+                    type="submit"
+                    style={{ marginRight: "5px" }}
+                  >
+                    Edit
+                  </button>
+                </Link>
+              )}
+              <Link to={`/courses/${course.id}`}>
+                <button className="btn btn-outline-success" type="submit">
+                  More Details
                 </button>
-            </Link>
-            ) : (
+              </Link>
+            </div>
+          ) : (
             <Link to={`/instructor/`}>
-                <button
-                className="btn btn-outline-success"
-                type="submit"
-                >
-                Update
-                </button>
+              <button className="btn btn-outline-success" type="submit">
+                Edit
+              </button>
             </Link>
-            )
-        }
+          )}
         </Card.Text>
       </Card.Body>
     </Card>

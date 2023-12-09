@@ -42,7 +42,7 @@ function Profile() {
   if (loading) {
     return <Loading />;
   } else {
-    return <UserProfile data={data} />;
+    return <UserProfile data={data} owner={true}/>;
   }
 }
 

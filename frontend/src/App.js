@@ -32,6 +32,7 @@ import UpdateLesson from './components/lesson-components/update-lesson/UpdateLes
 import ApproveCourses from './components/courses-components/approve-courses/ApproveCourses';
 
 import Profile from './components/Profile/profile';
+import UserPage from './components/user-page/userPage';
 import ShowLessons from './components/lesson-components/show_lesson/ShowLessons';
 import ShowSections from './components/section-components/show_section/ShowSections';
 
@@ -146,6 +147,13 @@ function App() {
       { path: 'showLessons', element: <ShowLessons /> },
     ],
   },
+  {
+    path: 'users',
+    element: <Layout />,
+    children: [
+      { path: ':id', element: <UserPage />},
+    ]
+  }
   ])
 
   return (
