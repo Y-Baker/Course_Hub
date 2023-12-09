@@ -2,7 +2,7 @@
 """module init"""
 # from flask_login import LoginManager, current_user, login_required
 
-from course_hub import app, user_views, auth_views, jwt
+from course_hub import app, jwt
 from os import getenv
 from flask import jsonify
 from flask_cors import CORS
@@ -10,6 +10,7 @@ from flasgger import Swagger
 from models import storage
 from course_hub.user import user_views
 from course_hub.course import course_views
+from course_hub.auth import auth_views
 from utils import sess_manager
 from course_hub.instructor import instructor_views
 from course_hub.student import student_views
