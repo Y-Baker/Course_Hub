@@ -6,7 +6,7 @@ import "./profile.css";
 import { UserDataContext } from "../UserContextProvider/UserContextProvider";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading/loading";
-import CourseCard from "../cards/CourseCard";
+import CourseCardProfile from "./CourseCard";
 
 import {
   MDBCol,
@@ -17,7 +17,7 @@ import {
   MDBCardText,
   MDBCardBody,
   MDBCardImage,
-  MDBBtn,
+MDBBtn,
   MDBBreadcrumb,
   MDBBreadcrumbItem,
   MDBProgress,
@@ -64,8 +64,6 @@ function Profile() {
     return <Loading />;
   } else {
     return (
-      <>
-        {console.log(data)}
         <section style={{ backgroundColor: "#eee" }}>
           <MDBContainer className="py-5">
             <MDBRow>
@@ -185,7 +183,7 @@ function Profile() {
                 ) : (
                   data.courses.map((course) => (
                     <MDBCol lg="5">
-                      {course.approved && <CourseCard course={course} />}
+                      <CourseCardProfile course={course} />
                     </MDBCol>
                   ))
                 )}
@@ -193,7 +191,6 @@ function Profile() {
             </MDBRow>
           </MDBContainer>
         </section>
-      </>
     );
   }
 }
