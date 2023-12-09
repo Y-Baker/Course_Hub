@@ -54,16 +54,16 @@ function Home(props) {
           <MDBContainer className="py-4">
             <MDBRow>
               {categories.map((category, index) => (
-                <div>
+                <>
                   {category.courses.length > 0 && (
                     <>
-                      <div className="SubHeading">
+                      <div className="SubHeading" key={category.id || index}>
                         <h2>{category.name}</h2>
                       </div>
                       <CourseList filter={category} />
                     </>
                   )}
-                </div>
+                </>
               ))}
             </MDBRow>
           </MDBContainer>

@@ -43,8 +43,8 @@ function CourseList({ filter = null }) {
     return (
       <MDBContainer className="py-4">
         <MDBRow  style={{ paddingLeft: "40px", paddingRight: "40px" }}>
-        {courses.map((course) => (
-          <MDBCol lg="4">
+        {courses.map((course, index) => (
+          <MDBCol lg="4" key={course.id || index}>
             <CourseCard course={course} />
           </MDBCol>
         ))}

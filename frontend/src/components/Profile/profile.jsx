@@ -181,8 +181,8 @@ function Profile() {
                 {data.courses.length == 0 ? (
                   <strong>No Data!</strong>
                 ) : (
-                  data.courses.map((course) => (
-                    <MDBCol lg="5">
+                  data.courses.map((course, index) => (
+                    <MDBCol lg="5" key={course.id || index}>
                       <CourseCardProfile course={course} />
                     </MDBCol>
                   ))
