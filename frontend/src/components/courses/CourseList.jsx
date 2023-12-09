@@ -37,6 +37,8 @@ function CourseList({ filter = null }) {
 
   if (loading) {
     return <Loading />;
+  } else if (courses.length === 0) {
+    return <div>No courses found</div>;
   } else {
     return (
       <MDBContainer className="py-4">

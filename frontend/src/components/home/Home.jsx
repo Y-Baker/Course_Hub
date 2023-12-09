@@ -53,14 +53,17 @@ function Home(props) {
           <hr />
           <MDBContainer className="py-4">
             <MDBRow>
-              {categories.map((category) => (
-                <>
-                  <div className="SubHeading">
-                    <h2>{category.name}</h2>
-                  </div>
-                  {/* <h2>{category.name}</h2> */}
-                  <CourseList filter={category} />
-                </>
+              {categories.map((category, index) => (
+                <div>
+                  {category.courses.length > 0 && (
+                    <>
+                      <div className="SubHeading">
+                        <h2>{category.name}</h2>
+                      </div>
+                      <CourseList filter={category} />
+                    </>
+                  )}
+                </div>
               ))}
             </MDBRow>
           </MDBContainer>
