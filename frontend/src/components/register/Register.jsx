@@ -16,7 +16,6 @@ export default function Register() {
     try {
       setisLoading(true);
       let response = await api.post(`${config.auth}/sign-up`, values);
-      console.log(response.status)
       if (response.status === 201)
       {
         setisLoading(false);

@@ -15,7 +15,7 @@ export default function UpdateCourse(props) {
   const userContext = useContext(UserDataContext);
   const { id } = useParams();
   const location = useLocation();
-  const { courseData } = location.state || null;
+  const { courseData } = null || location.state;
   const [fetchedCourse, setfetchedCourse] = useState(courseData)
 
   let userData = userContext.userData;

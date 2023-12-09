@@ -11,8 +11,6 @@ import Register from './components/register/Register';
 import Courses from './components/courses/Courses'
 import NotFound from './components/not-found/NotFound'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
-import { useState, useEffect, useCallback, useContext } from 'react';
-import { jwtDecode } from 'jwt-decode';
 import Forbidden from './components/forbidden/Forbidden';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 
