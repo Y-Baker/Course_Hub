@@ -7,6 +7,7 @@ import { useFormik} from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
 import './addCourse.css'
 import api from '../../api';
+import Loading from '../../Loading/loading';
 export default function AddCourse(props) {
   const userContext = useContext(UserDataContext);
     const userData = userContext.userData; 
@@ -137,7 +138,7 @@ export default function AddCourse(props) {
       onSubmit: handleCourseSubmit
     });
     if (loading){
-        return <><div className="alert">Loading ...</div></>
+        return <Loading/>
     }
     else {
     return <>

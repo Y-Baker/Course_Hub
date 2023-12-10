@@ -4,6 +4,7 @@ import api from '../../api';
 import toast, { Toaster } from 'react-hot-toast';
 import config from '../../config';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../../Loading/loading';
 
 
 export default function SearchSection() {
@@ -57,7 +58,7 @@ export default function SearchSection() {
 
   
     if (loading){
-      return <div className="card">Loading...</div>
+      return <Loading />
     } else {
       return <>
        <div>

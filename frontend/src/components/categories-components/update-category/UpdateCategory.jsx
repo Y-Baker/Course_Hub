@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import api from '../../api';
 import config from '../../config';
 import toast, { Toaster } from 'react-hot-toast';
+import Loading from '../../Loading/loading';
 import './updateCategory.css'
 
 export default function UpdateCategory() {
@@ -142,7 +143,7 @@ export default function UpdateCategory() {
     setremovedCourses([]);
   };
   if (loading) {
-    return <div className="info">Loading</div>
+    return <Loading/>
   } else {
     return <>
       <form onSubmit={formik.handleSubmit}>

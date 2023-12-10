@@ -6,6 +6,7 @@ import api from '../../api';
 import config from '../../config';
 import toast, { Toaster } from 'react-hot-toast';
 import './updateSection.css'
+import Loading from '../../Loading/loading';
 
 export default function UpdateSection() {
   const [loading, setloading] = useState(true)
@@ -107,7 +108,7 @@ export default function UpdateSection() {
     };
 
   if (loading) {
-    return <div className="info">Loading</div>
+    return <Loading />
   } else {
     return <>
       <form onSubmit={formik.handleSubmit}>

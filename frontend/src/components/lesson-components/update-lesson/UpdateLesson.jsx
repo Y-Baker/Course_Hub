@@ -4,6 +4,7 @@
   import * as Yup from 'yup';
   import api from '../../api';
   import config from '../../config';
+  import Loading from '../../Loading/loading';
   import toast, { Toaster } from 'react-hot-toast';
   import './updateLesson.css'
   
@@ -56,7 +57,7 @@
     })
 
     if (loading) {
-      return <div className="info">Loading</div>
+      return <Loading />
     } else {
       return <>
         <form onSubmit={formik.handleSubmit}>
