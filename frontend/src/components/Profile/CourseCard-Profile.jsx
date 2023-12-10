@@ -2,15 +2,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import Image from "../../assets/images/OIF.jpg";
-import "./CourseCard.css";
+import { useNavigate } from "react-router-dom";
+import "./CourseCard-Profile.css";
 
 function CourseCardProfile({ course, owner }) {
+  const navigate = useNavigate();
+  function handleEdit(course) {
+    navigate(`/instructor/updateCourse/${course.id}`, {
+      state: { courseData: course },
+    });
+  }
+
   return (
     <Card className="my-3 p-3 rounded">
       <Card.Img src={Image} variant="top" />
       <Card.Body>
         <Card.Title as="div" className="card-head">
-          {/*/instructor/updateCourse/:id*/}
           <Link to={`/courses/${course.id}`} className="link-style">
             <strong style={{ fontSize: "30px" }}>{course.name}</strong>
           </Link>
@@ -39,15 +46,14 @@ function CourseCardProfile({ course, owner }) {
           {course.approved ? (
             <div>
               {owner && (
-                <Link to={`/instructor/`}>
-                  <button
-                    className="btn btn-outline-success"
-                    type="submit"
-                    style={{ marginRight: "5px" }}
-                  >
-                    Edit
-                  </button>
-                </Link>
+                <button
+                  className="btn btn-outline-success"
+                  type="submit"
+                  style={{ marginRight: "5px" }}
+                  onClick={() => handleEdit(course)}
+                >
+                  Edit
+                </button>
               )}
               <Link to={`/courses/${course.id}`}>
                 <button className="btn btn-outline-success" type="submit">
@@ -56,11 +62,13 @@ function CourseCardProfile({ course, owner }) {
               </Link>
             </div>
           ) : (
-            <Link to={`/instructor/`}>
-              <button className="btn btn-outline-success" type="submit">
-                Edit
-              </button>
-            </Link>
+            <button
+              className="btn btn-outline-success"
+              type="submit"
+              onClick={() => handleEdit(course)}
+            >
+              Edit
+            </button>
           )}
         </Card.Text>
       </Card.Body>

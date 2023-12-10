@@ -25,7 +25,11 @@ function UserPage() {
         }
       })
       .catch((err) => {
-        navigate("/not-found");
+        if (err.response.status === 401) {
+          navigate("/forbidden");
+        } else {
+          navigate("/not-found");
+        }
         return;
       });
   }, []);

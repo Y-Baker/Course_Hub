@@ -13,7 +13,6 @@ function Profile() {
   const [data, setData] = useState({});
   const navigate = useNavigate();
 
-  let roleApi = "";
   useEffect(() => {
     // make wait for userData to be set
 
@@ -21,12 +20,7 @@ function Profile() {
       navigate("/login");
       return;
     }
-    if (userData.role == 1) {
-      roleApi = "instructors";
-    } else if (userData.role == 2) {
-      roleApi = "students";
-    }
-    const url_api = config.api + "/" + roleApi + "/" + userData.id;
+    const url_api = config.api + "/users/" + userData.id + "?all=true";
     api
       .get(`${url_api}`)
       .then((res) => {
