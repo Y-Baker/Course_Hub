@@ -47,23 +47,22 @@ function CourseCardProfile({ course, owner }) {
             <div>
               {owner && (
                 <button
-                  className="btn btn-outline-success"
+                  className="btn btn-outline-success mr edit"
                   type="submit"
-                  style={{ marginRight: "5px" }}
                   onClick={() => handleEdit(course)}
                 >
                   Edit
                 </button>
               )}
               <Link to={`/courses/${course.id}`}>
-                <button className="btn btn-outline-success" type="submit">
+                <button className="btn btn-outline-success basic" type="submit">
                   More Details
                 </button>
               </Link>
             </div>
           ) : (
             <button
-              className="btn btn-outline-success"
+              className="btn btn-outline-success edit"
               type="submit"
               onClick={() => handleEdit(course)}
             >

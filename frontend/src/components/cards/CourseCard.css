@@ -27,7 +27,7 @@
     margin-bottom: 3px;
 }
 
-.more-details {
+.basic {
     --bs-btn-border-color: #0174BE !important;
     --bs-btn-color: #0174BE !important;
     --bs-btn-hover-bg: #0174BE !important;
@@ -60,3 +60,13 @@
     --bs-btn-disabled-border-color: #27ae60 !important;
 }
 
+.edit {
+    --bs-btn-border-color: #51585e !important;
+    --bs-btn-color: #51585e !important;
+    --bs-btn-hover-bg: #51585e !important;
+    --bs-btn-hover-border-color: #51585e !important;
+    --bs-btn-active-bg: #51585e !important;
+    --bs-btn-active-border-color: #51585e !important;
+    --bs-btn-disabled-color: #51585e !important;
+    --bs-btn-disabled-border-color: #51585e !important;
+}

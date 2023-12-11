@@ -19,6 +19,7 @@ function CourseCard({ course, admin }) {
         .delete(`${config.api}/courses/${course.id}`)
         .then((response) => {
           toast.success(response.data.message);
+          window.location.reload();
         })
         .catch((error) => {
           console.error(error);
@@ -33,6 +34,7 @@ function CourseCard({ course, admin }) {
         .put(`${config.api}/courses/${course.id}/approve`, course.id)
         .then((response) => {
           toast.success(response.data.message);
+          window.location.reload();
         })
         .catch((error) => {
           console.error(error);
@@ -89,7 +91,7 @@ function CourseCard({ course, admin }) {
             )}
             <Link to={`/courses/${course.id}`}>
               <button
-                className="btn btn-outline-success mb more-details"
+                className="btn btn-outline-success mb basic"
                 type="submit"
               >
                 More Details
