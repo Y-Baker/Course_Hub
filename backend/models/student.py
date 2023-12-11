@@ -33,4 +33,6 @@ class Student(BaseRole, Base):
         else:
             new_dict['interested'] = {'name': "Not Defined", 'id': '0'}
         new_dict['courses'] = [course.to_dict() for course in self.my_courses]
+        if new_dict.get('user'):
+            del new_dict['user']
         return new_dict

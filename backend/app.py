@@ -14,6 +14,7 @@ from course_hub.auth import auth_views
 from utils import sess_manager
 from course_hub.instructor import instructor_views
 from course_hub.student import student_views
+from course_hub.enrollment import enrollment_views
 
 
 cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -24,6 +25,7 @@ app.register_blueprint(auth_views)
 app.register_blueprint(course_views)
 app.register_blueprint(instructor_views)
 app.register_blueprint(student_views)
+app.register_blueprint(enrollment_views)
 
 #flask_login configurations
 # login_manager = LoginManager()

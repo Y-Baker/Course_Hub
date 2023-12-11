@@ -142,8 +142,6 @@ def create_course(instructor_id):
         new_course = CourseSchema(context={'data': data}).load(data)
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
-    print("before")
-    print(new_course)
     new_course.save()
     return jsonify({
         "message" : "success",

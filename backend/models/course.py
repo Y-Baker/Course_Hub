@@ -1,30 +1,13 @@
 #!/usr/bin/python3
 """ holds class Courses"""
 
-from datetime import datetime
 from models.base_model import BaseModel, Base
-from sqlalchemy import Table
 from sqlalchemy import Column, String, Integer, DateTime, Boolean
 from sqlalchemy import ForeignKey
-from sqlalchemy import CheckConstraint as Check
 from sqlalchemy.orm import relationship
 
 from models.instructor import Instructor
-
-
-# association table between Courses and Students
-enrollments = Table('enrollments', Base.metadata,
-                    Column('student_id', String(60),
-                           ForeignKey('students.id'),
-                           primary_key=True, nullable=False),
-                    Column('course_id', String(60),
-                           ForeignKey('courses.id'),
-                           primary_key=True, nullable=False),
-                    Column('completed', Integer,
-                           Check('completed >= 0 AND completed <= 100'),
-                           nullable=False),
-                    Column('enrolled_date', DateTime, default=datetime.utcnow)
-                    )
+from models.category import Category
 
 
 class Course(BaseModel, Base):
@@ -54,8 +37,11 @@ class Course(BaseModel, Base):
         from models import storage
         new_dict = super().to_dict()
         instructor = storage.get(Instructor, self.instructor_id)
+        category = storage.get(Category, self.category_id)
         if instructor:
             new_dict['instructor_name'] = instructor.user.name
+        if category:
+            new_dict['category_name'] = category.name
         # new_dict['total_students'] = instructor.total_students
         new_dict['sections'] = [section.to_dict() for section in self.sections]
         # new_dict['students'] = [student.to_dict() for student in self.students]
