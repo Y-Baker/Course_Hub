@@ -4,7 +4,8 @@ import config from "../config";
 import { useState, useEffect } from "react";
 import Loading from "../Loading/loading";
 import CourseCard from "../cards/CourseCard";
-
+import { useContext } from "react";
+import { UserDataContext } from "../UserContextProvider/UserContextProvider";
 import {
   MDBCol,
   MDBContainer,
@@ -12,6 +13,8 @@ import {
 } from "mdb-react-ui-kit";
 
 function CourseList({ filter = null }) {
+  const userContext = useContext(UserDataContext);
+  const userData = userContext.userData;
   const [courses, setCourses] = React.useState([]);
   const [loading, setLoading] = useState(true);
   let url_api = config.api + "/";
@@ -45,7 +48,7 @@ function CourseList({ filter = null }) {
         <MDBRow  style={{ paddingLeft: "40px", paddingRight: "40px" }}>
         {courses.map((course, index) => (
           <MDBCol lg="4" key={course.id || index}>
-            <CourseCard course={course} />
+            <CourseCard course={course} admin={(userData && userData.role == 0) ?  true : false}/>
           </MDBCol>
         ))}
         </MDBRow>
