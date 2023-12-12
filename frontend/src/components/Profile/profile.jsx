@@ -14,10 +14,8 @@ function Profile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // make wait for userData to be set
 
     if (userData === null) {
-      navigate("/login");
       return;
     }
     const url_api = config.api + "/users/" + userData.id + "?all=true";
@@ -36,7 +34,15 @@ function Profile() {
   if (loading) {
     return <Loading />;
   } else {
-    return <UserProfile data={data} owner={true}/>;
+    return (
+      <>
+        {userData === null ? (
+          navigate("/login")
+        ) : (
+          <UserProfile data={data} owner={true} />
+        )}
+      </>
+    );
   }
 }
 
