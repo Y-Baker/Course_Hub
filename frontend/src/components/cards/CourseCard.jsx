@@ -7,11 +7,13 @@ import config from "../config";
 import toast from "react-hot-toast";
 import { useContext } from "react";
 import { UserDataContext } from "../UserContextProvider/UserContextProvider";
+import { useNavigate } from "react-router-dom";
 import "./CourseCard.css";
 
 function CourseCard({ course, admin }) {
   const userContext = useContext(UserDataContext);
   const userData = userContext.userData;
+  const navigate = useNavigate();
 
   function handleDelete(course) {
     if (userData && userData.role === 0) {
@@ -41,6 +43,10 @@ function CourseCard({ course, admin }) {
           toast.error("Error approving course");
         });
     }
+  }
+
+  function handleCoursePage(course) {
+    navigate(`/courses/${course.id}`, { state: { courseData: course } });
   }
 
   return (
@@ -89,14 +95,13 @@ function CourseCard({ course, admin }) {
                 )}
               </>
             )}
-            <Link to={`/courses/${course.id}`}>
-              <button
-                className="btn btn-outline-success mb basic"
-                type="submit"
-              >
-                More Details
-              </button>
-            </Link>
+            <button
+              className="btn btn-outline-success mb basic"
+              type="submit"
+              onClick={() => handleCoursePage(course)}
+            >
+              More Details
+            </button>
           </div>
         </Card.Text>
       </Card.Body>

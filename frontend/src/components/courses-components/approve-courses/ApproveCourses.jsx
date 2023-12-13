@@ -31,14 +31,7 @@ export default function ApproveCourses() {
 
 
   function handleViewDetails(course) {
-    if (userData) {
-        navigate(`/courses/${course.id}`, { state: { courseData: course } });
-    } else {
-        toast.error("You are not allowed to edit this course !!", {
-            duration: 4000
-        })
-    }
-
+    navigate(`/courses/${course.id}`, { state: { courseData: course } });
   }
 
   function handleApprove(course) {

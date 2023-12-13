@@ -1,16 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, Button, Row, Col } from "react-bootstrap";
+import { Card, Row, Col } from "react-bootstrap";
 import Image from "../../assets/images/OIF.jpg";
 import { useNavigate } from "react-router-dom";
 import "./CourseCard-Profile.css";
 
 function CourseCardProfile({ course, owner }) {
   const navigate = useNavigate();
+
   function handleEdit(course) {
     navigate(`/instructor/updateCourse/${course.id}`, {
       state: { courseData: course },
     });
+  }
+
+  function handleCoursePage(course) {
+    navigate(`/courses/${course.id}`, { state: { courseData: course } });
   }
 
   return (
@@ -54,11 +59,13 @@ function CourseCardProfile({ course, owner }) {
                   Edit
                 </button>
               )}
-              <Link to={`/courses/${course.id}`}>
-                <button className="btn btn-outline-success basic" type="submit">
-                  More Details
-                </button>
-              </Link>
+              <button
+                className="btn btn-outline-success basic"
+                type="submit"
+                onClick={() => handleCoursePage(course)}
+              >
+                More Details
+              </button>
             </div>
           ) : (
             <button
