@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useFormik} from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
 import './addLesson.css'
+import Loading from '../../Loading/loading';
 import api from '../../api';
 
 export default function AddLesson(props) {
@@ -78,7 +79,7 @@ export default function AddLesson(props) {
       onSubmit: handlelessonSubmit
     });
     if (loading){
-        return <><div className="alert">Loading ...</div></>
+        return <Loading />
     }
     else {
     return <>

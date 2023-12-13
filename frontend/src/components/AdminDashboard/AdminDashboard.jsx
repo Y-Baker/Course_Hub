@@ -3,6 +3,7 @@ import { Outlet , Link} from 'react-router-dom';
 import './AdminDashboard.css';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
+import Loading from '../Loading/loading';
 import { UserDataContext } from '../UserContextProvider/UserContextProvider';
 
 export default function AdminDashboard(props) {
@@ -30,7 +31,7 @@ export default function AdminDashboard(props) {
   }, [userContext.userData]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   } else {
     return (
       <>

@@ -36,7 +36,7 @@ function Home(props) {
           placeholder="Search"
           aria-label="Search"
         />
-        <button className="btn btn-outline-success" type="submit">
+        <button className="btn btn-outline-success basic" type="submit">
           Search
         </button>
       </form>
@@ -53,13 +53,16 @@ function Home(props) {
           <hr />
           <MDBContainer className="py-4">
             <MDBRow>
-              {categories.map((category) => (
+              {categories.map((category, index) => (
                 <>
-                  <div className="SubHeading">
-                    <h2>{category.name}</h2>
-                  </div>
-                  {/* <h2>{category.name}</h2> */}
-                  <CourseList filter={category} />
+                  {category.courses.length > 0 && (
+                    <>
+                      <div className="SubHeading" key={category.id || index}>
+                        <h2>{category.name}</h2>
+                      </div>
+                      <CourseList filter={category} />
+                    </>
+                  )}
                 </>
               ))}
             </MDBRow>

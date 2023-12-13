@@ -3,10 +3,12 @@
 
 from os import environ
 from flask import Flask
-from .auth import  auth_views
-from .user import user_views
+from models.admin import Admin
+from models.instructor import Instructor
+from models.student import Student
 from flask_jwt_extended import JWTManager
 
+roles = [Admin, Instructor, Student]
 
 jwt = JWTManager()
 app = Flask(__name__, instance_relative_config=True)

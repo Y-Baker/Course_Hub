@@ -21,11 +21,16 @@ from utils.auth_utils import user_required
 def get_courses():
     """reterive all courses from storage
     """
+    approved = eval(request.args.get("approved", "false", type=str).capitalize())
+    courses = course_service.get_courses(
+        request.args.get("page", 1, type=int),
+        request.args.get("per_page", 3, type=int)
+    )
+    if (approved):
+        courses = list(filter(lambda course: course.approved, courses))
+
     return jsonify(list(map(lambda course:
-                            course.to_dict(), course_service.get_courses(
-                                request.args.get("page", 1, type=int),
-                                request.args.get("per_page", 3, type=int)
-                            ))))
+                            course.to_dict(), courses)))
 
 
 @course_views.route('/courses/noCategory', methods=['GET'])
@@ -48,12 +53,17 @@ def get_courses_instructor(instructor_id):
     if instructor is None:
         abort(404)
 
+    approved = eval(request.args.get("approved", "false", type=str).capitalize())
+    courses = course_service.get_courses_by_instructor(
+        instructor_id,
+        request.args.get("page", 1, type=int),
+        request.args.get("per_page", 3, type=int)
+    )
+    if (approved):
+        courses = list(filter(lambda course: course.approved, courses))
+
     return jsonify(list(map(lambda course:
-                            course.to_dict(), course_service.get_courses_by_instructor(
-                                instructor_id,
-                                request.args.get("page", 1, type=int),
-                                request.args.get("per_page", 3, type=int)
-                                ))))
+                            course.to_dict(), courses)))
     # return jsonify([course.to_dict() for course in instructor.courses])
 
 
@@ -132,8 +142,6 @@ def create_course(instructor_id):
         new_course = CourseSchema(context={'data': data}).load(data)
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
-    print("before")
-    print(new_course)
     new_course.save()
     return jsonify({
         "message" : "success",

@@ -31,7 +31,7 @@ current_directory = os.path.dirname(os.path.realpath(__file__))
 @auth_views.route('/sign-up', methods=['POST'])
 @swag_from(os.path.join(current_directory, 'documentation/auth/sign_up.yml'))
 def sign_up():
-    roles = [Admin, Instructor, Student]
+    from course_hub import roles
     data = request.get_json()
     try:
         new_user = SignUpSchema().load(data)
