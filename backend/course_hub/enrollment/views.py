@@ -84,15 +84,16 @@ def create_enrollment(course_id, student_id):
     """
     student = storage.get(Student, student_id)
     course = storage.get(Course, course_id)
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except:
+       data = {}
+
     if student is None or course is None:
         abort(404)
 
     if current_user.id != student_id:
         abort(403)
-
-    if not data:
-        abort(400, "Not a JSON")
 
     if not data.get('student_id'):
         data['student_id'] = student_id

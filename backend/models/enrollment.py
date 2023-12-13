@@ -27,7 +27,7 @@ class Enrollment(BaseRole, Base):
                        nullable=False)
     enrolled_date = Column(DateTime, default=datetime.utcnow)
 
-    course = relationship("Course", backref="enrollments")
+    # course = relationship("Course", backref="enrollments")
 
     def __init__(self, *args, **kwargs):
         """initializes Enrollment"""
