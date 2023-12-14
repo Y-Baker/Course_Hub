@@ -2,7 +2,7 @@
 """module init"""
 # from flask_login import LoginManager, current_user, login_required
 
-from course_hub import app, user_views, auth_views, jwt
+from course_hub import app, jwt
 from os import getenv
 from flask import jsonify
 from flask_cors import CORS
@@ -10,6 +10,12 @@ from flasgger import Swagger
 from models import storage
 from course_hub.user import user_views
 from course_hub.course import course_views
+from course_hub.auth import auth_views
+from utils import sess_manager
+from course_hub.instructor import instructor_views
+from course_hub.student import student_views
+from course_hub.enrollment import enrollment_views
+
 
 cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
@@ -17,6 +23,9 @@ cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 app.register_blueprint(user_views)
 app.register_blueprint(auth_views)
 app.register_blueprint(course_views)
+app.register_blueprint(instructor_views)
+app.register_blueprint(student_views)
+app.register_blueprint(enrollment_views)
 
 #flask_login configurations
 # login_manager = LoginManager()
@@ -75,9 +84,14 @@ def token_in_blocklist_callback(jwt_header,jwt_data):
 
     return token is not None
 
+# @app.before_request 
+# def before_request_callback():
+#     sess_manager.reload()
+
 @app.after_request 
 def after_request_callback( response ):
     storage.close()
+    sess_manager.close()
     return response
 
 # @login_manager.user_loader

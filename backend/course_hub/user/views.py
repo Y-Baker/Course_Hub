@@ -24,13 +24,22 @@ def get_users():
 
 
 @user_views.route('/users/<user_id>', methods=['GET'])
+@jwt_required()
 @swag_from('documentation/user/get_user.yml', methods=['GET'])
 def get_user(user_id):
     """reterive user by id
     """
+    from course_hub import roles
     user = storage.get(User, user_id)
     if user is None:
         abort(404)
+
+    all = eval(request.args.get("all", "false", type=str).capitalize())
+    if all:
+        new_user = storage.get(roles[user.role], user_id)
+        if new_user:
+            user = new_user
+
     return jsonify(user.to_dict())
 
 

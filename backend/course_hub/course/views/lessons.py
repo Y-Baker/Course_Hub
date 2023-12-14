@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """new view for Course objects that handles all default RESTFul API actions"""
 
+from flask_jwt_extended import current_user, jwt_required
 from course_hub.course import course_views
 from flask import jsonify, abort, request
 from models import storage
@@ -12,6 +13,7 @@ from marshmallow import ValidationError
 from course_hub.course.schemas.lesson_schema import LessonSchema
 from course_hub.course.schemas.lesson_schema import CreateLessonSchema
 from course_hub.course.schemas.lesson_schema import UpdateLessonSchema
+from utils.auth_utils import user_required
 
 
 @course_views.route('/sections/<section_id>/lessons', methods=['GET'])
@@ -80,7 +82,7 @@ def create_lesson(section_id):
 
 
 # admin permission or instructor of this course permission
-@course_views.route('/lesson/<lesson_id>', methods=['PUT'])
+@course_views.route('/lessons/<lesson_id>', methods=['PUT'])
 @swag_from('../documentation/lessons/put_lesson.yml', methods=['PUT'])
 def update_lesson(lesson_id):
     """update lesson to storage
@@ -104,3 +106,31 @@ def update_lesson(lesson_id):
 
     lesson.save()
     return jsonify(lesson.to_dict())
+
+@course_views.route('/lessons/<filter_by>/<search_term>', methods=['GET'])
+def search_lesson(filter_by, search_term):
+    """reterive course by filter type with same search term
+    """
+    lessons = course_service.get_lesson_by_search_term(filter_by=filter_by, search_term=search_term)
+    if lessons is not None:
+        return jsonify({
+            'message': 'success',
+            'data': list(map(lambda category:
+                            category.to_dict(), lessons))
+        })
+    else:
+        return jsonify({
+            'message': "fail",
+            "data": []
+        })
+
+@course_views.route('/instructor/lessons', methods=['GET'])
+@jwt_required()
+@user_required([1])
+def get_all_instructor_lessons():
+    """return list of all instructor's lessons"""
+    return jsonify({
+        "messsage": "successfully retrieved lessons",
+        "data": list(map(lambda lesson: lesson.to_dict(),
+                         course_service.get_all_instructor_lessons(current_user.id)))
+    })

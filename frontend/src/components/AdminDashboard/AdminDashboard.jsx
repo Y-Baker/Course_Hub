@@ -3,6 +3,7 @@ import { Outlet , Link} from 'react-router-dom';
 import './AdminDashboard.css';
 import Header from '../header/Header';
 import Footer from '../footer/Footer';
+import Loading from '../Loading/loading';
 import { UserDataContext } from '../UserContextProvider/UserContextProvider';
 
 export default function AdminDashboard(props) {
@@ -30,7 +31,7 @@ export default function AdminDashboard(props) {
   }, [userContext.userData]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   } else {
     return (
       <>
@@ -58,9 +59,11 @@ export default function AdminDashboard(props) {
                     </div> */}
                     {userContext.userData.role === 0 ? (
                       <>
+                      <Link className="nav-link" to='/Admin'>
                         <div className="option">
                           <span className="icon">✎</span> Approve Courses
                         </div>
+                      </Link>
                       </>
                     ) : <>
                     <Link className="nav-link" to='searchCourse'>
@@ -92,9 +95,14 @@ export default function AdminDashboard(props) {
                         <span className="icon">+</span> search
                     </div>
                   </Link>
-                  <Link className="nav-link" to='addSection'>
+                  {/* <Link className="nav-link" to='addSection'>
                     <div className="option">
                       <span className="icon">+</span> Add
+                    </div>
+                  </Link> */}
+                  <Link className="nav-link" to='showSections'>
+                    <div className="option">
+                      <span className="icon"></span> show Sections
                     </div>
                   </Link>
                   {/* <div className="option">
@@ -117,9 +125,14 @@ export default function AdminDashboard(props) {
                         <span className="icon">+</span> search
                     </div>
                   </Link>
-                  <Link className="nav-link" to='addLesson'>
+                  {/* <Link className="nav-link" to='addLesson'>
                     <div className="option">
                       <span className="icon">+</span> Add
+                    </div>
+                  </Link> */}
+                  <Link className="nav-link" to='showLessons'>
+                    <div className="option">
+                      <span className="icon"></span> show Lessons
                     </div>
                   </Link>
                   {/* <div className="option">

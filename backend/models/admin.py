@@ -16,3 +16,12 @@ class Admin(BaseRole, Base):
     def __init__(self, *args, **kwargs):
         """initializes user"""
         super().__init__(*args, **kwargs)
+
+    def to_dict(self):
+        """return dict representation of admin"""
+        from models import storage
+        new_dict = super().to_dict()
+        user_dict = self.user.to_dict()
+        new_dict.update(user_dict)
+
+        return new_dict

@@ -11,8 +11,6 @@ import Register from './components/register/Register';
 import Courses from './components/courses/Courses'
 import NotFound from './components/not-found/NotFound'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
-import { useState, useEffect, useCallback, useContext } from 'react';
-import { jwtDecode } from 'jwt-decode';
 import Forbidden from './components/forbidden/Forbidden';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 
@@ -32,6 +30,14 @@ import AddLesson from './components/lesson-components/add-lesson/AddLesson';
 import SearchLesson from './components/lesson-components/search-lesson/SearchLesson';
 import UpdateLesson from './components/lesson-components/update-lesson/UpdateLesson';
 import ApproveCourses from './components/courses-components/approve-courses/ApproveCourses';
+
+import Profile from './components/Profile/profile';
+import UserPage from './components/user-page/userPage';
+import ShowLessons from './components/lesson-components/show_lesson/ShowLessons';
+import ShowSections from './components/section-components/show_section/ShowSections';
+
+import CoursePage from './components/courses/course-page/CoursePage';
+import NotApproved from './components/not_approved/not_approved';
 
 function App() {
   // const [userData, setuserData] = useState({});
@@ -64,84 +70,121 @@ function App() {
   //   }, [localStorage.getItem('access_token')]);
   let routers = createBrowserRouter([
     // {path: '/', element:<Layout  userData={userData} saveUserData={saveUserData}/>, children:[
-      /* using userContext instead of props */
-      {path: '/', element:<Layout />, children:[
-      {index:true, element: <Home/>},
-      {path:'about', element: <About/>},
-      {path:'contact-us', element: <ContacUs/>},
-      // {path:'login', element: <Login userData={userData} saveUserData={saveUserData}/>},
-       /* using userContext instead of props */
-      {path:'login', element: <Login/>},
+    /* using userContext instead of props */
+    {
+      path: "/",
+      element: <Layout />,
+      children: [
+        { index: true, element: <Home /> },
+        { path: "about", element: <About /> },
+        { path: "contact-us", element: <ContacUs /> },
+        // {path:'login', element: <Login userData={userData} saveUserData={saveUserData}/>},
+        /* using userContext instead of props */
+        { path: "login", element: <Login /> },
 
-      // {path:'logout', element: <ProtectedRoute userData={userData}><Logout saveUserData={saveUserData}/></ProtectedRoute>},
-      /* using userContext instead of props */
-      {path:'logout', element: <ProtectedRoute><Logout/></ProtectedRoute>},
+        // {path:'logout', element: <ProtectedRoute userData={userData}><Logout saveUserData={saveUserData}/></ProtectedRoute>},
+        /* using userContext instead of props */
+        {
+          path: "logout",
+          element: (
+            <ProtectedRoute>
+              <Logout />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "Profile",
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
+        },
+        { path: "register", element: <Register /> },
+        // ,
+        // {
+        //   path: '/Admin',
+        //   // element: <ProtectedRoute userData={userData} saveUserData={saveUserData} roles={['Admin']}><AdminDashboard userData={userData}/></ProtectedRoute>,
 
-      {path:'register', element: <Register/>},
-      // ,
-      // {
-      //   path: '/Admin',
-      //   // element: <ProtectedRoute userData={userData} saveUserData={saveUserData} roles={['Admin']}><AdminDashboard userData={userData}/></ProtectedRoute>,
+        //   element: <ProtectedRoute  roles={['Admin']}><AdminDashboard /></ProtectedRoute>,
+        //   children: [],
+        // },
+        // {
+        //   path: 'Instructor',
+        //   // element: <ProtectedRoute userData={userData} saveUserData={saveUserData} roles={['Instructor']}><AdminDashboard userData={userData}/></ProtectedRoute>,
 
-      //   element: <ProtectedRoute  roles={['Admin']}><AdminDashboard /></ProtectedRoute>,
-      //   children: [],
-      // },
-      // {
-      //   path: 'Instructor',
-      //   // element: <ProtectedRoute userData={userData} saveUserData={saveUserData} roles={['Instructor']}><AdminDashboard userData={userData}/></ProtectedRoute>,
+        //   element: <ProtectedRoute  roles={['Instructor']}><AdminDashboard /></ProtectedRoute>,
 
-      //   element: <ProtectedRoute  roles={['Instructor']}><AdminDashboard /></ProtectedRoute>,
+        //   children: [
+        //     // {path: 'addCourse', element:<AddCourse userData={userData}/>},
+        //     // {path: 'updateCourse', element:<UpdateCourse userData={userData}/>},
+        //     {path: 'addCourse', element:<AddCourse />},
+        //     {path: 'updateCourse', element:<UpdateCourse />},
+        //   ],
+        // },
+        {
+          path: "courses",
+          // element: <Layout />,
+          children: [
+            { index: true, element: <Courses /> },
 
-      //   children: [
-      //     // {path: 'addCourse', element:<AddCourse userData={userData}/>},
-      //     // {path: 'updateCourse', element:<UpdateCourse userData={userData}/>},
-      //     {path: 'addCourse', element:<AddCourse />},
-      //     {path: 'updateCourse', element:<UpdateCourse />},
-      //   ],
-      // },
-      {path:'courses', element: <Courses/>, children:[
-      
-      ]},
-      {path:'*', element: <NotFound/>},
-      {path:'forbidden', element: <Forbidden/>}
-    ]
-  }
-  ,
-  {
-    path: '/Admin',
-    element: <ProtectedRoute roles={['Admin']}><AdminDashboard/></ProtectedRoute>,
-    children: [
-      {index:true, element:<ApproveCourses/>},
+            { path: ":id", element: <CoursePage /> },
+          ],
+        },
 
-      { path: 'showCategories', element: <ShowCategories /> },
-      { path: 'SearchCategory', element: <SearchCategory /> },
-      { path: 'addCategory', element:<AddCategory />},
-      { path: 'updateCategory/:id', element:<UpdateCategory />},
+        { path: "*", element: <NotFound /> },
+        { path: "forbidden", element: <Forbidden /> },
+        { path: "not_approved", element: <NotApproved /> },
+      ],
+    },
+    {
+      path: "/Admin",
+      element: (
+        <ProtectedRoute roles={["Admin"]}>
+          <AdminDashboard />
+        </ProtectedRoute>
+      ),
+      children: [
+        { index: true, element: <ApproveCourses /> },
 
-    ],
-  },
-  {
-    path: 'Instructor',
-    element: <ProtectedRoute roles={['Instructor']}><AdminDashboard /></ProtectedRoute>,
-    children: [
-      { index:true, element: <ShowCourses /> },
-      {path: 'addCourse', element:<AddCourse/>},
-      { path: 'SearchCourse', element: <SearchCourse /> },
-      { path: 'updateCourse/:id', element:<UpdateCourse />},
-      
+        { path: "showCategories", element: <ShowCategories /> },
+        { path: "SearchCategory", element: <SearchCategory /> },
+        { path: "addCategory", element: <AddCategory /> },
+        { path: "updateCategory/:id", element: <UpdateCategory /> },
+      ],
+    },
+    {
+      path: "Instructor",
+      element: (
+        <ProtectedRoute roles={["Instructor"]}>
+          <AdminDashboard />
+        </ProtectedRoute>
+      ),
+      children: [
+        { index: true, element: <ShowCourses /> },
+        { path: "addCourse", element: <AddCourse /> },
+        { path: "SearchCourse", element: <SearchCourse /> },
+        { path: "updateCourse/:id", element: <UpdateCourse /> },
 
-      { path: 'SearchCategory', element: <SearchCategory /> },
+        { path: "SearchCategory", element: <SearchCategory /> },
 
-      { path: 'addSection', element:<AddSection />},
-      { path: 'SearchSection', element: <SearchSection /> },
-      { path: 'updateSection/:id', element:<UpdateSection />},
+        { path: "addSection", element: <AddSection /> },
+        { path: "SearchSection", element: <SearchSection /> },
+        { path: "updateSection/:id", element: <UpdateSection /> },
+        { path: "showSections", element: <ShowSections /> },
 
-      { path: 'addLesson', element:<AddLesson />},
-      { path: 'SearchLesson', element: <SearchLesson /> },
-      { path: 'updateLesson/:id', element:<UpdateLesson />},
-    ],
-  },
-  ])
+        { path: "addLesson", element: <AddLesson /> },
+        { path: "SearchLesson", element: <SearchLesson /> },
+        { path: "updateLesson/:id", element: <UpdateLesson /> },
+        { path: "showLessons", element: <ShowLessons /> },
+      ],
+    },
+    {
+      path: "users",
+      element: <Layout />,
+      children: [{ path: ":id", element: <UserPage /> }],
+    },
+  ]);
 
   return (
     <UserContextProvider>

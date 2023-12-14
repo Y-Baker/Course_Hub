@@ -5,6 +5,7 @@ import * as Yup from 'yup'
 import api from '../../api';
 import toast, { Toaster } from 'react-hot-toast';
 import config from '../../config';
+import Loading from '../../Loading/loading';
 import { useNavigate, useParams, useLocation   } from 'react-router-dom';
 
 export default function UpdateCourse(props) {
@@ -221,7 +222,7 @@ export default function UpdateCourse(props) {
   }, [fetchedCourse])
 
     if (loading){
-      return <div className="card">Loading...</div>
+      return <Loading />
     } else {
       return <>
        <div>

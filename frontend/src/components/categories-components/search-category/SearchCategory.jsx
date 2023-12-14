@@ -3,6 +3,7 @@ import { UserDataContext } from '../../UserContextProvider/UserContextProvider';
 import api from '../../api';
 import toast, { Toaster } from 'react-hot-toast';
 import config from '../../config';
+import Loading from '../../Loading/loading';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -11,7 +12,7 @@ export default function SearchCategory() {
   const [filterType, setFilterType] = useState('id');
   const [categories, setcategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isLoading, setisLoading] = useState(false)
+  const [isLoading, setisLoading] = useState(false);
 
   const userContext = useContext(UserDataContext);
   let userData = userContext.userData;
@@ -57,7 +58,7 @@ export default function SearchCategory() {
 
   
     if (loading){
-      return <div className="card">Loading...</div>
+      return <Loading/>
     } else {
       return <>
        <div>

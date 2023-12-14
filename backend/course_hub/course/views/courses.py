@@ -21,11 +21,16 @@ from utils.auth_utils import user_required
 def get_courses():
     """reterive all courses from storage
     """
+    approved = eval(request.args.get("approved", "false", type=str).capitalize())
+    courses = course_service.get_courses(
+        request.args.get("page", 1, type=int),
+        request.args.get("per_page", 3, type=int)
+    )
+    if (approved):
+        courses = list(filter(lambda course: course.approved, courses))
+
     return jsonify(list(map(lambda course:
-                            course.to_dict(), course_service.get_courses(
-                                request.args.get("page", 1, type=int),
-                                request.args.get("per_page", 3, type=int)
-                            ))))
+                            course.to_dict(), courses)))
 
 
 @course_views.route('/courses/noCategory', methods=['GET'])
@@ -48,12 +53,17 @@ def get_courses_instructor(instructor_id):
     if instructor is None:
         abort(404)
 
+    approved = eval(request.args.get("approved", "false", type=str).capitalize())
+    courses = course_service.get_courses_by_instructor(
+        instructor_id,
+        request.args.get("page", 1, type=int),
+        request.args.get("per_page", 3, type=int)
+    )
+    if (approved):
+        courses = list(filter(lambda course: course.approved, courses))
+
     return jsonify(list(map(lambda course:
-                            course.to_dict(), course_service.get_courses_by_instructor(
-                                instructor_id,
-                                request.args.get("page", 1, type=int),
-                                request.args.get("per_page", 3, type=int)
-                                ))))
+                            course.to_dict(), courses)))
     # return jsonify([course.to_dict() for course in instructor.courses])
 
 
@@ -90,7 +100,7 @@ def search_course(filter_by, search_term):
 # admin permission or instructor of this course permission
 @course_views.route('/courses/<course_id>', methods=['DELETE'])
 @jwt_required()
-@user_required([1])
+@user_required([0, 1])
 @swag_from('../documentation/courses/delete_course.yml', methods=['DELETE'])
 def delete_course(course_id):
     """delete Course by id
@@ -98,7 +108,7 @@ def delete_course(course_id):
     course = storage.get(Course, course_id)
     if course is None:
         abort(404)
-    if current_user.id != course.instructor_id:
+    if current_user.role == 1 and current_user.id != course.instructor_id:
         abort(403)
     course.delete()
     storage.save()
@@ -132,8 +142,6 @@ def create_course(instructor_id):
         new_course = CourseSchema(context={'data': data}).load(data)
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
-    print("before")
-    print(new_course)
     new_course.save()
     return jsonify({
         "message" : "success",
@@ -165,3 +173,36 @@ def update_course(course_id):
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
     return course_service.update_course(course, data)
+
+
+@course_views.route('/courses/not-approved', methods=['GET'])
+@jwt_required()
+@user_required([0, 1])
+def get_not_approved_courses():
+    """reterive all not approved courses from storage
+    """
+    return jsonify({
+        "message": "successfully retrived not approved courses",
+        "data": list(map(lambda course:
+                            course.to_dict(), course_service.get_not_approved_courses(
+                                request.args.get("page", 1, type=int),
+                                request.args.get("per_page", 3, type=int),
+                                current_user
+                            )))
+    })
+
+@course_views.route('/courses/<course_id>/approve', methods=['PUT'])
+@jwt_required()
+@user_required([0])
+def approve_courses(course_id):
+    """approved courses from storage
+    """
+    course = storage.get("Course", course_id)
+    if not course:
+        abort(404)
+    course.approved = True
+    course.save()
+    return jsonify({
+        "message": "successfully approved course",
+        "data": CourseSchema().dump(course)
+    })

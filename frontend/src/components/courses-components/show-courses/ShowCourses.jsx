@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { UserDataContext } from '../../UserContextProvider/UserContextProvider';
 import api from '../../api';
 import config from '../../config';
+import Loading from '../../Loading/loading';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -26,6 +27,16 @@ export default function ShowCourses() {
             console.error(err);
         })
     }, [])
+    function handleAdd(course) {
+        if (userData && userData.id === course.instructor_id) {
+            navigate(`/instructor/addSection`, { state: { courseData: course } });
+        } else {
+            toast.error("You are not allowed to edit this course !!", {
+                duration: 4000
+            })
+        }
+    
+      }
     function handleUpdate(course) {
         if (userData && userData.id === course.instructor_id) {
             navigate(`/instructor/updateCourse/${course.id}`, { state: { courseData: course } });
@@ -50,12 +61,12 @@ export default function ShowCourses() {
 
       if (loading) {
         return <>
-            Loading .....
+            <Loading/>
         </>
       }
       else {
         return <>
-        <table className="table">
+                <table className="table">
         <thead className='table-dark'>
             <tr>
             {/* <th scope="col">id</th> */}
@@ -64,8 +75,9 @@ export default function ShowCourses() {
             <th scope="col">approved</th>
             <th scope="col">hours</th>
             <th scope="col">category id</th>
+            <th scope="col">add section</th>
             <th scope="col">update</th>
-            <th scope="col">deelete</th>
+            <th scope="col">delete</th>
             </tr>
         </thead>
         <tbody>
@@ -79,6 +91,10 @@ export default function ShowCourses() {
                 </td>
                 <td>{course.hours}</td>
                 <td>{course.category_id}</td>
+                <td>
+                    <button className='btn btn-secondary' onClick={() => handleAdd(course)}>add section</button>
+                    <Toaster/>
+                </td>
                 <td>
                     <button className='btn btn-secondary' onClick={() => handleUpdate(course)}>Update</button>
                     <Toaster/>

@@ -6,7 +6,8 @@ Contains the class DBStorage
 import models
 from models.TokenBlocklist import TokenBlocklist
 from models.user import User
-from models.course import Course, enrollments
+from models.course import Course
+from models.enrollment import Enrollment
 from models.section import Section
 from models.lesson import Lesson
 from models.category import Category
@@ -114,5 +115,5 @@ class DBStorage:
 
     def get_enrollments(self):
         """return list of enrollments"""
-        result = self.__session.query(enrollments).all()
+        result = self.__session.query(Enrollment).all()
         return result
