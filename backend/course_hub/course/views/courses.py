@@ -14,6 +14,7 @@ from flask_jwt_extended import current_user, jwt_required
 from models.lesson import Lesson
 from models.section import Section
 from utils.auth_utils import user_required
+from utils.file_service import save_base64_image, save_image
 
 
 @course_views.route('/courses', methods=['GET'])
@@ -137,11 +138,22 @@ def create_course(instructor_id):
         abort(400, "Not a JSON")
     if not data.get('instructor_id'):
         data['instructor_id'] = instructor_id
+    # image = request.files.get('image')
     createCourseSchema = CourseSchema()
     try:
         new_course = CourseSchema(context={'data': data}).load(data)
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
+    # image_path = save_image(image=image, course_id=new_course.id)
+    # if image_path is not None:
+    #     new_course.image = image_path
+    image_base64 = data.get('imageBase64')
+
+    if image_base64:
+        image_filename = f"{new_course.id}.png"
+        image_path = save_base64_image(image_base64, image_filename)
+    if image_path:
+        new_course.image = image_path
     new_course.save()
     return jsonify({
         "message" : "success",
@@ -165,11 +177,11 @@ def update_course(course_id):
     if current_user.id != course.instructor_id:
         abort(403)
     data = request.get_json()
+    # image = request.files.get('image')
     if not data:
         abort(400, 'Not a JSON')
     try:
         new_data = UpdateCourseSchema().load(data)
-
     except ValidationError as err:
         return jsonify({'validation_error': err.messages}), 422
     return course_service.update_course(course, data)

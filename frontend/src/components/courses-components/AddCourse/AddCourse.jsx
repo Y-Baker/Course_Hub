@@ -74,41 +74,54 @@ export default function AddCourse(props) {
       };
 
 
-    async function handleCourseSubmit(values) {
-      values.num_sections = values.sections.length
-      try {
-        setisLoading(true);
-        let response = await api.post(`${config.api}/instructors/${userData.id}/courses`, values);
-        if (response.status === 201)
-        {
-          setisLoading(false);
-            toast.success('Course saved successfully!', {
-                position: 'top-center',
-                autoClose: 3000, 
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
-        } else {
-          setisLoading(false);
-        }
-     } catch (error) {
-      
-      if (error.response.status === 401){
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');    
-        nav('/login');
-        window.location.reload();
+      function convertImageToBase64(imageFile) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.onerror = error => reject(error);
+          reader.readAsDataURL(imageFile);
+        });
       }
-      setisLoading(false);
-      console.error(error);
-      seterrorMessage(`${JSON.stringify(error.response.data)}`);
-    }
-    setisLoading(false);
-    }
-  
 
+      async function handleCourseSubmit(values) {
+        values.num_sections = values.sections.length;
+      
+        try {
+          setisLoading(true);
+      
+          const imageFile = values.image;
+          const imageBase64 = await convertImageToBase64(imageFile);
+      
+          values.imageBase64 = imageBase64;
+      
+          let response = await api.post(`${config.api}/instructors/${userData.id}/courses`, values);
+      
+          if (response.status === 201) {
+            setisLoading(false);
+            toast.success('Course saved successfully!', {
+              position: 'top-center',
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            });
+          } else {
+            setisLoading(false);
+          }
+        } catch (error) {
+          if (error.response && error.response.status === 401) {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            nav('/login');
+            window.location.reload();
+          }
+      
+          setisLoading(false);
+          console.error(error);
+          seterrorMessage(`${JSON.stringify(error.response?.data)}`);
+        }
+      }
     const formik = useFormik({
       initialValues : {
         name: '',
@@ -118,6 +131,7 @@ export default function AddCourse(props) {
         num_sections: 1,
         category_id: undefined,
         instructor_id: userData.id,
+        image: null, // Add the image field to initialValues
         sections: [
         {
             name: '',
@@ -206,6 +220,19 @@ export default function AddCourse(props) {
                 disabled
               />
                 {formik.errors.num_sections && formik.touched.num_sections ? <div className="alert alert-danger">{formik.errors.num_sections}</div> : null}
+                <label htmlFor="image">Image:</label>
+              <input
+                id="image"
+                name="image"
+                type="file"
+                onChange={(event) => {
+                  formik.setFieldValue('image', event.currentTarget.files[0]);
+                }}
+              />
+              {/* Display error if there is any */}
+              {formik.touched.image && formik.errors.image ? (
+                <div>{formik.errors.image}</div>
+              ) : null}
                 {/* <label htmlFor="num_enrolled">Number Enrolled:</label>
                 <Field id="num_enrolled" name="num_enrolled" placeholder="Number Enrolled" type="number" />
                 <input

@@ -38,7 +38,7 @@ class CourseSchema(BaseSchema):
     category_id = fields.String()
     instructor_id = fields.String(required=True)
     sections = fields.Nested(SectionSchema, many=True)
-    
+    imageBase64 = fields.String()
     @validates('category_id')
     def validate_category_id(self, value):
         if value is not None and not storage.get(Category, value):
@@ -96,13 +96,14 @@ class UpdateCourseSchema(BaseSchema):
     category_id = fields.String()
     instructor_id = fields.String(required=True)
     sections = fields.Nested(UpdateSectionSchema, many=True)
+    imageBase64 = fields.String()
     # students
     @post_load
     def update_course(self, data, **kwargs):
         course = self.context.get('instance', None)
         if course:
             for key, value in data.items():
-                if key not in ['id', 'created_at', 'updated_at', 'instructor_id']:
+                if key not in ['id', 'created_at', 'updated_at', 'instructor_id', 'imageBase64']:
                     setattr(course, key, value)
         return course
 
