@@ -11,6 +11,7 @@ import { useNavigate, useParams, useLocation   } from 'react-router-dom';
 export default function UpdateCourse(props) {
   const [loading, setLoading] = useState(true);
   const [isLoading, setisLoading] = useState(false)
+  const [categories, setcategories] = useState([])
   const [errorMessage, seterrorMessage] = useState('')
   const nav = useNavigate();
   const userContext = useContext(UserDataContext);
@@ -37,6 +38,14 @@ export default function UpdateCourse(props) {
     })
   }
   useEffect(() =>{
+    api.get(`${config.api}/categories?page=1&per_page=100`)
+    .then((resp) => {
+      setcategories(resp.data)
+      setLoading(false);
+    })
+    .catch(err => {
+      console.error(err);
+    })
     if (courseData === null || courseData === undefined){
       fetchCourse();
     }
@@ -56,9 +65,29 @@ export default function UpdateCourse(props) {
       setLoading(false);
     }
   }, [userData]);
+
+  const handleCategoryChange = (event) => {
+    const categoryId = event.target.value;
+    formik.setFieldValue('category_id', categoryId);
+    formik.setFieldTouched('category_id', true);
+  };
+
+  function convertImageToBase64(imageFile) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = error => reject(error);
+      reader.readAsDataURL(imageFile);
+    });
+  }
   async function handleCourseSubmit(values) {
+    values.num_sections = values.sections.length;
     try {
       setisLoading(true);
+      const imageFile = values.image;
+      const imageBase64 = await convertImageToBase64(imageFile);
+  
+      values.imageBase64 = imageBase64;
       let response = await api.put(`${config.api}/courses/${values.id}`, values);
       if (response.status === 200)
       {
@@ -99,10 +128,7 @@ export default function UpdateCourse(props) {
       .required('Required')
       .positive('Must be positive')
       .integer('Must be an integer'),
-    num_sections: Yup.number()
-      .required('Required')
-      .positive('Must be positive')
-      .integer('Must be an integer'),
+    num_sections: Yup.number(),
     category_id: Yup.string(),
 
     sections: Yup.array()
@@ -141,9 +167,10 @@ export default function UpdateCourse(props) {
           description: fetchedCourse.description || '',
           approved: fetchedCourse.approved || false,
           hours: fetchedCourse.hours || '',
-          num_sections: fetchedCourse.num_sections || '',
+          num_sections: fetchedCourse.num_sections || 0,
           category_id: fetchedCourse.category_id || undefined,
           instructor_id: fetchedCourse.instructor_id || userData.id,
+          image: fetchedCourse.image || null, // Add the image field to initialValues
           sections: fetchedCourse.sections || [
             {
               id: '',
@@ -171,6 +198,7 @@ export default function UpdateCourse(props) {
           num_sections: '',
           category_id: undefined,
           instructor_id: userData.id,
+          image: null, // Add the image field to initialValues
           sections: [
             {
               id: '',
@@ -193,33 +221,33 @@ export default function UpdateCourse(props) {
     onSubmit: handleCourseSubmit,
   });
 
-  useEffect(() =>{
-    if (fetchCourse) {
-      formik.values.name = fetchedCourse.name || '';
-      formik.values.description = fetchedCourse.description || '';
-      formik.values.approved = fetchedCourse.approved || false;
-      formik.values.hours = fetchedCourse.hours || '';
-      formik.values.num_sections = fetchedCourse.num_sections || '';
-      formik.values.category_id = fetchedCourse.category_id || undefined;
-      formik.values.instructor_id = fetchedCourse.instructor_id || userData.id;
-      formik.values.sections = fetchedCourse.sections || [
-        {
-          name: '',
-          section_num: 1,
-          completed: false,
-          lessons: [
-            {
-              name: '',
-              lesson_num: 1,
-              completed: false,
-              content: '',
-            },
-          ],
-        },
-      ]
-    }
+  // useEffect(() =>{
+  //   if (fetchCourse) {
+  //     formik.values.name = fetchedCourse.name || '';
+  //     formik.values.description = fetchedCourse.description || '';
+  //     formik.values.approved = fetchedCourse.approved || false;
+  //     formik.values.hours = fetchedCourse.hours || '';
+  //     formik.values.num_sections = fetchedCourse.num_sections || 0;
+  //     formik.values.category_id = fetchedCourse.category_id || undefined;
+  //     formik.values.instructor_id = fetchedCourse.instructor_id || userData.id;
+  //     formik.values.sections = fetchedCourse.sections || [
+  //       {
+  //         name: '',
+  //         section_num: 1,
+  //         completed: false,
+  //         lessons: [
+  //           {
+  //             name: '',
+  //             lesson_num: 1,
+  //             completed: false,
+  //             content: '',
+  //           },
+  //         ],
+  //       },
+  //     ]
+  //   }
 
-  }, [fetchedCourse])
+  // }, [fetchedCourse])
 
     if (loading){
       return <Loading />
@@ -303,19 +331,31 @@ export default function UpdateCourse(props) {
               required
               />
               {formik.errors.hours && formik.touched.hours ? <div className="alert alert-danger">{formik.errors.hours}</div> : null}
-
-              <label htmlFor="num_sections">Number of Sections:</label>
+              <label htmlFor="image">Image:</label>
               <input
-              type="number"
-              name="num_sections"
-              id = "num_sections"
-              placeholder="Number of Sections"
-              value={formik.values.num_sections}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              required
+                id="image"
+                name="image"
+                type="file"
+                onChange={(event) => {
+                  formik.setFieldValue('image', event.currentTarget.files[0]);
+                }}
               />
-              {formik.errors.num_sections && formik.touched.num_sections ? <div className="alert alert-danger">{formik.errors.num_sections}</div> : null}
+              {/* Display error if there is any */}
+              {formik.touched.image && formik.errors.image ? (
+                <div>{formik.errors.image}</div>
+              ) : null}
+
+                <label htmlFor="num_sections">Number of Sections:</label>
+                <input
+                type="number"
+                name="num_sections"
+                id="num_sections"
+                placeholder="Number of Sections"
+                value={formik.values.sections.length}
+                required
+                disabled
+              />
+                {formik.errors.num_sections && formik.touched.num_sections ? <div className="alert alert-danger">{formik.errors.num_sections}</div> : null}
               {/* <label htmlFor="num_enrolled">Number Enrolled:</label>
               <Field id="num_enrolled" name="num_enrolled" placeholder="Number Enrolled" type="number" />
               <input
@@ -329,17 +369,24 @@ export default function UpdateCourse(props) {
               required
               /> */}
 
-              <label htmlFor="category_id">Category ID:</label>
-              <input
-              type="number"
-              name="category_id"
-              id = "category_id"
-              placeholder="Category ID"
-              value={formik.values.category_id}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              />
-              {formik.errors.category_id && formik.touched.category_id ? <div className="alert alert-danger">{formik.errors.category_id}</div> : null}
+                    <label htmlFor="category_id">Category:</label>
+                    <select
+                      id="category_id"
+                      name="category_id"
+                      value={formik.values.category_id}
+                      onChange={handleCategoryChange}
+                      onBlur={formik.handleBlur}
+                    >
+                      <option value="" label="Select a category" />
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                    {formik.errors.category_id && formik.touched.category_id ? (
+                      <div className="alert alert-danger">{formik.errors.category_id}</div>
+                    ) : null}
 
               {/* <label htmlFor="instructor_id">Instructor ID:</label>
               <Field id="instructor_id" name="instructor_id" placeholder="Instructor ID" />
