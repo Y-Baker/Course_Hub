@@ -110,7 +110,8 @@ def create_enrollment(course_id, student_id):
         return jsonify({'validation_error': err.messages}), 422
 
     enrollment.save()
-
+    course.num_enrolled += 1
+    course.save()
     return jsonify({
         "message" : "success",
         "data": enrollment.dump()  
@@ -127,6 +128,9 @@ def delete_enrollment(course_id, student_id):
         abort(403)
     if not enrollment_service.delete_enrollment(course_id, student_id):
         abort(404)
+    course = storage.get(Course, course_id)
+    course.num_enrolled -= 1
+    course.save()
     return jsonify({
         "message": "deleted successfully",
         "data": []
