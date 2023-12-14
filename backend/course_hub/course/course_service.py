@@ -15,7 +15,7 @@ from models.lesson import Lesson
 from models.category import Category
 from models.instructor import Instructor
 from utils import sess_manager
-
+from utils.file_service import save_base64_image, save_image
 class CourseService:
     # __engine = None
     # __session = None
@@ -212,6 +212,16 @@ class CourseService:
         existing_course.name = data.get('name', existing_course.name)
         existing_course.description = data.get('description', existing_course.description)
 #        existing_course.hours = data.get('hours', existing_course.hours)
+        # image_path = save_image(image=image, course_id=existing_course.id)
+        # if image_path is not None:
+        #     existing_course.image = image_path
+        image_base64 = data.get('imageBase64')
+
+        if image_base64:
+            image_filename = f"{existing_course.id}.png"
+            image_path = save_base64_image(image_base64, image_filename)
+        if image_path:
+            existing_course.image = image_path
         existing_course.num_sections = data.get('num_sections', existing_course.num_sections)
         existing_course.num_enrolled = data.get('num_enrolled', existing_course.num_enrolled)
         existing_course.category_id = data.get('category_id', existing_course.category_id)

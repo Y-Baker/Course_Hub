@@ -19,7 +19,7 @@ class Course(BaseModel, Base):
     hours = Column(Integer, nullable=False)
     num_sections = Column(Integer, nullable=False, default=0)
     num_enrolled = Column(Integer, nullable=False, default=0)
-
+    image = Column(String(500))
     sections = relationship("Section", backref="course", cascade='all, delete-orphan')
 
     category_id = Column(String(60),
