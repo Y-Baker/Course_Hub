@@ -108,8 +108,7 @@ function EnrollCard({ user, course }) {
     }
     console.log('Loading 1' + loading);
     if (userData.role === 0) {
-      // const url_api = config.api + "/users/" + userData.id + "/enrollments/" + course.id;
-      // checkEnroll(url_api);
+      setLoading(false);
     } else if (userData.role === 1) {
       url_api = config.api + "/users/" + userData.id + "?all=true";
       setLoading(true);
@@ -163,7 +162,7 @@ function EnrollCard({ user, course }) {
     } else if (user.role === 2) {
       url_api = config.api + "/enrollments/" + course.id + "/" + user.id;
       unenroll(url_api);
-      window.location.reload();
+      // window.location.reload();
     }
   };
 
