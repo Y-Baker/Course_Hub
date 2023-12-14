@@ -3,8 +3,8 @@
 import base64
 import os
 
-
-UPLOAD_DIR = '/uploads/courses'
+home_directory = os.environ.get('HOME')
+UPLOAD_DIR = f'{home_directory}/uploads/courses'
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'ico'}
     return '.' in filename and filename.split('.', 1)[1].lower() in ALLOWED_EXTENSIONS
