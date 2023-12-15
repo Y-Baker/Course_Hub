@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import "./EnrollCard.css";
 
 function EnrollCard({ user, course }) {
-  console.log(user, course);
   const userContext = useContext(UserDataContext);
   const userData = userContext.userData;
   const [enrollState, setEnrollState] = useState(false);
@@ -47,6 +46,7 @@ function EnrollCard({ user, course }) {
       .post(`${url_api}`, {})
       .then((res) => {
         if (res.status === 201) {
+          window.location.reload();
           setEnrollState(true);
           setEnrollData(res.data.data);
           toast.success(res.data.message);
@@ -63,6 +63,7 @@ function EnrollCard({ user, course }) {
       .delete(`${url_api}`)
       .then((res) => {
         if (res.status === 200) {
+          window.location.reload();
           setEnrollState(false);
           setEnrollData(null);
           toast.success(res.data.message);

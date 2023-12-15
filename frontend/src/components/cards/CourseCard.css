@@ -70,3 +70,9 @@
     --bs-btn-disabled-color: #51585e !important;
     --bs-btn-disabled-border-color: #51585e !important;
 }
+
+.card-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}

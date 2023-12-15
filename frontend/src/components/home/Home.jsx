@@ -11,7 +11,7 @@ import { MDBCardTitle, MDBContainer, MDBRow } from "mdb-react-ui-kit";
 function Home(props) {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  let url_api = config.api + "/categories";
+  let url_api = config.api + "/categories?page=1&per_page=20";
 
   useEffect(() => {
     api

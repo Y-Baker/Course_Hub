@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import config from "../config";
 import "./userProfile.css";
 import CourseCardProfile from "./CourseCard-Profile";
+import CourseCard from "../cards/CourseCard";
 import NotApprovedCourses from "./admin/NotApproved";
 
 import {
@@ -147,8 +148,12 @@ function UserProfile({ data, owner }) {
                 <strong>No Data!</strong>
               ) : (
                 courses.map((course, index) => (
-                  <MDBCol lg="5" key={course.id || index}>
+                  <MDBCol lg="4" key={course.id || index}>
+                    {data.role == 1 ? (
                     <CourseCardProfile course={course} owner={owner} />
+                    ) : (
+                      <CourseCard course={course} admin={false} />
+                    )}
                   </MDBCol>
                 ))
               )}

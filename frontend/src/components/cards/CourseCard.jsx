@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, Button, Row, Col } from "react-bootstrap";
-import Image from "../../assets/images/OIF.jpg";
 import api from "../api";
 import config from "../config";
 import toast from "react-hot-toast";
@@ -52,7 +51,12 @@ function CourseCard({ course, admin }) {
   return (
     <Card className="my-3 p-3 rounded">
       <Link to={`/courses/${course.id}`}>
-        <Card.Img src={`${config.baseURL}/images/${course.image}`} alt="Course"  variant="top" />
+        <Card.Img
+          src={`${config.baseURL}/images/${course.image}`}
+          alt="Course"
+          variant="top"
+          className="card-img"
+        />
       </Link>
       <Card.Body>
         <Card.Title as="div" className="card-head">

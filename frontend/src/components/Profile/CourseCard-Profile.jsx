@@ -1,9 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card, Row, Col } from "react-bootstrap";
-import Image from "../../assets/images/OIF.jpg";
 import { useNavigate } from "react-router-dom";
-import "./CourseCard-Profile.css";
+import config from "../config";
 
 function CourseCardProfile({ course, owner }) {
   const navigate = useNavigate();
@@ -20,7 +19,11 @@ function CourseCardProfile({ course, owner }) {
 
   return (
     <Card className="my-3 p-3 rounded">
-      <Card.Img src={Image} variant="top" />
+      <Card.Img
+        src={`${config.baseURL}/images/${course.image}`}
+        variant="top"
+        className="card-img"
+      />
       <Card.Body>
         <Card.Title as="div" className="card-head">
           <Link to={`/courses/${course.id}`} className="link-style">
