@@ -109,8 +109,6 @@ function CourseContent({ user, course }) {
           Course Content
         </Card.Header>
         <Card.Body>
-          {console.log("shown: " + shown)}
-          {console.log("section: " + course.sections)}
           {shown ? (
             <Card.Text className="course-content">
               {course.sections.length === 0 && (
@@ -118,7 +116,6 @@ function CourseContent({ user, course }) {
               )}
               {course.sections.map((section) => (
                 <>
-                  {console.log("section: " + section.name)}
                   <div key={section.id} className="list-sections">
                     <h3 className="section-head">
                       <span

@@ -1,5 +1,4 @@
 import Carousel from 'react-bootstrap/Carousel';
-// import img from '../img'; // Adjust the path as needed
 
 
 function Slider() {

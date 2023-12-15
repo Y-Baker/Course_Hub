@@ -37,27 +37,6 @@ export default function UserContextProvider(props) {
       };
     }
     
-    // const saveUserData = useCallback((userDetails) => {
-    //   if (userDetails !== null && userDetails !== undefined) {
-    //     setUserData(userDetails);
-    //   } else {
-    //     setUserData(null);
-    //   }
-    // }, []);
-
-    // const saveUserData = useCallback(() => {
-    //     let encodedToken = localStorage.getItem('access_token');
-    //     if (encodedToken !== null && encodedToken !== undefined) {
-    //       let decodedToken = jwtDecode(encodedToken);
-    //       setuserData(TokenToUserData(decodedToken));
-    //       return userData;
-    //     } else {
-    //       setuserData(null);
-    //       localStorage.removeItem('access_token');
-    //       localStorage.removeItem('refresh_token');
-    //       return null;
-    //     }
-    //     }, []);
         useEffect(() => {
             saveUserData();
           }, [localStorage.getItem('access_token')]);

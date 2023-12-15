@@ -37,7 +37,6 @@ export default function Logout(props) {
   
   useEffect(() => {
     if (showModal) {
-      // Focus on the close button when the modal is shown
       document.getElementById('closeButton').focus();
     }
   }, [showModal]);
@@ -69,8 +68,6 @@ export default function Logout(props) {
   function doLogOut() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
-    // props.saveUserData();
-    // userContext.saveUserData();
     userContext.setUserData(null);
     navigate('/login');
   }

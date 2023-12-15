@@ -17,53 +17,7 @@ export default function Login() {
   const [isLoading, setisLoading] = useState(false);
   const [errorMessage, seterrorMessage] = useState("");
   const nav = useNavigate();
-  // async function handleLogin(values) {
-  //   try {
-  //     setisLoading(true);
-  //     let response = await axios.post(`${config.baseUrl}${config.auth}/login`, values);
-  //     if (response.status === 200)
-  //     {
-  //       localStorage.setItem("access_token", response.data.data.access_token);
-  //       localStorage.setItem("refresh_token", response.data.data.refresh_token);
-  //       // props.saveUserData();
-  //       // await userContext.saveUserData({
-  //       //   name: response.data.data.name,
-  //       //   role: response.data.data.role,
-  //       //   id: response.data.data.id,
-  //       //   email: response.data.data.email,
-  //       // })
-  //       handleSaveUserData(response)
-  //       setisLoading(false);
-  //       if (response.data.data.role === 1) {
-  //         nav('/Instructor')
-  //       } else if (response.data.data.role === 0) {
-  //         nav('/admin')
-  //       }
-  //       else {
-  //         nav('/')
-  //       }
 
-  //     } else {
-  //       setisLoading(false);
-  //     }
-  //  } catch (error) {
-  //   setisLoading(false);
-  //   seterrorMessage(`${JSON.stringify(error.response.data.error)}`);
-  // }
-  // setisLoading(false);
-  // }
-
-  // const handleSaveUserData = async (response) => {
-  //   await userContext.saveUserData({
-  //     name: response.data.data.name,
-  //     role: response.data.data.role,
-  //     id: response.data.data.id,
-  //     email: response.data.data.email,
-  //   }, () => {
-  //     console.log(userContext.userData); // This should log the updated state
-  //     // Continue with any logic dependent on the updated state
-  //   });
-  // };
   async function handleLogin(values) {
     try {
       setisLoading(true);
@@ -162,19 +116,6 @@ export default function Login() {
             <div className="alert alert-danger">{formik.errors.password}</div>
           ) : null}
 
-          {/* <div className='rem-checkbox'>
-            <label id='remember-label' htmlFor='remember'>
-            Remember Me
-            </label>
-            <input
-              type="checkbox"
-              name="remember"
-              id = "remember"
-              checked={formik.values.remember}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-          </div> */}
           <p></p>
           {isLoading ? (
             <button type="button" className="register-button">

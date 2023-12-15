@@ -34,7 +34,7 @@ function CourseList({ filter = null }) {
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   }, []);
 
