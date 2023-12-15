@@ -2,7 +2,7 @@
 """new view for Course objects that handles all default RESTFul API actions"""
 
 from course_hub.course import course_views
-from flask import jsonify, abort, request
+from flask import jsonify, abort, request, send_from_directory
 from models import storage
 from models.course import Course
 from models.instructor import Instructor
@@ -14,7 +14,7 @@ from flask_jwt_extended import current_user, jwt_required
 from models.lesson import Lesson
 from models.section import Section
 from utils.auth_utils import user_required
-from utils.file_service import save_base64_image, save_image
+from utils.file_service import save_base64_image, save_image, get_upload_dir
 
 
 @course_views.route('/courses', methods=['GET'])
@@ -218,3 +218,4 @@ def approve_courses(course_id):
         "message": "successfully approved course",
         "data": CourseSchema().dump(course)
     })
+    

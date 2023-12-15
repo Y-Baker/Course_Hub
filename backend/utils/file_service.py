@@ -2,9 +2,17 @@
 """module for file dealing utils"""
 import base64
 import os
+import os
+from os.path import expanduser
 
-home_directory = os.environ.get('HOME')
-UPLOAD_DIR = f'{home_directory}/uploads/courses'
+
+home = expanduser("~")
+UPLOAD_DIR = f'{home}{os.sep}uploads{os.sep}courses'
+
+
+def get_upload_dir():
+    return UPLOAD_DIR
+
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'ico'}
     return '.' in filename and filename.split('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -21,7 +29,7 @@ def save_image(image, course_id):
         image_filename = f"{course_id}.png"
         image_path = os.path.join(UPLOAD_DIR, image_filename)
         image.save(image_path)
-        return image_path
+        return image_filename
     else:
         return None
     
@@ -35,6 +43,6 @@ def save_base64_image(base64_data, filename):
         with open(file_path, 'wb') as file:
             file.write(decoded_data)
 
-        return file_path
+        return filename
     except Exception as e:
         raise e

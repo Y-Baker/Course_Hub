@@ -4,7 +4,7 @@
 
 from course_hub import app, jwt
 from os import getenv
-from flask import jsonify
+from flask import jsonify, send_from_directory
 from flask_cors import CORS
 from flasgger import Swagger
 from models import storage
@@ -15,6 +15,7 @@ from utils import sess_manager
 from course_hub.instructor import instructor_views
 from course_hub.student import student_views
 from course_hub.enrollment import enrollment_views
+from utils.file_service import get_upload_dir
 
 
 cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -93,6 +94,12 @@ def after_request_callback( response ):
     storage.close()
     sess_manager.close()
     return response
+
+
+@app.route('/images/<path:filename>')
+def serve_image(filename):
+    directory = get_upload_dir()
+    return send_from_directory(directory, filename)
 
 # @login_manager.user_loader
 # def load_user(id):
