@@ -70,3 +70,10 @@ class EnrollmentService:
         enrollment.completed = False
         self.__session.commit()
         return enrollment
+
+    def get_last_enrollment(self, course_id):
+        """method to get last enrollment"""
+        return self.__session.query(Enrollment)\
+            .filter(Enrollment.course_id == course_id)\
+            .order_by(Enrollment.enrolled_date.desc()).first()
+

@@ -17,6 +17,7 @@ function EnrollCard({ user, course }) {
   const [enrollData, setEnrollData] = useState(null);
   const [instructor, setInstructor] = useState(null);
   const [instructorOwner, setInstructorOwner] = useState(false);
+  const [lastEnrollment, setLastEnrollment] = useState(null);
   const navigate = useNavigate();
   let url_api = "";
 
@@ -98,7 +99,6 @@ function EnrollCard({ user, course }) {
   };
 
   useEffect(() => {
-    console.log('Loading 0' + loading);
     if (userData === null) {
       setLoading(false);
       return;
@@ -107,19 +107,18 @@ function EnrollCard({ user, course }) {
       navigate("/forbidden");
       return;
     }
-    console.log('Loading 1' + loading);
     if (userData.role === 0) {
+      lastPurchase(course);
       setLoading(false);
     } else if (userData.role === 1) {
       url_api = config.api + "/users/" + userData.id + "?all=true";
       setLoading(true);
       checkOwner(url_api, course);
-      console.log('Loading 2' + loading);
+      lastPurchase(course);
     } else if (userData.role === 2) {
       url_api = config.api + "/enrollments/" + course.id + "/" + user.id;
       setLoading(true);
       checkEnroll(url_api);
-      console.log('Loading 3' + loading);
     }
   }, [userData]);
 
@@ -128,7 +127,6 @@ function EnrollCard({ user, course }) {
   };
 
   const handleEnroll = (user, course) => {
-    console.log("Enroll Button")
     if (!user) {
       handleLogin("Please Login to Enroll");
       return;
@@ -144,7 +142,6 @@ function EnrollCard({ user, course }) {
         return;
       }
       url_api = config.api + "/enrollments/" + course.id + "/" + user.id;
-      console.log("Go to Enroll with" + url_api)
       enroll(url_api);
       // window.location.reload();
     }
@@ -204,14 +201,32 @@ function EnrollCard({ user, course }) {
             "Hello, \n\nI am student in your course " + course.name + ".\n"
           );
           const mailToURL =
-            "mailto:" + res.data.email + "?subject=" + subject + "&body=" + body;
-      
+            "mailto:" +
+            res.data.email +
+            "?subject=" +
+            subject +
+            "&body=" +
+            body;
+
           window.open(mailToURL);
         }
       })
       .catch((err) => {
         console.error(err);
+      });
+  };
+
+  const lastPurchase = (course) => {
+    api
+      .get(`${config.api}/enrollments/${course.id}/last`)
+      .then((res) => {
+        if (res.status === 200) {
+          setLastEnrollment(res.data);
+        }
       })
+      .catch((err) => {
+        return;
+      });
   };
 
   const headerText = (user, owner) => {
@@ -235,18 +250,26 @@ function EnrollCard({ user, course }) {
       return "Get it for Free";
     }
     if (user.role === 0) {
-      return "Admin Management";
-    } else if (user.role === 1) {
-      if (owner) {
-        return (
-          "Last Purchase: " +
-          course.updated_at
+      return lastEnrollment
+      ? "Last Purchase: " +
+          lastEnrollment.enrolled_date
             .substring(0, 10)
             .replace(/-/g, "/")
             .split("/")
             .reverse()
             .join("/")
-        );
+      : "No Purchase yet";
+    } else if (user.role === 1) {
+      if (owner) {
+        return lastEnrollment
+          ? "Last Purchase: " +
+              lastEnrollment.enrolled_date
+                .substring(0, 10)
+                .replace(/-/g, "/")
+                .split("/")
+                .reverse()
+                .join("/")
+          : "No Purchase yet";
       }
       return "Login as Student to Enroll";
     } else if (user.role === 2) {
@@ -317,12 +340,7 @@ function EnrollCard({ user, course }) {
       </Button>
     );
     const b6 = (
-      <Button
-        className="basic-p mr ml"
-        variant="primary"
-        block
-        disabled
-      >
+      <Button className="basic-p mr ml" variant="primary" block disabled>
         Enroll Now
       </Button>
     );
@@ -365,15 +383,14 @@ function EnrollCard({ user, course }) {
   } else {
     return (
       <Card className="mt-3">
-        {console.log(instructorOwner)}
         <Card.Header as="h5">{headerText(user, instructorOwner)}</Card.Header>
         <Card.Body>
+          {user.role === 0 && (<Card.Text>Admin Management</Card.Text>)}
           <Card.Text>{bodyText(user, instructorOwner, enrollState)}</Card.Text>
           <div className="enroll-buttons">
             {buttons(user, instructorOwner, enrollState)}
             <Toaster />
           </div>
-
         </Card.Body>
       </Card>
     );

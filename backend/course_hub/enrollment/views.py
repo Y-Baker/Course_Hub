@@ -155,3 +155,14 @@ def uncomplete_enrollment(course_id, student_id):
         abort(404)
     enrollment_service.uncomplete_enrollment(course_id, student_id)
     return jsonify(enrollment.dump()), 200
+
+@enrollment_views.route('/enrollments/<course_id>/last', methods=['GET'])
+@jwt_required()
+@user_required([0, 1])
+def get_last_enrollment(course_id):
+    """reterive last enrollment from storage
+    """
+    enrollment = enrollment_service.get_last_enrollment(course_id)
+    if enrollment is None:
+        abort(404)
+    return jsonify(enrollment.dump()), 200
