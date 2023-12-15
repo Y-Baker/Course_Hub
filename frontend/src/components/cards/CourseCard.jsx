@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import Image from "../../assets/images/OIF.jpg";
@@ -52,7 +52,7 @@ function CourseCard({ course, admin }) {
   return (
     <Card className="my-3 p-3 rounded">
       <Link to={`/courses/${course.id}`}>
-        <Card.Img src={Image} variant="top" />
+        <Card.Img src={`${config.baseURL}/images/${course.image}`} alt="Course"  variant="top" />
       </Link>
       <Card.Body>
         <Card.Title as="div" className="card-head">
