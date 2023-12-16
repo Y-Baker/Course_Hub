@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import api from "../../api";
 import config from "../../config";
 import toast from "react-hot-toast";
@@ -12,7 +12,6 @@ import NotFound from "../../not-found/NotFound";
 import NotApproved from "../../not_approved/not_approved";
 import EnrollCard from "./EnrollCard";
 import CourseContent from "./Content";
-
 
 function CoursePage() {
   const userContext = useContext(UserDataContext);
@@ -82,7 +81,7 @@ function CoursePage() {
                       {course.category_id && (
                         <li>
                           Category{" "}
-                          <span className="redirect">
+                          <span className="redir">
                             {course.category_name}
                           </span>
                         </li>
@@ -91,9 +90,11 @@ function CoursePage() {
                       <li>Total Students {course.num_enrolled}</li>
                       <li>
                         Created By{" "}
-                        <span className="redirect">
-                          {course.instructor_name}
-                        </span>
+                        <Link to={`/users/${course.instructor_id}`}>
+                          <span className="redirect">
+                            {course.instructor_name}
+                          </span>
+                        </Link>
                       </li>
                     </ul>
                   </Card.Text>

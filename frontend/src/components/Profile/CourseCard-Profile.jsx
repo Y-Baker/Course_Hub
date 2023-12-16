@@ -45,7 +45,7 @@ function CourseCardProfile({ course, owner }) {
           </div>
         </Card.Title>
         <Card.Text as="div" style={{ paddingBottom: "16px" }}>
-          <p style={{ color: "#333" }}>{course.description}</p>
+          <p style={{ color: "#333" }}>{course.description.substring(0, 60)}{course.description.length > 60 && "..."}</p>
         </Card.Text>
         <Card.Text as="div" className="d-flex justify-content-between">
           <p style={{ color: "#0C356A", paddingTop: "8px" }}>

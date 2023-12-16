@@ -26,7 +26,7 @@ function NotApprovedCourses() {
   const navigate = useNavigate();
   function getNotApprovedCourses() {
     api
-      .get(`${config.api}/courses/not-approved`)
+      .get(`${config.api}/courses/not-approved?page=1&per_page=4`)
       .then((response) => {
         setNotApprovedCourses(response.data.data);
         toast.success(response.data.message);

@@ -5,11 +5,14 @@ from flask_jwt_extended import jwt_required
 from course_hub.user import user_views
 from flask import jsonify, abort, request
 from course_hub.user.user_service import UserService
+from course_hub.instructor.instructor_service import InstructorService
 from models import storage
 from models.user import User
 from flasgger.utils import swag_from
 
 user_service = UserService()
+instructor_service = InstructorService()
+
 @user_views.route('/users', methods=['GET'])
 @jwt_required()    
 @swag_from('documentation/user/all_users.yml')
@@ -35,6 +38,10 @@ def get_user(user_id):
         abort(404)
 
     all = eval(request.args.get("all", "false", type=str).capitalize())
+    if user.role == 1:
+        instructor = storage.get(roles[user.role], user_id)
+        instructor_service.get_total_students(instructor)
+
     if all:
         new_user = storage.get(roles[user.role], user_id)
         if new_user:

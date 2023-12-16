@@ -13,7 +13,7 @@ export default function ApproveCourses() {
   const userContext = useContext(UserDataContext);
   const userData = userContext.userData;
   function getNotApprovedCourses() {
-    api.get(`${config.api}/courses/not-approved`)
+    api.get(`${config.api}/courses/not-approved?page=1&per_page=100`)
     .then((response) => {
       setnotApprovedCourses(response.data.data);
       toast.success(response.data.message);
