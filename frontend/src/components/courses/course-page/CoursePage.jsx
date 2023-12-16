@@ -81,9 +81,11 @@ function CoursePage() {
                       {course.category_id && (
                         <li>
                           Category{" "}
-                          <span className="redir">
-                            {course.category_name}
-                          </span>
+                          <Link to={`/categories/${course.category_id}`}>
+                            <span className="redirect">
+                              {course.category_name}
+                            </span>
+                          </Link>
                         </li>
                       )}
                       <li>Total Hours {course.hours}</li>

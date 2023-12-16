@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """to init db"""
 
 from os import getenv

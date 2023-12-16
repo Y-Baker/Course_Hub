@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import CourseList from "../courses/CourseList";
 import Slider from "../slider/Slider";
 import Loading from "../Loading/loading";
 import "./home.css";
 import api from "../api";
 import config from "../config";
 import { Container } from "react-bootstrap";
-import { MDBCardTitle, MDBContainer, MDBRow } from "mdb-react-ui-kit";
+import Categories from "../categories/Categories";
 
 function Home(props) {
   const [categories, setCategories] = useState([]);
@@ -51,22 +50,7 @@ function Home(props) {
             <br />
           </Container>
           <hr />
-          <MDBContainer className="py-4">
-            <MDBRow>
-              {categories.map((category, index) => (
-                <>
-                  {category.courses.length > 0 && (
-                    <>
-                      <div className="SubHeading" key={category.id || index}>
-                        <h2>{category.name}</h2>
-                      </div>
-                      <CourseList filter={category} />
-                    </>
-                  )}
-                </>
-              ))}
-            </MDBRow>
-          </MDBContainer>
+          <Categories categories={categories}/>
         </div>
       )}
     </>
