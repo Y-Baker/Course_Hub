@@ -74,6 +74,13 @@ export default function UpdateCourse(props) {
 
   function convertImageToBase64(imageFile) {
     return new Promise((resolve, reject) => {
+      console.log("before checking");
+      if (!(imageFile instanceof Blob) && !(imageFile instanceof File)) {
+        console.log("not instance");
+        resolve(null);
+        return;
+      }
+  
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result.split(',')[1]);
       reader.onerror = error => reject(error);
@@ -86,8 +93,13 @@ export default function UpdateCourse(props) {
       setisLoading(true);
       const imageFile = values.image;
       const imageBase64 = await convertImageToBase64(imageFile);
-  
-      values.imageBase64 = imageBase64;
+      if (imageBase64 !== null && imageBase64 !== undefined){
+        console.log("adding the value");
+        values.imageBase64 = imageBase64;
+      }
+      
+      console.log("outside of the checks");
+
       let response = await api.put(`${config.api}/courses/${values.id}`, values);
       if (response.status === 200)
       {
@@ -104,7 +116,7 @@ export default function UpdateCourse(props) {
         setisLoading(false);
       }
    } catch (error) {
-    
+    console.error(error);
     if (error.response.status === 401){
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
@@ -170,7 +182,7 @@ export default function UpdateCourse(props) {
           num_sections: fetchedCourse.num_sections || 0,
           category_id: fetchedCourse.category_id || undefined,
           instructor_id: fetchedCourse.instructor_id || userData.id,
-          image: fetchedCourse.image || null, // Add the image field to initialValues
+          image: fetchedCourse.image || null,
           sections: fetchedCourse.sections || [
             {
               id: '',
@@ -198,7 +210,7 @@ export default function UpdateCourse(props) {
           num_sections: '',
           category_id: undefined,
           instructor_id: userData.id,
-          image: null, // Add the image field to initialValues
+          image: null,
           sections: [
             {
               id: '',
