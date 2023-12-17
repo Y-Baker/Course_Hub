@@ -2,12 +2,33 @@ import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
 import logo from "../../assets/images/online-course.ico";
-
+import api from "../api";
+import config from "../config";
+import Loading from "../Loading/loading";
 import { UserDataContext } from "../UserContextProvider/UserContextProvider";
 
 export default function NavBar(props) {
   let userContext = useContext(UserDataContext);
   let userData = userContext.userData;
+
+  const [categories, setCategories] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const url_api = config.api + "/categories?page=1&per_page=20";
+
+  useEffect(() => {
+    api
+      .get(url_api)
+      .then((response) => {
+        if (response.status === 200) {
+          setCategories(response.data);
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   useEffect(() => {
     console.log("userData changed");
   }, [userData]);
@@ -57,7 +78,7 @@ export default function NavBar(props) {
               <li className="nav-item dropdown">
                 <Link
                   className="nav-link dropdown-toggle"
-                  to="#"
+                  to="/categories"
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
@@ -65,22 +86,22 @@ export default function NavBar(props) {
                   Categories
                 </Link>
                 <ul className="dropdown-menu">
-                  <li>
-                    <Link className="dropdown-item" to="#">
-                      First Category
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="#">
-                      Second Category
-                    </Link>
-                  </li>
+                  {loading ? <Loading /> : categories.map((category, index) => (
+                    <li key={category.id || index}>
+                      <Link
+                        className="dropdown-item"
+                        to={"/categories/" + category.id}
+                      >
+                        {category.name}
+                      </Link>
+                    </li>
+                  ))}
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="#">
-                      Third Category
+                    <Link className="dropdown-item" to="/categories">
+                      All Categories
                     </Link>
                   </li>
                 </ul>

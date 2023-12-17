@@ -61,9 +61,7 @@ $yellow2: #B79A2F;
     &:nth-child(#{$i}) {      
       .code {
         @for $j from 1 through 4 {
-          &:nth-child(#{$j}) {
-            // $rotation: (5 - random(10)) + deg;
-            // transform: translateY(0px) rotate($rotation);      
+          &:nth-child(#{$j}) {      
             $spacing: (random(9) / 2) + 1em;
             margin-left: $spacing;
           }

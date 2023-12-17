@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """to init db"""
 
 from os import getenv
@@ -23,8 +24,7 @@ engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
                                         CH_MYSQL_PWD,
                                         CH_MYSQL_HOST, 
                                         CH_MYSQL_DB))
-# for t in Base.metadata.sorted_tables:
-#         print(t.name)
+
 Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 

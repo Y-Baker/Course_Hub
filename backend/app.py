@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """module init"""
-# from flask_login import LoginManager, current_user, login_required
 
 from course_hub import app, jwt
 from os import getenv
@@ -28,11 +27,6 @@ app.register_blueprint(instructor_views)
 app.register_blueprint(student_views)
 app.register_blueprint(enrollment_views)
 
-#flask_login configurations
-# login_manager = LoginManager()
-# login_manager.init_app(app)
-
-#flask_JWT configurations
 jwt.init_app(app)
 
 # load user
@@ -42,15 +36,6 @@ def user_lookup_callback(_jwt_headers, jwt_data):
 
     return storage.getUserById(identity)
 
-# additional claims
-
-# @jwt.additional_claims_loader
-# def make_additional_claims(identity):
-#     if identity == "janedoe123":
-#         return {"is_staff": True}
-#     return {"is_staff": False}
-
-# jwt error handlers
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_data):
@@ -85,9 +70,6 @@ def token_in_blocklist_callback(jwt_header,jwt_data):
 
     return token is not None
 
-# @app.before_request 
-# def before_request_callback():
-#     sess_manager.reload()
 
 @app.after_request 
 def after_request_callback( response ):
@@ -101,16 +83,6 @@ def serve_image(filename):
     directory = get_upload_dir()
     return send_from_directory(directory, filename)
 
-# @login_manager.user_loader
-# def load_user(id):
-#     print(id)
-#     return storage.getUserById(id)
-
-
-
-# @login_manager.unauthorized_handler
-# def unauthorized():
-#     return jsonify({'message': 'Unauthorized'}), 401
 
 @app.errorhandler(403)
 def unauthorized(err):

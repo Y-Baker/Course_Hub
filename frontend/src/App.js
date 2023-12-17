@@ -37,40 +37,13 @@ import ShowLessons from './components/lesson-components/show_lesson/ShowLessons'
 import ShowSections from './components/section-components/show_section/ShowSections';
 
 import CoursePage from './components/courses/course-page/CoursePage';
+import CategoryPage from './components/categories/categoryPage';
 import NotApproved from './components/not_approved/not_approved';
+import Categories from './components/categories/Categories';
 
 function App() {
-  // const [userData, setuserData] = useState({});
-  // function TokenToUserData(decodedToken){
-  //   return {
-  //     'name': decodedToken.name,
-  //     'id': decodedToken.sub,
-  //     'email': decodedToken.email,
-  //     'role': decodedToken.role,
-  //   }
-
-  // }
-
-
-  // const saveUserData = useCallback(() => {
-  //   let encodedToken = localStorage.getItem('access_token');
-  //   if (encodedToken !== null && encodedToken !== undefined) {
-  //     let decodedToken = jwtDecode(encodedToken);
-  //     setuserData(TokenToUserData(decodedToken));
-  //     return userData;
-  //   } else {
-  //     setuserData(null);
-  //     localStorage.removeItem('access_token');
-  //     localStorage.removeItem('refresh_token');
-  //     return null;
-  //   }
-  //   }, []);
-  //   useEffect(() => {
-  //     saveUserData();
-  //   }, [localStorage.getItem('access_token')]);
   let routers = createBrowserRouter([
-    // {path: '/', element:<Layout  userData={userData} saveUserData={saveUserData}/>, children:[
-    /* using userContext instead of props */
+
     {
       path: "/",
       element: <Layout />,
@@ -78,12 +51,8 @@ function App() {
         { index: true, element: <Home /> },
         { path: "about", element: <About /> },
         { path: "contact-us", element: <ContacUs /> },
-        // {path:'login', element: <Login userData={userData} saveUserData={saveUserData}/>},
-        /* using userContext instead of props */
         { path: "login", element: <Login /> },
 
-        // {path:'logout', element: <ProtectedRoute userData={userData}><Logout saveUserData={saveUserData}/></ProtectedRoute>},
-        /* using userContext instead of props */
         {
           path: "logout",
           element: (
@@ -101,27 +70,6 @@ function App() {
           ),
         },
         { path: "register", element: <Register /> },
-        // ,
-        // {
-        //   path: '/Admin',
-        //   // element: <ProtectedRoute userData={userData} saveUserData={saveUserData} roles={['Admin']}><AdminDashboard userData={userData}/></ProtectedRoute>,
-
-        //   element: <ProtectedRoute  roles={['Admin']}><AdminDashboard /></ProtectedRoute>,
-        //   children: [],
-        // },
-        // {
-        //   path: 'Instructor',
-        //   // element: <ProtectedRoute userData={userData} saveUserData={saveUserData} roles={['Instructor']}><AdminDashboard userData={userData}/></ProtectedRoute>,
-
-        //   element: <ProtectedRoute  roles={['Instructor']}><AdminDashboard /></ProtectedRoute>,
-
-        //   children: [
-        //     // {path: 'addCourse', element:<AddCourse userData={userData}/>},
-        //     // {path: 'updateCourse', element:<UpdateCourse userData={userData}/>},
-        //     {path: 'addCourse', element:<AddCourse />},
-        //     {path: 'updateCourse', element:<UpdateCourse />},
-        //   ],
-        // },
         {
           path: "courses",
           // element: <Layout />,
@@ -129,6 +77,15 @@ function App() {
             { index: true, element: <Courses /> },
 
             { path: ":id", element: <CoursePage /> },
+          ],
+        },
+
+        {
+          path: "categories",
+          // element: <Layout />,
+          children: [
+            { index: true, element: <Categories />},
+            { path: ":id", element: <CategoryPage /> },
           ],
         },
 

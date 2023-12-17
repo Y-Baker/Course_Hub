@@ -41,6 +41,8 @@ def sign_up():
     new_data = role_data(data)
     new_data['id'] = new_user.id
     role = roles[new_user.role](**new_data)
+    if new_user.role == 2:
+        role.interested = data.get('interestedIn')
     role.save()
     return jsonify({
         'message': 'success',

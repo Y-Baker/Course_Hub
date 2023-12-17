@@ -221,33 +221,6 @@ export default function UpdateCourse(props) {
     onSubmit: handleCourseSubmit,
   });
 
-  // useEffect(() =>{
-  //   if (fetchCourse) {
-  //     formik.values.name = fetchedCourse.name || '';
-  //     formik.values.description = fetchedCourse.description || '';
-  //     formik.values.approved = fetchedCourse.approved || false;
-  //     formik.values.hours = fetchedCourse.hours || '';
-  //     formik.values.num_sections = fetchedCourse.num_sections || 0;
-  //     formik.values.category_id = fetchedCourse.category_id || undefined;
-  //     formik.values.instructor_id = fetchedCourse.instructor_id || userData.id;
-  //     formik.values.sections = fetchedCourse.sections || [
-  //       {
-  //         name: '',
-  //         section_num: 1,
-  //         completed: false,
-  //         lessons: [
-  //           {
-  //             name: '',
-  //             lesson_num: 1,
-  //             completed: false,
-  //             content: '',
-  //           },
-  //         ],
-  //       },
-  //     ]
-  //   }
-
-  // }, [fetchedCourse])
 
     if (loading){
       return <Loading />
@@ -356,18 +329,6 @@ export default function UpdateCourse(props) {
                 disabled
               />
                 {formik.errors.num_sections && formik.touched.num_sections ? <div className="alert alert-danger">{formik.errors.num_sections}</div> : null}
-              {/* <label htmlFor="num_enrolled">Number Enrolled:</label>
-              <Field id="num_enrolled" name="num_enrolled" placeholder="Number Enrolled" type="number" />
-              <input
-              type="number"
-              name="hours"
-              id = "hours"
-              placeholder='course hours'
-              value={formik.values.hours}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              required
-              /> */}
 
                     <label htmlFor="category_id">Category:</label>
                     <select

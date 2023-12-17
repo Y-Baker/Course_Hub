@@ -22,7 +22,7 @@ function CourseList({ filter = null }) {
     url_api += "courses?approved=true&page=1&per_page=20";
   } else {
     // categories/<category_id>/courses
-    url_api += "categories/" + filter.id + "/courses?approved=1&page=1&per_page=20";
+    url_api += "categories/" + filter.id + "/courses?approved=1&page=1&per_page=6";
   }
   useEffect(() => {
     api
@@ -34,7 +34,7 @@ function CourseList({ filter = null }) {
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   }, []);
 

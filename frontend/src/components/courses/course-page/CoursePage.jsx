@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import api from "../../api";
 import config from "../../config";
 import toast from "react-hot-toast";
@@ -10,9 +10,8 @@ import "./CoursePage.css";
 import Loading from "../../Loading/loading";
 import NotFound from "../../not-found/NotFound";
 import NotApproved from "../../not_approved/not_approved";
-import Image from "../../../assets/images/OIF.jpg";
 import EnrollCard from "./EnrollCard";
-
+import CourseContent from "./Content";
 
 function CoursePage() {
   const userContext = useContext(UserDataContext);
@@ -61,7 +60,7 @@ function CoursePage() {
   }
   if (course === null) {
     return <NotFound />;
-  } else if (course.approved === false) {
+  } else if (course.approved === false && userData.role != 0) {
     return <NotApproved />;
   } else {
     return (
@@ -82,23 +81,27 @@ function CoursePage() {
                       {course.category_id && (
                         <li>
                           Category{" "}
-                          <span className="redirect">
-                            {course.category_name}
-                          </span>
+                          <Link to={`/categories/${course.category_id}`}>
+                            <span className="redirect">
+                              {course.category_name}
+                            </span>
+                          </Link>
                         </li>
                       )}
                       <li>Total Hours {course.hours}</li>
                       <li>Total Students {course.num_enrolled}</li>
                       <li>
                         Created By{" "}
-                        <span className="redirect">
-                          {course.instructor_name}
-                        </span>
+                        <Link to={`/users/${course.instructor_id}`}>
+                          <span className="redirect">
+                            {course.instructor_name}
+                          </span>
+                        </Link>
                       </li>
                     </ul>
                   </Card.Text>
                   <Card.Text className="footer-text">
-                    <div className="icon-block" style={{ width: "200px" }}>
+                    <div className="icon-block" style={{ width: "220px" }}>
                       <div className="last-updated-icon"></div>
                       <span className="icon-text">
                         Last updated{" "}
@@ -133,12 +136,18 @@ function CoursePage() {
                   <Card.Img
                     variant="top"
                     // src={course.image_url}
-                    src={Image}
+                    src={`${config.baseURL}/images/${course.image}`}
                     style={{ width: "100%" }}
                   />
                 </Card.Body>
               </Card>
               <EnrollCard user={userData} course={course} />
+            </Col>
+          </Row>
+          <br />
+          <Row>
+            <Col>
+              <CourseContent user={userData} course={course} />
             </Col>
           </Row>
         </Container>

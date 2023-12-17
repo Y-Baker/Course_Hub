@@ -45,4 +45,4 @@ def get_total_students(instructor_id):
     instructor = storage.get(Instructor, instructor_id)
     if instructor is None:
         abort(404)
-    return jsonify(instructor_service.get_total_students(instructor))
+    return jsonify({"data": instructor_service.get_total_students(instructor)})

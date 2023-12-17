@@ -1,33 +1,61 @@
 import Carousel from 'react-bootstrap/Carousel';
-// import img from '../img'; // Adjust the path as needed
-
+import api from '../api';
+import config from '../config';
+import { useEffect, useState } from 'react';
+import Loading from '../Loading/loading';
+import { Link } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
+import "./Slider.css";
 
 function Slider() {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const url_api = config.api + '/courses/best?page=1&per_page=3';
+
+  useEffect(() => {
+    api
+      .get(url_api)
+      .then((response) => {
+        if (response.status === 200) {
+          setCourses(response.data);
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(true);
+      });
+  }
+  , []);
+
   return (
     <Carousel>
-      <Carousel.Item>
-        <img src="https://c4.wallpaperflare.com/wallpaper/39/346/426/digital-art-men-city-futuristic-night-hd-wallpaper-preview.jpg" />
-        <Carousel.Caption>
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-        <img src="https://c4.wallpaperflare.com/wallpaper/39/346/426/digital-art-men-city-futuristic-night-hd-wallpaper-preview.jpg" />
-        <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-        <img src="https://c4.wallpaperflare.com/wallpaper/39/346/426/digital-art-men-city-futuristic-night-hd-wallpaper-preview.jpg" />
-        <Carousel.Caption>
-          <h3>Third slide label</h3>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-          </p>
-        </Carousel.Caption>
-      </Carousel.Item>
+      {console.log(courses)}
+      {loading ? (
+        <Loading />
+      ) : (
+        courses.map((course, index) => (
+          <Carousel.Item key={course.id || index} className='slide'>
+            <img
+              className="d-block w-100 slider-img"
+              src={`${config.baseURL}/images/${course.image}`}
+              alt={course.name}
+              onClick={() => window.location.href = '/courses/' + course.id}
+            />
+
+            <Carousel.Caption className='slide-text'>
+              <div>
+              <Link to={'/courses/' + course.id}>
+                <h3 className='slide-link'>{course.name}</h3>
+              </Link>
+              <p>{course.description.substring(0, 60)}{course.description.length > 60 && "..."}</p>
+              </div>
+            </Carousel.Caption>
+          </Carousel.Item>
+        ))
+      )}
+
     </Carousel>
   );
 }
