@@ -68,12 +68,17 @@ export default function AdminDashboard(props) {
                     ) : <>
                     <Link className="nav-link" to='searchCourse'>
                       <div className="option">
-                          <span className="icon">+</span> search
+                          <span className="icon">+</span> Search
                       </div>
                     </Link>
                     <Link className="nav-link" to='addCourse'>
                       <div className="option">
                           <span className="icon">+</span> Add
+                      </div>
+                    </Link>
+                    <Link className="nav-link" to='/Instructor'>
+                      <div className="option">
+                        <span className="icon"></span> My Courses
                       </div>
                     </Link>
                     </>}
@@ -92,7 +97,7 @@ export default function AdminDashboard(props) {
                 <div className="options">
                   <Link className="nav-link" to='SearchSection'>
                     <div className="option">
-                        <span className="icon">+</span> search
+                        <span className="icon">+</span> Search
                     </div>
                   </Link>
                   {/* <Link className="nav-link" to='addSection'>
