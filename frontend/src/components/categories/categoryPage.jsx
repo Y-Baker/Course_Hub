@@ -15,7 +15,7 @@ function CategoryPage() {
     id;
 
   const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState([]);
+  const [category, setCategory] = useState(null);
 
   const navigate = useNavigate();
 
@@ -35,8 +35,13 @@ function CategoryPage() {
   };
 
   useEffect(() => {
+    if (category) {
+      window.location.reload();
+    } else {
     getCategory(url_api);
-  }, []);
+    }
+  }, [url_api]);
+
 
   if (loading) {
     return <Loading />;
@@ -48,7 +53,7 @@ function CategoryPage() {
             <Link to="/categories" className="redirect">Categories</Link> / {category.name}
         </div>
         <div className="row">
-          <CourseList filter={category}/>
+          <CourseList filter={category} />
         </div>
       </div>
     );
