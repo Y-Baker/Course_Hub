@@ -261,3 +261,13 @@ class CourseService:
                             .all())
         
         return sections
+
+    def get_courses_best_choise(self, page, per_page):
+        """method to filter courses by number of enrolled students"""
+        offset = (page - 1) * per_page
+
+        results = self.__session.query(Course)\
+            .order_by(Course.num_enrolled.desc())\
+            .offset(offset)\
+                .limit(per_page).all()
+        return results

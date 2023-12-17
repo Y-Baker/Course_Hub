@@ -4,8 +4,8 @@ import Loading from "../Loading/loading";
 import "./home.css";
 import api from "../api";
 import config from "../config";
-import { Container } from "react-bootstrap";
 import Categories from "../categories/Categories";
+import { MDBContainer, MDBRow } from "mdb-react-ui-kit";
 
 function Home(props) {
   const [categories, setCategories] = useState([]);
@@ -44,11 +44,13 @@ function Home(props) {
         <Loading />
       ) : (
         <div className="row">
-          <Container>
+          <MDBContainer>
+            <MDBRow>
             <Slider />
+            </MDBRow>
             <br />
             <br />
-          </Container>
+          </MDBContainer>
           <hr />
           <Categories categories={categories}/>
         </div>

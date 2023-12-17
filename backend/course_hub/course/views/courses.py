@@ -45,6 +45,16 @@ def get_courses_without_category():
                                 request.args.get("per_page", 3, type=int)
                             ))))
 
+@course_views.route('/courses/best', methods=['GET'])
+def get_courses_best():
+    """
+    reterive course from most number enrollend and with instructor have most students
+    """
+    return jsonify(list(map(lambda course:
+                            course.to_dict(), course_service.get_courses_best_choise(
+                                request.args.get("page", 1, type=int),
+                                request.args.get("per_page", 3, type=int)
+                            ))))
 
 @course_views.route('/instructors/<instructor_id>/courses', methods=['GET'])
 @swag_from('../documentation/courses/all_courses_instructor.yml', methods=['GET'])
