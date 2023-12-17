@@ -70,11 +70,11 @@ export default function NavBar(props) {
                   About
                 </Link>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="nav-link" to="/contact-us">
                   Contact Us
                 </Link>
-              </li>
+              </li> */}
               <li className="nav-item dropdown">
                 <Link
                   className="nav-link dropdown-toggle"
