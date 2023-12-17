@@ -43,7 +43,7 @@ function About() {
               <h2>Yousef Ahmed</h2>
               <p className="title">Software Engineer</p>
               <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-              <p>yuossefbakier@gmail.com</p>
+              <p>GitHub: <a href="https://github.com/Y-Baker" className="redirect">Y-Baker</a></p>
               <p>
                 <Button
                   className="basic-p about-button"
@@ -59,16 +59,16 @@ function About() {
         <div className="about-column">
           <div className="about-card">
             <img
-              src="/w3images/team2.jpg"
+              src="./users/AbdullahKhames.jpg"
               alt="Abdullah"
-              style={{ width: "100%" }}
+              style={{ width: "100%", height: "500px", paddingLeft: "10%", paddingRight: "10%", paddingTop: "5px"}}
             />
             <div className="about-container">
             <br />
               <h2>Abdullah Khames</h2>
               <p className="title">Software Engineer</p>
               <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-              <p>abdallahyouniiss@gmail.com</p>
+              <p>GitHub: <a href="https://github.com/AbdullahKhames" className="redirect">AbdullahKhames</a></p>
               <p>
                 <Button
                   className="basic-p about-button"
@@ -93,7 +93,7 @@ function About() {
               <h2>Mohamed Elshafae</h2>
               <p className="title">Software Engineer</p>
               <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-              <p>mohamedelshafae888@gmail.com</p>
+              <p>GitHub: <a href="https://github.com/MohamedElshafae" className="redirect">MohamedElshafae</a></p>
               <p>
                 <Button
                   className="basic-p about-button"
