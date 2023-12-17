@@ -84,9 +84,9 @@ function About() {
         <div className="about-column">
           <div className="about-card">
             <img
-              src="/w3images/team3.jpg"
+              src="./users/Mohammed.jpg"
               alt="Mohamed"
-              style={{ width: "100%" }}
+              style={{ width: "100%", height: "500px", paddingLeft: "10%", paddingRight: "10%", paddingTop: "5px"}}
             />
             <div className="about-container">
             <br />
