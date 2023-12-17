@@ -199,7 +199,7 @@ class CourseService:
 
         existing_course.name = data.get('name', existing_course.name)
         existing_course.description = data.get('description', existing_course.description)
-#        existing_course.hours = data.get('hours', existing_course.hours)
+        existing_course.hours = data.get('hours', existing_course.hours)
         # image_path = save_image(image=image, course_id=existing_course.id)
         # if image_path is not None:
         #     existing_course.image = image_path
