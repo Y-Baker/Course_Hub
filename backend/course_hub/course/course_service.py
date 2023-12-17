@@ -204,7 +204,7 @@ class CourseService:
         # if image_path is not None:
         #     existing_course.image = image_path
         image_base64 = data.get('imageBase64')
-
+        image_path = None
         if image_base64:
             image_filename = f"{existing_course.id}.png"
             image_path = save_base64_image(image_base64, image_filename)
