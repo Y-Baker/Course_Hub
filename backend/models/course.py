@@ -42,7 +42,8 @@ class Course(BaseModel, Base):
             new_dict['instructor_name'] = instructor.user.name
         if category:
             new_dict['category_name'] = category.name
-        # new_dict['total_students'] = instructor.total_students
+        new_dict['total_students'] = instructor.total_students
         new_dict['sections'] = [section.to_dict() for section in self.sections]
-        # new_dict['students'] = [student.to_dict() for student in self.students]
+        # order sections by section number
+        new_dict['sections'].sort(key=lambda section: section['section_num'])
         return new_dict

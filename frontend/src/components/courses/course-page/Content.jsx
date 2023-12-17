@@ -114,9 +114,9 @@ function CourseContent({ user, course }) {
               {course.sections.length === 0 && (
                 <Alert variant="danger">No content available</Alert>
               )}
-              {course.sections.map((section) => (
+              {course.sections.map((section, index) => (
                 <>
-                  <div key={section.id} className="list-sections">
+                  <div key={section.id || index} className="list-sections">
                     <h3 className="section-head">
                       <span
                         className="toggle-icon"
@@ -128,8 +128,8 @@ function CourseContent({ user, course }) {
                     </h3>
                     {expandedSections[section.id] && (
                       <ul className="list-content">
-                        {section.lessons.map((lesson) => (
-                          <li key={lesson.id}>
+                        {section.lessons.map((lesson, index) => (
+                          <li key={lesson.id || index}>
                             <div className="lesson-item">
                               <span
                                 className="toggle-icon"
@@ -168,8 +168,8 @@ function CourseContent({ user, course }) {
                 {course.sections.length === 0 && (
                   <Alert variant="danger">No content available</Alert>
                 )}
-                {course.sections.map((section) => (
-                  <div key={section.id} className="list-sections">
+                {course.sections.map((section, index) => (
+                  <div key={section.id || index} className="list-sections">
                     <h3 className="section-head">
                       <span className="point-icon">•</span>
                       {section.name}

@@ -44,4 +44,6 @@ class Section(BaseModel, Base):
             new_dict['course_name'] = course.name
             new_dict['total_sections'] = course.num_sections
         new_dict['lessons'] = [lesson.to_dict() for lesson in self.lessons]
+        # order lessons by lesson number
+        new_dict['lessons'].sort(key=lambda lesson: lesson['lesson_num'])
         return new_dict
