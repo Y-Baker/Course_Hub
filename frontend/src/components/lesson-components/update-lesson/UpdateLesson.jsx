@@ -1,6 +1,6 @@
   import { useFormik } from 'formik';
   import React, { useEffect, useState } from 'react'
-  import { useLocation, useParams } from 'react-router-dom'
+  import { useParams } from 'react-router-dom'
   import * as Yup from 'yup';
   import api from '../../api';
   import config from '../../config';

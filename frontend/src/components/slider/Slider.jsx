@@ -4,7 +4,6 @@ import config from '../config';
 import { useEffect, useState } from 'react';
 import Loading from '../Loading/loading';
 import { Link } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
 import "./Slider.css";
 
 function Slider() {

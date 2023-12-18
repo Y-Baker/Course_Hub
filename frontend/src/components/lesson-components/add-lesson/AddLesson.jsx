@@ -1,5 +1,6 @@
-import React, {useState, useEffect, useContext} from 'react'
-import { UserDataContext } from '../../UserContextProvider/UserContextProvider';
+import React, {useState, useEffect} from 'react'
+// import { UserDataContext } from '../../UserContextProvider/UserContextProvider';
+// import { useContext } from 'react';
 import * as Yup from 'yup'
 import config from '../../config';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -10,8 +11,8 @@ import Loading from '../../Loading/loading';
 import api from '../../api';
 
 export default function AddLesson(props) {
-  const userContext = useContext(UserDataContext);
-    const userData = userContext.userData; 
+  // const userContext = useContext(UserDataContext);
+    // const userData = userContext.userData;
     const [loading, setLoading] = useState(true);
     const [isLoading, setisLoading] = useState(false)
     const [errorMessage, seterrorMessage] = useState('')

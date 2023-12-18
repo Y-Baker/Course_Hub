@@ -48,7 +48,7 @@ function CourseList({ filter = null }) {
         <MDBRow  style={{ paddingLeft: "40px", paddingRight: "40px" }}>
         {courses.map((course, index) => (
           <MDBCol lg="4" key={course.id || index}>
-            <CourseCard course={course} admin={(userData && userData.role == 0) ?  true : false}/>
+            <CourseCard course={course} admin={(userData && userData.role === 0) ?  true : false}/>
           </MDBCol>
         ))}
         </MDBRow>

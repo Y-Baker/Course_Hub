@@ -1,9 +1,8 @@
 import React from "react";
-import { Container, Row, Col, Card, Button, Alert } from "react-bootstrap";
+import { Card, Alert } from "react-bootstrap";
 import Loading from "../../Loading/loading";
 import api from "../../api";
 import config from "../../config";
-import toast, { Toaster } from "react-hot-toast";
 import { useContext, useEffect, useState } from "react";
 import { UserDataContext } from "../../UserContextProvider/UserContextProvider";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +13,7 @@ function CourseContent({ user, course }) {
   const userData = userContext.userData;
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [instructor, setInstructor] = useState(null);
+  // const [instructor, setInstructor] = useState(null);
   const [expandedSections, setExpandedSections] = useState({});
   const [expandedLessons, setExpandedLessons] = useState({});
   // const [instructorOwner, setInstructorOwner] = useState(false);
@@ -82,7 +81,7 @@ function CourseContent({ user, course }) {
       setLoading(false);
       return;
     }
-    if (userData.id != user.id) {
+    if (userData.id !== user.id) {
       navigate("/forbidden");
       return;
     }

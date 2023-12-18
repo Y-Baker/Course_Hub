@@ -1,4 +1,3 @@
-import React, { useContext, useEffect, useState } from "react";
 import config from "../config";
 import "./userProfile.css";
 import CourseCardProfile from "./CourseCard-Profile";
@@ -20,8 +19,8 @@ function UserProfile({ data, owner }) {
   let courses = [];
   if (data.role > 0) {
     courses = data.courses;
-    if (owner == false) {
-      courses = courses.filter((course) => course.approved == true);
+    if (owner === false) {
+      courses = courses.filter((course) => course.approved === true);
     }
   }
   return (
@@ -76,7 +75,7 @@ function UserProfile({ data, owner }) {
                     </MDBCardText>
                   </MDBCol>
                 </MDBRow>
-                {data.role > 0 && (data.role == 1 ? (
+                {data.role > 0 && (data.role === 1 ? (
                   <>
                     <hr />
                     <MDBRow>
@@ -134,22 +133,22 @@ function UserProfile({ data, owner }) {
 
         <br />
         <br />
-        {data.role == 0 ? (
+        {data.role === 0 ? (
           owner && (
             <NotApprovedCourses />
           )
         ) : (
           <MDBRow>
             <MDBCardTitle className="SubHeading">
-              {data.role == 1 ? "My Courses" : "My Learning"}
+              {data.role === 1 ? "My Courses" : "My Learning"}
             </MDBCardTitle>
             <MDBRow className="py-4">
-              {courses.length == 0 ? (
+              {courses.length === 0 ? (
                 <strong>No Data!</strong>
               ) : (
                 courses.map((course, index) => (
                   <MDBCol lg="4" key={course.id || index}>
-                    {data.role == 1 ? (
+                    {data.role === 1 ? (
                     <CourseCardProfile course={course} owner={owner} />
                     ) : (
                       <CourseCard course={course} admin={false} />

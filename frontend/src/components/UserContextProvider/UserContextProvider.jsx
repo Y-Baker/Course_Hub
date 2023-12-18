@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react'
+import React, { createContext, useState, useEffect } from 'react'
 import { jwtDecode } from 'jwt-decode';
 
 export let UserDataContext = createContext();

@@ -25,7 +25,7 @@ export default function UpdateCourse(props) {
   function fetchCourse() {
     api.get(`${config.api}/courses/${id}`)
     .then((resp) => {
-      if (resp.status == 200) {
+      if (resp.status === 200) {
         setfetchedCourse(resp.data.data);
       }
       else {

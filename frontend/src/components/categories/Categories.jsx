@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBCardTitle, MDBContainer, MDBRow } from "mdb-react-ui-kit";
+import { MDBContainer, MDBRow } from "mdb-react-ui-kit";
 import CourseList from "../courses/CourseList";
 import api from "../api";
 import config from "../config";
