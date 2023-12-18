@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { Card, Button, Row, Col } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import api from "../api";
 import config from "../config";
 import toast from "react-hot-toast";
@@ -30,7 +30,7 @@ function CourseCard({ course, admin }) {
   }
 
   function handleApprove(course) {
-    if (userData && userData.role == 0) {
+    if (userData && userData.role === 0) {
       api
         .put(`${config.api}/courses/${course.id}/approve`, course.id)
         .then((response) => {
@@ -52,7 +52,7 @@ function CourseCard({ course, admin }) {
     <Card className="my-3 p-3 rounded">
       <Link to={`/courses/${course.id}`}>
         <Card.Img
-          src={`${config.baseURL}/images/${course.image}`}
+          src={course.image ? `${config.baseURL}/images/${course.image}` : "./courses/Default.jpg"}
           alt="Course"
           variant="top"
           className="card-img"
@@ -114,10 +114,3 @@ function CourseCard({ course, admin }) {
 }
 
 export default CourseCard;
-
-{
-  /* <button className="btn btn-outline-success" type="submit"
-            variant="primary"
-            style={{ backgroundColor: "#0C356A", borderColor: "#0C356A", color: "#FFFFFF" }}
-          ></button> */
-}

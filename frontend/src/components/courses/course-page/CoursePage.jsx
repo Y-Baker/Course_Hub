@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import api from "../../api";
 import config from "../../config";
@@ -60,7 +60,7 @@ function CoursePage() {
   }
   if (course === null) {
     return <NotFound />;
-  } else if (course.approved === false && userData.role != 0) {
+  } else if (course.approved === false && (!userData || userData.role !== 0)) {
     return <NotApproved />;
   } else {
     return (
@@ -136,7 +136,7 @@ function CoursePage() {
                   <Card.Img
                     variant="top"
                     // src={course.image_url}
-                    src={`${config.baseURL}/images/${course.image}`}
+                    src={course.image ? `${config.baseURL}/images/${course.image}` : "./courses/Default.jpg"}
                     style={{ width: "100%" }}
                   />
                 </Card.Body>

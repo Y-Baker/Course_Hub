@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading/loading";
-import NotFound from "../not-found/NotFound";
 import UserProfile from "../Profile/userProfile";
 
 function UserPage() {

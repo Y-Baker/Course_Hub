@@ -1,6 +1,5 @@
 import React from 'react'
 import CourseList from './CourseList'
-import { Container } from 'react-bootstrap'
 function Courses() {
   return <>
             {/* Search bar in the middle */}

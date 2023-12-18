@@ -5,7 +5,6 @@ import api from "../../api";
 import config from "../../config";
 import Loading from "../../Loading/loading";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import CourseCard from "../../cards/CourseCard";
 import {
     MDBCol,
@@ -18,7 +17,6 @@ import {
 function NotApprovedCourses() {
   const [notApprovedCourses, setNotApprovedCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   function getNotApprovedCourses() {
     api
       .get(`${config.api}/courses/not-approved?page=1&per_page=4`)
@@ -45,7 +43,7 @@ function NotApprovedCourses() {
             Not Approved Courses
         </MDBCardTitle>
         <MDBRow className="py-4">
-          {notApprovedCourses.length == 0 ? (
+          {notApprovedCourses.length === 0 ? (
             <strong>All Courses have been Approved</strong>
           ) : (
             notApprovedCourses.map((course, index) => (

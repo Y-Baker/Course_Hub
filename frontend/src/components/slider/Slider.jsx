@@ -4,7 +4,6 @@ import config from '../config';
 import { useEffect, useState } from 'react';
 import Loading from '../Loading/loading';
 import { Link } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
 import "./Slider.css";
 
 function Slider() {
@@ -39,7 +38,7 @@ function Slider() {
           <Carousel.Item key={course.id || index} className='slide'>
             <img
               className="d-block w-100 slider-img"
-              src={`${config.baseURL}/images/${course.image}`}
+              src={course.image ? `${config.baseURL}/images/${course.image}` : "./courses/Default.jpg"}
               alt={course.name}
               onClick={() => window.location.href = '/courses/' + course.id}
             />

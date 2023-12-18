@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import { UserDataContext } from "../../UserContextProvider/UserContextProvider";
+import React, { useState, useEffect } from "react";
 import * as Yup from "yup";
 import config from "../../config";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -10,8 +9,6 @@ import api from "../../api";
 import Loading from "../../Loading/loading";
 
 export default function AddSection(props) {
-  const userContext = useContext(UserDataContext);
-  const userData = userContext.userData;
   const [loading, setLoading] = useState(true);
   const [isLoading, setisLoading] = useState(false);
   const [errorMessage, seterrorMessage] = useState("");
@@ -45,11 +42,11 @@ export default function AddSection(props) {
     ),
   });
 
-  const handleCategoryChange = (event) => {
-    const categoryId = event.target.value;
-    formik.setFieldValue("category_id", categoryId);
-    formik.setFieldTouched("category_id", true);
-  };
+  // const handleCategoryChange = (event) => {
+  //   const categoryId = event.target.value;
+  //   formik.setFieldValue("category_id", categoryId);
+  //   formik.setFieldTouched("category_id", true);
+  // };
 
   async function handleSectionSubmit(values) {
     seterrorMessage("");

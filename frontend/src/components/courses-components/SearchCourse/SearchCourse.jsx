@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react'
 import { UserDataContext } from '../../UserContextProvider/UserContextProvider';
 import api from '../../api';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import config from '../../config';
 import Loading from '../../Loading/loading';
 import { useNavigate } from 'react-router-dom';

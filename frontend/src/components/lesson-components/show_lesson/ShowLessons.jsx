@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { UserDataContext } from '../../UserContextProvider/UserContextProvider';
+import React, { useEffect, useState } from 'react';
 import api from '../../api';
 import config from '../../config';
 import Loading from '../../Loading/loading';
@@ -7,9 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
 export default function ShowLessons() {
-    const userContext = useContext(UserDataContext);
     const [loading, setLoading] = useState(true)
-    const userData = userContext.userData;
     const [lessons, setlessons] = useState([]);
     const navigate = useNavigate();
     useEffect(() =>{
