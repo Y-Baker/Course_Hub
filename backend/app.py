@@ -75,8 +75,13 @@ def token_in_blocklist_callback(jwt_header,jwt_data):
 def after_request_callback( response ):
     storage.close()
     sess_manager.close()
+    print(sess_manager.session_status())
     return response
 
+@app.teardown_appcontext
+def teardown_appcontext(exception=None):
+    storage.close()
+    sess_manager.close()
 
 @app.route('/images/<path:filename>')
 def serve_image(filename):

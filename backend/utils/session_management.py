@@ -1,11 +1,6 @@
-#!/usr/bin/python3
-"""service for instructor"""
-
 from os import getenv
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-
 from models.base_model import Base
 
 
@@ -18,22 +13,30 @@ class SessionManagement:
         CH_MYSQL_PWD = getenv('CH_MYSQL_PWD')
         CH_MYSQL_HOST = getenv('CH_MYSQL_HOST')
         CH_MYSQL_DB = getenv('CH_MYSQL_DB')
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                format(CH_MYSQL_USER,
-                                        CH_MYSQL_PWD,
-                                        CH_MYSQL_HOST,
-                                        CH_MYSQL_DB))
-        # sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        # Session = scoped_session(sess_factory)
-        # self.__session = Session
-
+        SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://{}:{}@{}/{}'.format(
+                                    CH_MYSQL_USER,
+                                    CH_MYSQL_PWD,
+                                    CH_MYSQL_HOST,
+                                    CH_MYSQL_DB)
+        self.__engine = create_engine(SQLALCHEMY_DATABASE_URI, pool_size=10,
+                       pool_timeout=60, pool_recycle=3600)
+        # self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
+        #                         format(CH_MYSQL_USER,
+        #                                 CH_MYSQL_PWD,
+        #                                 CH_MYSQL_HOST,
+        #                                 CH_MYSQL_DB))
+        self.reload()
 
     def reload(self):
-        """reloads data from the database"""
+        """Reloads data from the database."""
         Base.metadata.create_all(self.__engine)
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.session = scoped_session(sess_factory)
 
     def close(self):
-        """call remove() method on the private session attribute"""
+        """Closes the session."""
         self.session.remove()
+
+    def session_status(self):
+        """Returns the status of the session."""
+        return self.session.is_active

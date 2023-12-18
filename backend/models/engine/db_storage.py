@@ -36,11 +36,13 @@ class DBStorage:
         CH_MYSQL_HOST = getenv('CH_MYSQL_HOST')
         CH_MYSQL_DB = getenv('CH_MYSQL_DB')
         CH_ENV = getenv('CH_ENV')
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                      format(CH_MYSQL_USER,
-                                             CH_MYSQL_PWD,
-                                             CH_MYSQL_HOST,
-                                             CH_MYSQL_DB))
+        SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://{}:{}@{}/{}'.format(
+                                    CH_MYSQL_USER,
+                                    CH_MYSQL_PWD,
+                                    CH_MYSQL_HOST,
+                                    CH_MYSQL_DB)
+        self.__engine = create_engine(SQLALCHEMY_DATABASE_URI, pool_size=10,
+                       pool_timeout=60, pool_recycle=3600)
         if CH_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
