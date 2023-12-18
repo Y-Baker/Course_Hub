@@ -158,7 +158,7 @@ def create_course(instructor_id):
     # if image_path is not None:
     #     new_course.image = image_path
     image_base64 = data.get('imageBase64')
-
+    image_path = None
     if image_base64:
         image_filename = f"{new_course.id}.png"
         image_path = save_base64_image(image_base64, image_filename)
