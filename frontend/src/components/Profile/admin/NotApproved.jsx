@@ -10,12 +10,7 @@ import CourseCard from "../../cards/CourseCard";
 import {
     MDBCol,
     MDBCardTitle,
-    MDBContainer,
     MDBRow,
-    MDBCard,
-    MDBCardText,
-    MDBCardBody,
-    MDBCardImage,
   } from "mdb-react-ui-kit";
 
 
