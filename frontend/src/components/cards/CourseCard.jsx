@@ -52,7 +52,7 @@ function CourseCard({ course, admin }) {
     <Card className="my-3 p-3 rounded">
       <Link to={`/courses/${course.id}`}>
         <Card.Img
-          src={`${config.baseURL}/images/${course.image}`}
+          src={course.image ? `${config.baseURL}/images/${course.image}` : "./courses/Default.jpg"}
           alt="Course"
           variant="top"
           className="card-img"

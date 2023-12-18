@@ -20,7 +20,7 @@ function CourseCardProfile({ course, owner }) {
   return (
     <Card className="my-3 p-3 rounded">
       <Card.Img
-        src={`${config.baseURL}/images/${course.image}`}
+        src={course.image ? `${config.baseURL}/images/${course.image}` : "./courses/Default.jpg"}
         variant="top"
         className="card-img"
       />

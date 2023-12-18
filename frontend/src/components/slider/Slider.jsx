@@ -39,7 +39,7 @@ function Slider() {
           <Carousel.Item key={course.id || index} className='slide'>
             <img
               className="d-block w-100 slider-img"
-              src={`${config.baseURL}/images/${course.image}`}
+              src={course.image ? `${config.baseURL}/images/${course.image}` : "./courses/Default.jpg"}
               alt={course.name}
               onClick={() => window.location.href = '/courses/' + course.id}
             />
