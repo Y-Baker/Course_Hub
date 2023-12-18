@@ -15,10 +15,10 @@ from course_hub.instructor import instructor_views
 from course_hub.student import student_views
 from course_hub.enrollment import enrollment_views
 from utils.file_service import get_upload_dir
+import logging
 
-
-cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-
+CORS(app)
+#cors = CORS(app, resources={r"/*": {"origins": "*"}})
 #registering bluebrints
 app.register_blueprint(user_views)
 app.register_blueprint(auth_views)
@@ -28,7 +28,7 @@ app.register_blueprint(student_views)
 app.register_blueprint(enrollment_views)
 
 jwt.init_app(app)
-
+app.logger.setLevel(logging.INFO)
 # load user
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_headers, jwt_data):
@@ -71,7 +71,7 @@ def token_in_blocklist_callback(jwt_header,jwt_data):
     return token is not None
 
 
-@app.after_request 
+@app.after_request
 def after_request_callback( response ):
     storage.close()
     sess_manager.close()
