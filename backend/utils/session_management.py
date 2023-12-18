@@ -35,7 +35,7 @@ class SessionManagement:
 
     def close(self):
         """Closes the session."""
-        self.session.remove()
+        self.session.close()
 
     def session_status(self):
         """Returns the status of the session."""
