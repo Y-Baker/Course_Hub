@@ -76,6 +76,11 @@ export default function AddCourse(props) {
 
       function convertImageToBase64(imageFile) {
         return new Promise((resolve, reject) => {
+          if (!(imageFile instanceof Blob) && !(imageFile instanceof File)) {
+            resolve(null);
+            return;
+          }
+      
           const reader = new FileReader();
           reader.onload = () => resolve(reader.result.split(',')[1]);
           reader.onerror = error => reject(error);
@@ -91,8 +96,10 @@ export default function AddCourse(props) {
       
           const imageFile = values.image;
           const imageBase64 = await convertImageToBase64(imageFile);
-      
-          values.imageBase64 = imageBase64;
+          if (imageBase64 !== null && imageBase64 !== undefined){
+            console.log("adding the value");
+            values.imageBase64 = imageBase64;
+          }
       
           let response = await api.post(`${config.api}/instructors/${userData.id}/courses`, values);
       
