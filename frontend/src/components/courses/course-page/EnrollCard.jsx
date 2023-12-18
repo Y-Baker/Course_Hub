@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Card, Button, Alert } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import Loading from "../../Loading/loading";
 import api from "../../api";
 import config from "../../config";
@@ -103,7 +103,7 @@ function EnrollCard({ user, course }) {
       setLoading(false);
       return;
     }
-    if (userData.id != user.id) {
+    if (userData.id !== user.id) {
       navigate("/forbidden");
       return;
     }
@@ -385,7 +385,7 @@ function EnrollCard({ user, course }) {
       <Card className="mt-3">
         <Card.Header as="h5">{headerText(user, instructorOwner)}</Card.Header>
         <Card.Body>
-          {user.role === 0 && (<Card.Text>Admin Management</Card.Text>)}
+          {(user && user.role === 0) && (<Card.Text>Admin Management</Card.Text>)}
           <Card.Text>{bodyText(user, instructorOwner, enrollState)}</Card.Text>
           <div className="enroll-buttons">
             {buttons(user, instructorOwner, enrollState)}

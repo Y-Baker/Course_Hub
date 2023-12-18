@@ -5,7 +5,6 @@ import api from "../../api";
 import config from "../../config";
 import Loading from "../../Loading/loading";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import CourseCard from "../../cards/CourseCard";
 import {
     MDBCol,
