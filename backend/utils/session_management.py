@@ -18,8 +18,11 @@ class SessionManagement:
                                     CH_MYSQL_PWD,
                                     CH_MYSQL_HOST,
                                     CH_MYSQL_DB)
-        self.__engine = create_engine(SQLALCHEMY_DATABASE_URI, pool_size=10,
-                       pool_timeout=60, pool_recycle=3600)
+        self.__engine = create_engine(SQLALCHEMY_DATABASE_URI, 
+                                      pool_size=10,
+                                      max_overflow=30,
+                                      pool_timeout=60, 
+                                      pool_recycle=3600)
         # self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
         #                         format(CH_MYSQL_USER,
         #                                 CH_MYSQL_PWD,
