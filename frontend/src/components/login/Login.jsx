@@ -134,6 +134,9 @@ export default function Login() {
         <div className="container">
           dont Have An Account ?<Link to="/register"> Register Here</Link>
         </div>
+        <div className="container">
+          want to activate your email?<Link to="/activate"> Activate Here</Link>
+        </div>
         <Toaster />
       </div>
     </>
