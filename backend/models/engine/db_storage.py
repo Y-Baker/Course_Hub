@@ -3,7 +3,7 @@
 Contains the class DBStorage
 """
 
-import models
+# import models
 from models.TokenBlocklist import TokenBlocklist
 from models.user import User
 from models.course import Course
@@ -15,9 +15,9 @@ from models.student import Student
 from models.instructor import Instructor
 from models.admin import Admin
 from os import getenv
+from utils import sess_manager
 from models.base_model import Base
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+
 
 classes = {"User": User, "Course": Course, "Section": Section,
            "Lesson": Lesson, "Category": Category, "Student": Student,
@@ -31,21 +31,22 @@ class DBStorage:
 
     def __init__(self):
         """Instantiate a DBStorage object"""
-        CH_MYSQL_USER = getenv('CH_MYSQL_USER')
-        CH_MYSQL_PWD = getenv('CH_MYSQL_PWD')
-        CH_MYSQL_HOST = getenv('CH_MYSQL_HOST')
-        CH_MYSQL_DB = getenv('CH_MYSQL_DB')
+        # CH_MYSQL_USER = getenv('CH_MYSQL_USER')
+        # CH_MYSQL_PWD = getenv('CH_MYSQL_PWD')
+        # CH_MYSQL_HOST = getenv('CH_MYSQL_HOST')
+        # CH_MYSQL_DB = getenv('CH_MYSQL_DB')
+        # SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://{}:{}@{}/{}'.format(
+        #                             CH_MYSQL_USER,
+        #                             CH_MYSQL_PWD,
+        #                             CH_MYSQL_HOST,
+        #                             CH_MYSQL_DB)
+        # self.__engine = create_engine(SQLALCHEMY_DATABASE_URI,
+        #                               pool_size=10,
+        #                               max_overflow=30,
+        #                               pool_timeout=60,
+        #                               pool_recycle=3600)
+        self.__engine = sess_manager.get_engine()
         CH_ENV = getenv('CH_ENV')
-        SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://{}:{}@{}/{}'.format(
-                                    CH_MYSQL_USER,
-                                    CH_MYSQL_PWD,
-                                    CH_MYSQL_HOST,
-                                    CH_MYSQL_DB)
-        self.__engine = create_engine(SQLALCHEMY_DATABASE_URI, 
-                                      pool_size=10,
-                                      max_overflow=30,
-                                      pool_timeout=60, 
-                                      pool_recycle=3600)
         if CH_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
@@ -75,10 +76,10 @@ class DBStorage:
 
     def reload(self):
         """reloads data from the database"""
-        Base.metadata.create_all(self.__engine)
-        sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(sess_factory)
-        self.__session = Session
+        # Base.metadata.create_all(self.__engine)
+        # sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        # Session = scoped_session(sess_factory)
+        self.__session = sess_manager.get_session()
 
     def close(self):
         """call remove() method on the private session attribute"""
@@ -96,6 +97,13 @@ class DBStorage:
         """A method to retrieve one object by its id"""
         if email is not None:
             return self.__session.query(User).filter(User.email == str(email)).first()
+        else:
+            return None
+
+    def getUserByResetToken(self, reset_token):
+        """A method to retrieve one object by its id"""
+        if reset_token is not None:
+            return self.__session.query(User).filter(User.reset_token == str(reset_token)).first()
         else:
             return None
 
