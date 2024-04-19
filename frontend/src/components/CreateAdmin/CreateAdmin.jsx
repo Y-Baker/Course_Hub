@@ -1,29 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { useFormik } from 'formik';
-import { Link, useNavigate } from 'react-router-dom';
-import './register.css';
+import { useNavigate } from 'react-router-dom';
+import './CreateAdmin.css';
 import api from '../api';
 import config from '../config';
 import * as yup from 'yup';
 import toast, { Toaster } from "react-hot-toast";
 
-function Register() {
+function CreateAdmin() {
   const [isLoading, setisLoading] = useState(false);
   const [errorMessage, seterrorMessage] = useState('');
-  const [categories, setCategories] = useState([]);
-  let url_api = config.api + "/categories?page=1&per_page=100";
   const nav = useNavigate();
 
-  async function handleRegister(values) {
+  async function handleCreateAdmin(values) {
     try {
       setisLoading(true);
-      let response = await api.post(`${config.auth}/sign-up`, values);
+      let response = await api.post(`${config.auth}/craete_admin`, values);
       if (response.status === 201) {
         setisLoading(false);
         toast.success(response.data.message);
         setTimeout(() => {
-          nav('/activate');
-        }, 3000);
+          nav('/');
+        }, 2000);
       } else {
         setisLoading(false);
       }
@@ -40,9 +38,7 @@ function Register() {
     email: yup.string().email().required(),
     password: yup.string().required().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", 'Minimum eight characters, at least one uppercase letter, one lowercase letter, and one number'),
     confirmPassword: yup.string().required().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", 'Minimum eight characters, at least one uppercase letter, one lowercase letter, and one number').oneOf([yup.ref('password')], "Password doesn't match"),
-    role: yup.string().required(),
     age: yup.number().min(16).max(60),
-    interestedIn: yup.string().notRequired()
   });
   
   let formik = useFormik({
@@ -51,36 +47,19 @@ function Register() {
       name: '',
       password: '',
       confirmPassword: '',
-      role: '',
+      role: 0,
       age: '',
-      interestedIn: '',
     },
     validationSchema: validShceme,
-    onSubmit: handleRegister,
+    onSubmit: handleCreateAdmin,
   });
 
-  const roleOptions = [
-    { name: 'Student', val: '2' },
-    { name: 'Instructor', val: '1' },
-  ];
 
-  useEffect(() => {
-    api
-      .get(url_api)
-      .then((response) => {
-        if (response.status === 200) {
-          setCategories(response.data);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
   return (
     <>
       <div className="registration-container">
-        <h3>Register Now</h3>
+        <h3>Create Admin Now</h3>
         {errorMessage.length > 0 ? (
           <div className="alert alert-danger">{errorMessage}</div>
         ) : null}
@@ -155,57 +134,10 @@ function Register() {
             <div className="alert alert-danger">{formik.errors.age}</div>
           ) : null}
 
-          <label htmlFor="role">Register As:</label>
-          <select
-            id="role"
-            name="role"
-            value={formik.values.role}
-            onChange={(e) => {
-              formik.handleChange(e);
-              formik.setFieldValue('interestedIn', '');
-            }}
-            onBlur={formik.handleBlur}
-            required
-          >
-            <option value="" disabled>
-              Register As:
-            </option>
-            {roleOptions.map((option) => (
-              <option key={option.name} value={option.val}>
-                {option.name}
-              </option>
-            ))}
-          </select>
           {formik.errors.role && formik.touched.role ? (
             <div className="alert alert-danger">{formik.errors.role}</div>
           ) : null}
 
-          {formik.values.role === '2' && (
-            <div>
-              <label htmlFor="interestedIn">Interested In:</label>
-              <select
-                id="interestedIn"
-                name="interestedIn"
-                value={formik.values.interestedIn}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                required={formik.values.role === '2'}
-              >
-                <option value="" disabled>
-                  Interested In:
-                </option>
-                {categories.map((category, index) => (
-                  <option key={category.id || index} value={category.id}>
-                    {category.name}
-                  </option>
-                )
-                )}
-              </select>
-              {formik.errors.interestedIn && formik.touched.interestedIn ? (
-                <div className="alert alert-danger">{formik.errors.interestedIn}</div>
-              ) : null}
-            </div>
-          )}
 
           <div className="container">
             {isLoading ? (
@@ -217,23 +149,17 @@ function Register() {
                 className="register-button"
                 disabled={!formik.dirty && formik.isValid}
                 type="submit"
-                onSubmit={handleRegister}
+                onSubmit={handleCreateAdmin}
               >
-                Register
+                CreateAdmin
               </button>
             )}
           </div>
+          <Toaster />
         </form>
-        <div className="container">
-          Already Have An Account? <Link to="/login">Login Here</Link>
-        </div>
-        <div className="container">
-          want to activate your email?<Link to="/activate"> Activate Here</Link>
-        </div>
-        <Toaster />
       </div>
     </>
   );
 }
 
-export default Register;
+export default CreateAdmin;

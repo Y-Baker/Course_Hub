@@ -6,8 +6,12 @@ import Home from './components/home/Home';
 import About from './components/about/About';
 import ContacUs from './components/contact-us/ContactUs';
 import Login from './components/login/Login';
+import Activation from './components/activation/activation';
 import Logout from './components/logout/Logout';
 import Register from './components/register/Register';
+import ResetPassword from './components/Password-components/ResetPassword/ResetPassword';
+import ForgotPassword from './components/Password-components/ForgotPassword/ForgotPassword';
+import CreateAdmin from './components/CreateAdmin/CreateAdmin';
 import Courses from './components/courses/Courses'
 import NotFound from './components/not-found/NotFound'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
@@ -40,6 +44,7 @@ import CoursePage from './components/courses/course-page/CoursePage';
 import CategoryPage from './components/categories/categoryPage';
 import NotApproved from './components/not_approved/not_approved';
 import Categories from './components/categories/Categories';
+import CoursesFilter from './components/courses/CoursesFilter';
 
 function App() {
   let routers = createBrowserRouter([
@@ -52,6 +57,7 @@ function App() {
         { path: "about", element: <About /> },
         { path: "contact-us", element: <ContacUs /> },
         { path: "login", element: <Login /> },
+        { path: "activate", element: <Activation /> },
 
         {
           path: "logout",
@@ -70,6 +76,8 @@ function App() {
           ),
         },
         { path: "register", element: <Register /> },
+        { path: "forget-password", element: <ForgotPassword /> },
+        { path: "reset-password", element: <ResetPassword /> },
         {
           path: "courses",
           // element: <Layout />,
@@ -77,6 +85,7 @@ function App() {
             { index: true, element: <Courses /> },
 
             { path: ":id", element: <CoursePage /> },
+            { path: "filter", element: <CoursesFilter />}
           ],
         },
 
@@ -103,7 +112,12 @@ function App() {
       ),
       children: [
         { index: true, element: <ApproveCourses /> },
-
+        { path: "create-admin" ,
+        element: (
+          <ProtectedRoute roles={["Admin"]}>
+            <CreateAdmin />
+          </ProtectedRoute>
+        )},
         { path: "showCategories", element: <ShowCategories /> },
         { path: "SearchCategory", element: <SearchCategory /> },
         { path: "addCategory", element: <AddCategory /> },
